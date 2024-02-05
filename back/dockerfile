@@ -1,0 +1,10 @@
+FROM node:18-slim AS base
+
+WORKDIR /app
+
+# Check if node_modules directory exists
+# If not, install dependencies
+COPY package.json ./
+
+EXPOSE 5000
+CMD [ "sh", "-c", "yarn install && yarn start:dev" ]

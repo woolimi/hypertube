@@ -1,0 +1,18 @@
+{
+  "name": "hypertube",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dc:build-front": "docker compose build front",
+    "dc:build-back": "docker compose build front",
+    "dc:up-front": "docker compose up front",
+    "dc:up-back": "docker compose up front",
+    "dc:bash": "docker exec -it",
+    "install": "pnpm install --prefix front && pnpm install --prefix back",
+    "dev": ""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
