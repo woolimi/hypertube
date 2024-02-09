@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "install": "pnpm install --prefix front && pnpm install --prefix back",
-    "dev": ""
+    "dev:front": "pnpm --prefix front run dev",
+    "dev:back": "pnpm --prefix back run dev"
   },
   "keywords": [],
   "author": "",

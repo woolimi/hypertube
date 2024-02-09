@@ -108,7 +108,6 @@ Authenticated
 - backend api documentation (https://docs.nestjs.com/openapi/introduction)
 - different resolution of video
 - Stream video with Media Stream API
-- dark / light theme
 
 ## Something not clear
 
