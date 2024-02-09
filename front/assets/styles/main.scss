@@ -1,6 +1,7 @@
-/* tailwind.css */
+@layer tailwind-base, primevue, tailwind-utilities;
+
 @layer tailwind-base {
-  @tailwind base;
+    @tailwind base;
 }
 
 @layer tailwind-utilities {
@@ -8,4 +9,23 @@
   @tailwind utilities;
 }
 
-@import '~/assets/styles/theme.css';
+@font-face {
+  font-family: 'CircularXX';
+  src: url('~/assets/fonts/CircularXX-Regular.woff2') format('woff2'),
+    url('~/assets/fonts/CircularXX-Regular.woff') format('woff');
+  font-display: swap;
+}
+
+* {
+  font-family: CircularXX, Avenir, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Arial;
+}
+
+html, body {
+  @apply bg-surface-100 dark:bg-surface-950;
+  min-height: 100vh;
+}
+
+html.dark {
+  color: white;
+}
+
