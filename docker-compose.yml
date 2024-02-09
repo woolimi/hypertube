@@ -5,35 +5,3 @@ services:
     image: mysql:latest
     ports: ['3306:3306']
     env_file: .env
-
-  back:
-    build: ./back
-    working_dir: /app
-    volumes:
-      - ./back:/app
-    ports: [5000:5000]
-    env_file: .env
-
-  front:
-    build: ./front
-    working_dir: /app
-    volumes:
-      - ./front:/app
-    ports:
-      - "3000:3000"
-    env_file: .env
-
-volumes:
-  back_node_modules:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ./back/node_modules
-
-  font_node_modules:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ./front/node_modules
