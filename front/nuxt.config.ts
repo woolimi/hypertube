@@ -16,4 +16,10 @@ export default defineNuxtConfig({
       inputStyle: "outlined",
     },
   },
+  components: [
+    {
+      path: "~/components",
+      pathPrefix: false,
+    },
+  ],
 });
