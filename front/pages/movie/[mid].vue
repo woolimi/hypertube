@@ -2,6 +2,8 @@
 const { data } = await useAsyncData("mountains", async () => {
   // TODO: get movie by mid
   // TODO: get comments by mid
+  // TODO: Different Thumbnail for watched movie
+
   return {
     movie: {
       image: "/thumbnail.jpeg",

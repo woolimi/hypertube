@@ -4,8 +4,8 @@ import colors from "tailwindcss/colors";
 export default {
   content: [
     "./components/**/*.{js,vue,ts}",
-    "./layouts/**/*.vue",
-    "./pages/**/*.vue",
+    "./layouts/**/*.{js,vue,ts}",
+    "./pages/**/*.{js,vue,ts}",
     "./plugins/**/*.{js,ts}",
     "./error.vue",
     "./presets/**/*.{js,vue,ts}",

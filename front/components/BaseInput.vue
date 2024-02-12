@@ -14,6 +14,10 @@ const props = defineProps({
     type: String,
     default: "text",
   },
+  placeholder: {
+    type: String,
+    default: "text",
+  },
 });
 const emit = defineEmits(["update:modelValue"]);
 const { modelValue } = useVModels(props, emit);
@@ -22,7 +26,12 @@ const id = useIdStore().get();
 
 <template>
   <div class="flex flex-col gap-1 text-left">
-    <label :for="id">{{ label }}</label>
-    <InputText :id="id" v-model="modelValue" :type="type" />
+    <label :for="id" class="text-primary-400">{{ label }}</label>
+    <InputText
+      :id="id"
+      v-model="modelValue"
+      :type="type"
+      :placeholder="placeholder"
+    />
   </div>
 </template>

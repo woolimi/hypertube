@@ -1,4 +1,6 @@
 <script setup>
+// TODO: Add infinite scroll
+// TODO: Different Thumbnail for watched movies
 const props = defineProps({
   items: {
     type: Array,
