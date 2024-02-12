@@ -54,16 +54,38 @@ const comments = computed(() => data.value?.comments ?? []);
 <template>
   <main class="min-h-[calc(100vh-64px)]">
     <section class="mx-auto max-w-[760px] pt-[112px]">
-      <figure>
-        <img :src="movie.image" />
-        <figcaption>
-          {{ movie.title }}
-        </figcaption>
-      </figure>
+      <img :src="movie.image" class="h-full w-full object-cover" />
     </section>
 
-    <section>
-      <!-- movie information -->
+    <section class="mx-auto max-w-[760px] p-4">
+      <ul class="flex flex-col gap-2 text-xl">
+        <li>
+          <span class="font-bold"> Title: </span>
+          <span class="text-primary-400">{{ movie.title }}</span>
+        </li>
+        <li>
+          <span class="font-bold"> Score: </span>
+          <span class="text-primary-400">{{ movie.score }}</span>
+        </li>
+        <li>
+          <span class="font-bold"> Genre: </span>
+          <p class="inline-flex flex-wrap gap-1">
+            <span
+              v-for="g in movie.genre"
+              class="rounded-[12px] bg-primary-400 px-3 py-1 text-sm font-semibold text-black"
+              :key="g"
+            >
+              {{ g }}
+            </span>
+          </p>
+        </li>
+        <li>
+          <p class="font-bold">Description</p>
+          <p class="text-gray-400">
+            {{ movie.description }}
+          </p>
+        </li>
+      </ul>
     </section>
 
     <CommentList :items="comments" />
