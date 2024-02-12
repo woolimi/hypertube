@@ -15,7 +15,7 @@ const localePath = useLocalePath();
         <img
           src="~/assets/images/logo-big.png"
           alt="hypertube logo"
-          class="h-[20vw] max-h-[80px]"
+          class="h-[20vw] max-h-[60px]"
         />
       </NuxtLink>
 

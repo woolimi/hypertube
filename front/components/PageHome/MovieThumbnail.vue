@@ -9,7 +9,11 @@ const props = defineProps({
 </script>
 
 <template>
-  <NuxtLink :to="localePath('index')" class="relative" :class="$style.link">
+  <NuxtLink
+    :to="localePath({ name: 'movie-mid', params: { mid: item.mid } })"
+    class="relative"
+    :class="$style.link"
+  >
     <figure class="w-full">
       <img :src="item.image" class="w-full object-cover" />
     </figure>

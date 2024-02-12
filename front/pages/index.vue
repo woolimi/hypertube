@@ -11,6 +11,7 @@ const movies = ref(
         "Deux astronomes méconnus entreprennent une tournée médiatique pour prévenir l'humanité qu'une comète fonce sur la Terre. Mais cela n'a pas l'air d'inquiéter grand monde.",
       genre: ["SF", "Comedies", "Drames sociaux"],
       score: 4.5,
+      mid: 12345,
     })),
     toArray,
   ),

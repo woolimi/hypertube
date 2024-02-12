@@ -1,0 +1,14 @@
+<script setup>
+const props = defineProps({
+  item: {
+    type: Object,
+    default: () => ({}),
+  },
+});
+</script>
+
+<template>
+  <Comment :item="item" class="ml-14 mt-2" />
+</template>
+
+<style lang="scss" module></style>
