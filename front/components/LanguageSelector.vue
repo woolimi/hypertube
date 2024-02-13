@@ -50,15 +50,15 @@ onClickOutside(target, () => {
 </template>
 <style module>
 .dropdown::before {
-  content: "";
   position: absolute;
-  display: block;
   bottom: 100%;
   left: 15px;
+  display: block;
   width: 0;
   height: 0;
+  border-right: 10px solid transparent;
   border-bottom: 10px solid white;
   border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
+  content: "";
 }
 </style>

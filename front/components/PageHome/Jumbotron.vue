@@ -24,35 +24,39 @@
 <style lang="scss" module>
 .heroWrapper {
   position: relative;
+
   &::before {
     @apply bg-gradient-to-r from-black to-transparent;
-    content: "";
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
     display: flex;
     width: 5px;
     height: 100%;
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: 10;
+    content: "";
   }
+
   &::after {
     @apply bg-gradient-to-l from-black to-transparent;
-    content: "";
+
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 10;
     display: flex;
     width: 5px;
     height: 100%;
-    position: absolute;
-    right: 0;
-    top: 0;
-    z-index: 10;
+    content: "";
   }
 }
 
 .hero {
   background-image: url("~/assets/images/hero.jpg");
   background-repeat: no-repeat;
+  background-position: center;
   background-size: cover;
   background-attachment: fixed;
-  background-position: center;
 }
 </style>

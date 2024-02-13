@@ -75,6 +75,7 @@ const password = ref("");
 
   &:hover {
     @apply bg-primary-300 bg-opacity-20;
+
     svg {
       @apply fill-primary-400;
     }

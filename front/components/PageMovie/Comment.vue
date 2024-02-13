@@ -21,5 +21,3 @@ const props = defineProps({
     </aside>
   </div>
 </template>
-
-<style lang="scss" module></style>

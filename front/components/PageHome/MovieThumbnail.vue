@@ -31,22 +31,22 @@ const props = defineProps({
 </template>
 
 <style lang="scss" module>
+.overlay {
+  @apply bg-black bg-opacity-50 transition-all duration-300;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  content: "";
+}
+
 .link:hover {
   .overlay {
     opacity: 100;
   }
-}
-.overlay {
-  @apply bg-black bg-opacity-50 transition-all duration-300;
-
-  content: "";
-  position: absolute;
-  opacity: 0;
-
-  z-index: 10;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
 }
 </style>

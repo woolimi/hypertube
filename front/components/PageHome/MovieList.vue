@@ -24,7 +24,7 @@ defineProps({
 <style lang="scss" module>
 .gridContainer {
   display: grid;
-  gap: 1rem;
   grid-template-columns: repeat(auto-fill, minmax(200px, auto));
+  gap: 1rem;
 }
 </style>
