@@ -6,12 +6,16 @@ defineProps({
     type: Array,
     default: () => [],
   },
+  title: {
+    type: String,
+    default: "",
+  },
 });
 </script>
 
 <template>
   <section class="mx-auto max-w-[960px] px-4 py-10">
-    <h2 class="mb-3 text-3xl font-bold text-primary-400">Movies</h2>
+    <h2 class="mb-3 text-3xl font-bold text-primary-400">{{ title }}</h2>
 
     <ul :class="$style.gridContainer">
       <li v-for="(item, idx) in items" :key="idx" class="h-full w-full">
