@@ -21,6 +21,6 @@ const movies = ref(
 <template>
   <main class="min-h-[calc(100vh-64px)]">
     <Jumbotron />
-    <MovieList :items="movies" />
+    <MovieList :items="movies" title="Movies" />
   </main>
 </template>
