@@ -53,14 +53,14 @@ const password = ref("");
         <form class="flex max-w-[450px] flex-col gap-2">
           <BaseInput v-model="username" type="text" label="username" />
           <BaseInput v-model="password" type="password" label="Password" />
-          <Button class="mt-4 w-full">Login</Button>
+          <Button class="mt-4 w-full"> Login </Button>
         </form>
 
         <div class="mt-5">
           <p>You don't have an account yet?</p>
           <p>
             Click
-            <BaseLink :to="localePath('auth-register')">here</BaseLink> to
+            <BaseLink :to="localePath('auth-register')"> here </BaseLink> to
             register
           </p>
         </div>

@@ -1,10 +1,10 @@
 <script setup>
 // TODO: Add infinite scroll
 // TODO: Different Thumbnail for watched movies
-const props = defineProps({
+defineProps({
   items: {
     type: Array,
-    default: [],
+    default: () => [],
   },
 });
 </script>
@@ -14,7 +14,7 @@ const props = defineProps({
     <h2 class="mb-3 text-3xl font-bold text-primary-400">Movies</h2>
 
     <ul :class="$style.gridContainer">
-      <li v-for="item in items" class="h-full w-full">
+      <li v-for="(item, idx) in items" :key="idx" class="h-full w-full">
         <MovieThumbnail :item="item" />
       </li>
     </ul>

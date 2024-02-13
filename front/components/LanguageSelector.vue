@@ -1,5 +1,6 @@
 <script setup>
 import { onClickOutside } from "@vueuse/core";
+
 import EnFlag from "~/assets/images/en.svg";
 import FrFlag from "~/assets/images/fr.svg";
 
@@ -25,14 +26,14 @@ onClickOutside(target, () => {
 </script>
 
 <template>
-  <div class="relative" ref="target">
+  <div ref="target" class="relative">
     <Button rounded text @click.stop="toggleDropdown">
       <component :is="currentLangFlag" class="h-6 w-6 fill-primary-400" />
     </Button>
 
     <ul
-      :class="$style.dropdown"
       v-if="showDropdown"
+      :class="$style.dropdown"
       class="absolute left-0 top-full flex flex-col gap-1 rounded-lg bg-white p-1 text-black"
     >
       <li v-for="option in options" :key="option.value">

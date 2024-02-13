@@ -1,10 +1,10 @@
 <script setup>
-import { pipe, range, map, toArray } from "@fxts/core";
+import { map, pipe, range, toArray } from "@fxts/core";
 
 const movies = ref(
   pipe(
     range(20),
-    map((_) => ({
+    map(() => ({
       image: "/thumbnail.jpeg",
       title: "Don't look up",
       description:

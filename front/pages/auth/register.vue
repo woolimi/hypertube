@@ -1,6 +1,4 @@
-<script setup>
-const modelValue = ref();
-</script>
+<script setup></script>
 
 <template>
   <main>register</main>
