@@ -1,7 +1,13 @@
 version: '3.8'
 
 services:
-  db:
-    image: mysql:latest
-    ports: ['3306:3306']
-    env_file: .env
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - 27017:27017
+    restart: always
+    environment:
+      # MONGO_INITDB_ROOT_USERNAME: root
+      # MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: hypertube #to put to .env

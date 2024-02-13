@@ -6,6 +6,29 @@ const password = ref("");
 const firstName = ref("");
 const lastName = ref("");
 const email = ref("");
+
+const handleOnSubmit = () => {
+
+  const userInfo = {
+    username:username.value,
+    password:password.value,
+    firstName:firstName.value,
+    lastName:lastName.value,
+    email:email.value,
+  };
+
+  fetch('http://localhost:5000/users', {
+    method:'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ ...userInfo })
+
+  }).then(res => {
+    console.log(res);
+  });
+
+}
 </script>
 
 <template>
@@ -41,7 +64,7 @@ const email = ref("");
       </div>
 
       <section class="flex w-full flex-col text-center">
-        <form class="grid max-w-[450px] gap-3">
+        <form class="grid max-w-[450px] gap-3" @submit.prevent="handleOnSubmit">
           <BaseInput
             v-model="firstName"
             type="text"
@@ -73,7 +96,7 @@ const email = ref("");
             label="Password"
             autocomplete="current-password"
           />
-          <Button class="mt-4 w-full sm:col-span-2">Register</Button>
+          <Button class="mt-4 w-full sm:col-span-2" type="submit">Register</Button>
         </form>
       </section>
     </div>
