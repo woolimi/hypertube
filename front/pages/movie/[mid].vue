@@ -74,8 +74,8 @@ const comments = computed(() => data.value?.comments ?? []);
           <p class="inline-flex flex-wrap gap-1">
             <span
               v-for="g in movie.genre"
-              class="rounded-[12px] bg-primary-400 px-3 py-1 text-sm font-semibold text-black"
               :key="g"
+              class="rounded-[12px] bg-primary-400 px-3 py-1 text-sm font-semibold text-black"
             >
               {{ g }}
             </span>

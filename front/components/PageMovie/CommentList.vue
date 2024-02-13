@@ -1,8 +1,8 @@
 <script setup>
-const props = defineProps({
+defineProps({
   items: {
     type: Array,
-    default: [],
+    default: () => [],
   },
 });
 </script>
@@ -13,9 +13,13 @@ const props = defineProps({
       Comments <span class="text-xl text-white">({{ items.length }})</span>
     </h2>
     <LeaveComment />
-    <div v-for="item in items" :item="item">
+    <div v-for="(item, idx) in items" :key="idx" :item="item">
       <Comment :item="item" />
-      <SubComment v-for="subItem in item.comments" :item="subItem" />
+      <SubComment
+        v-for="(subItem, idx2) in item.comments"
+        :key="idx2"
+        :item="subItem"
+      />
     </div>
   </section>
 </template>

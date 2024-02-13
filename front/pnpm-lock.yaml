@@ -43,6 +43,9 @@ devDependencies:
   '@nuxtjs/i18n':
     specifier: ^8.1.0
     version: 8.1.0(rollup@4.10.0)(vue@3.4.18)
+  '@vue/eslint-config-prettier':
+    specifier: ^9.0.0
+    version: 9.0.0(eslint@8.56.0)(prettier@3.2.5)
   '@vue/eslint-config-typescript':
     specifier: ^12.0.0
     version: 12.0.0(eslint-plugin-vue@9.21.1)(eslint@8.56.0)(typescript@5.3.3)
@@ -2259,6 +2262,20 @@ packages:
 
   /@vue/devtools-api@6.5.1:
     resolution: {integrity: sha512-+KpckaAQyfbvshdDW5xQylLni1asvNSGme1JFs8I1+/H5pHEhqUKMEQD/qn3Nx5+/nycBq11qAEi8lk+LXI2dA==}
+
+  /@vue/eslint-config-prettier@9.0.0(eslint@8.56.0)(prettier@3.2.5):
+    resolution: {integrity: sha512-z1ZIAAUS9pKzo/ANEfd2sO+v2IUalz7cM/cTLOZ7vRFOPk5/xuRKQteOu1DErFLAh/lYGXMVZ0IfYKlyInuDVg==}
+    peerDependencies:
+      eslint: '>= 8.0.0'
+      prettier: '>= 3.0.0'
+    dependencies:
+      eslint: 8.56.0
+      eslint-config-prettier: 9.1.0(eslint@8.56.0)
+      eslint-plugin-prettier: 5.1.3(eslint-config-prettier@9.1.0)(eslint@8.56.0)(prettier@3.2.5)
+      prettier: 3.2.5
+    transitivePeerDependencies:
+      - '@types/eslint'
+    dev: true
 
   /@vue/eslint-config-typescript@12.0.0(eslint-plugin-vue@9.21.1)(eslint@8.56.0)(typescript@5.3.3):
     resolution: {integrity: sha512-StxLFet2Qe97T8+7L8pGlhYBBr8Eg05LPuTDVopQV6il+SK6qqom59BA/rcFipUef2jD8P2X44Vd8tMFytfvlg==}
