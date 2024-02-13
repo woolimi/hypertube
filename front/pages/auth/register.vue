@@ -7,7 +7,7 @@ const firstName = ref("");
 const lastName = ref("");
 const email = ref("");
 
-const handleOnSubmit = () => {
+const handleOnSubmit = async () => {
 
   const userInfo = {
     username:username.value,
@@ -17,16 +17,20 @@ const handleOnSubmit = () => {
     email:email.value,
   };
 
-  fetch('http://localhost:5000/users', {
-    method:'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ ...userInfo })
+  // Maybe use axios and helper to implement for api call
+  // This is a only test to see if db is correctly implemented in backend
+  try {
+    await fetch('http://localhost:5000/users', {
+      method:'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ ...userInfo })
+    })
+  } catch (e) {
+    console.error(e);
+  }
 
-  }).then(res => {
-    console.log(res);
-  });
 
 }
 </script>
