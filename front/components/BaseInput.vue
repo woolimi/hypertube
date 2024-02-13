@@ -16,7 +16,11 @@ const props = defineProps({
   },
   placeholder: {
     type: String,
-    default: "text",
+    default: undefined,
+  },
+  autocomplete: {
+    type: String,
+    default: undefined,
   },
 });
 const emit = defineEmits(["update:modelValue"]);
@@ -32,6 +36,7 @@ const id = useIdStore().get();
       v-model="modelValue"
       :type="type"
       :placeholder="placeholder"
+      :autocomplete="autocomplete"
     />
   </div>
 </template>

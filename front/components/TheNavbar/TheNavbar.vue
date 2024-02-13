@@ -1,5 +1,6 @@
 <script setup>
 const localePath = useLocalePath();
+const { isLoggedIn } = storeToRefs(useUserStore());
 </script>
 
 <template>
@@ -20,9 +21,8 @@ const localePath = useLocalePath();
       </NuxtLink>
 
       <div>
-        <NuxtLink :to="localePath('auth-login')">
-          <Button rounded text icon="pi pi-user" aria-label="User Login" />
-        </NuxtLink>
+        <ProfileSelector v-if="isLoggedIn" />
+        <LoginSelector v-else />
       </div>
     </div>
   </nav>

@@ -1,3 +1,4 @@
 export const useUserStore = defineStore("user", () => {
-  return {};
+  const isLoggedIn = ref(false);
+  return { isLoggedIn };
 });

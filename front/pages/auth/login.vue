@@ -1,5 +1,5 @@
 <script setup>
-import FtLogo from "~/assets/images/42.svg";
+import FtLogo from "~/assets/icons/42.svg";
 
 const localePath = useLocalePath();
 const username = ref("");
@@ -8,38 +8,24 @@ const password = ref("");
 
 <template>
   <main
-    class="flex min-h-[calc(100vh-64px)] justify-center p-4 pt-[112px] lg:p-8 lg:pt-[112px]"
+    class="flex min-h-[calc(100vh-64px)] justify-center bg-slate-800 p-4 pt-[112px] lg:p-8 lg:pt-[112px]"
   >
     <div class="mt-10 flex w-full max-w-[450px] flex-col items-center gap-4">
       <h1 class="text-center text-2xl font-[800] md:text-4xl lg:mb-10">
-        LOGIN TO GET ACCESS
+        Login to get access
       </h1>
 
-      <section>
+      <section class="mt-10">
         <div class="flex items-center justify-center gap-2">
-          <NuxtLink
-            :to="localePath('index')"
-            aria-label="42 login"
-            :class="$style.social"
-          >
-            <FtLogo class="ftLogo h-8 w-8" />
-          </NuxtLink>
-          <Button
-            class="shrink-0 text-[24px]"
-            icon="pi pi-google"
-            rounded
-            raised
-            text
-            aria-label="Google login"
-          />
-          <Button
-            icon="pi pi-github"
-            class="shrink-0 text-[24px]"
-            rounded
-            raised
-            text
-            aria-label="Github login"
-          />
+          <SocialButton aria-label="42 login" class="h-[56px] w-[56px] !p-0">
+            <FtLogo class="h-8 w-8" />
+          </SocialButton>
+          <SocialButton aria-label="Google login">
+            <i class="pi pi-google text-[24px]"></i>
+          </SocialButton>
+          <SocialButton aria-label="Github login">
+            <i class="pi pi-github text-[24px]"></i>
+          </SocialButton>
         </div>
       </section>
 
@@ -51,8 +37,18 @@ const password = ref("");
 
       <section class="flex w-full flex-col text-center">
         <form class="flex max-w-[450px] flex-col gap-2">
-          <BaseInput v-model="username" type="text" label="username" />
-          <BaseInput v-model="password" type="password" label="Password" />
+          <BaseInput
+            v-model="username"
+            type="text"
+            label="Username"
+            autocomplete="username"
+          />
+          <BaseInput
+            v-model="password"
+            type="password"
+            label="Password"
+            autocomplete="current-password"
+          />
           <Button class="mt-4 w-full">Login </Button>
         </form>
 
@@ -68,17 +64,3 @@ const password = ref("");
     </div>
   </main>
 </template>
-
-<style lang="scss" module>
-.social {
-  @apply rounded-[50%] fill-primary-400 p-3;
-
-  &:hover {
-    @apply bg-primary-300 bg-opacity-20;
-
-    svg {
-      @apply fill-primary-400;
-    }
-  }
-}
-</style>

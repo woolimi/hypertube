@@ -1,19 +1,15 @@
 <script setup>
-import { onClickOutside } from "@vueuse/core";
-
-import EnFlag from "~/assets/icons/en.svg";
-import FrFlag from "~/assets/icons/fr.svg";
-
-const switchLocalePath = useSwitchLocalePath();
-const { locale } = useI18n();
-const options = [
-  { name: "English", value: "en" },
-  { name: "Français", value: "fr" },
-];
-const currentLangFlag = computed(() => {
-  return locale.value === "fr" ? FrFlag : EnFlag;
-});
-
+const localePath = useLocalePath();
+const options = ref([
+  {
+    name: "Login",
+    value: "auth-login",
+  },
+  {
+    name: "Register",
+    value: "auth-register",
+  },
+]);
 const showDropdown = ref(false);
 const toggleDropdown = () => {
   showDropdown.value = !showDropdown.value;
@@ -27,18 +23,21 @@ onClickOutside(target, () => {
 
 <template>
   <div ref="target" class="relative">
-    <Button rounded text @click.stop="toggleDropdown">
-      <component :is="currentLangFlag" class="h-6 w-6 fill-primary-400" />
-    </Button>
-
+    <Button
+      rounded
+      text
+      icon="pi pi-user"
+      aria-label="User Login"
+      @click.stop="toggleDropdown"
+    />
     <ul
       v-if="showDropdown"
       :class="$style.dropdown"
-      class="absolute left-0 top-full flex min-w-[100px] flex-col gap-1 rounded-lg bg-white p-1 text-black"
+      class="absolute right-0 top-[calc(100%+10px)] flex min-w-[100px] flex-col gap-1 rounded-lg bg-white p-1 text-black"
     >
       <li v-for="option in options" :key="option.value">
         <NuxtLink
-          :to="switchLocalePath(option.value)"
+          :to="localePath(option.value)"
           class="flex w-full rounded-lg px-2 py-1 hover:bg-surface-200"
           @click.stop="() => (showDropdown = false)"
         >
@@ -48,11 +47,12 @@ onClickOutside(target, () => {
     </ul>
   </div>
 </template>
+
 <style module>
 .dropdown::before {
   position: absolute;
+  right: 15px;
   bottom: 100%;
-  left: 15px;
   display: block;
   width: 0;
   height: 0;

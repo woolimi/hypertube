@@ -10,7 +10,7 @@ defineProps({
 
 <template>
   <NuxtLink
-    :to="localePath({ name: 'movie-mid', params: { mid: item.mid } })"
+    :to="localePath({ name: 'movies-mid', params: { mid: item.mid } })"
     class="relative"
     :class="$style.link"
   >
