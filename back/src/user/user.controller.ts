@@ -6,13 +6,18 @@ import {
   Param,
   Put,
   Delete,
+  Res,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
+import { AuthService } from 'src/auth/auth.service';
 
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private authService: AuthService,
+    private readonly userService: UserService,
+  ) {}
 
   @Get()
   async findAll(): Promise<User[]> {
@@ -26,9 +31,20 @@ export class UserController {
 
   @Post()
   //TODO: to change using dto maybe?
-  async create(@Body() user: User): Promise<User> {
-    console.log(user);
-    return this.userService.create(user);
+  async create(
+    @Body() user: User,
+    @Res({ passthrough: true }) res,
+  ): Promise<void> {
+    const createdUser = await this.userService.create(user);
+    const { accessToken, ...accessOption } =
+      this.authService.getCookieWithJwtAccessToken(createdUser.id);
+    const { refreshToken, ...refreshOption } =
+      this.authService.getCookieWithJwtRefreshToken(createdUser.id);
+
+    res.cookie('accessToken', accessToken, accessOption);
+    res.cookie('refreshToken', refreshToken, refreshOption);
+    res.status(201);
+    res.send('User created successfully');
   }
 
   @Put(':id')
