@@ -14,6 +14,7 @@ import { AuthService } from 'src/auth/auth.service';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UserDto } from './dto/user.dto';
 
+@ApiTags('User')
 @Controller('users')
 export class UserController {
   constructor(
