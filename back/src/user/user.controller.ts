@@ -11,19 +11,24 @@ import {
 import { UserService } from './user.service';
 import { User } from './user.entity';
 import { AuthService } from 'src/auth/auth.service';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { UserDto } from './dto/user.dto';
 
 @Controller('users')
 export class UserController {
   constructor(
     private authService: AuthService,
     private readonly userService: UserService,
-  ) {}
+  ) { }
 
+  @ApiOperation({ summary: '전체 유저 확인' })
   @Get()
   async findAll(): Promise<User[]> {
     return this.userService.findAll();
   }
 
+  @ApiOkResponse({ type: UserDto })
+  @ApiOperation({ summary: '유저 확인' })
   @Get(':id')
   async findOne(@Param('id') id: number): Promise<User> {
     return this.userService.findOne(id);
