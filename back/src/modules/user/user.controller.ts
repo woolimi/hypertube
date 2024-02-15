@@ -9,7 +9,6 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
-import { ObjectId } from 'mongodb';
 
 @Controller('users')
 export class UserController {
@@ -21,7 +20,7 @@ export class UserController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: ObjectId): Promise<User> {
+  async findOne(@Param('id') id: number): Promise<User> {
     return this.userService.findOne(id);
   }
 
@@ -33,12 +32,12 @@ export class UserController {
   }
 
   @Put(':id')
-  async update(@Param('id') id: ObjectId, @Body() user: User): Promise<User> {
+  async update(@Param('id') id: number, @Body() user: User): Promise<User> {
     return this.userService.update(id, user);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: ObjectId): Promise<void> {
+  async remove(@Param('id') id: number): Promise<void> {
     return this.userService.remove(id);
   }
 }
