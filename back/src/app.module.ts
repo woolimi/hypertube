@@ -7,9 +7,9 @@ import { UserModule } from './modules/user/user.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      type: 'mongodb',
+      type: 'mysql',
       host: 'localhost',
-      port: 27017,
+      port: 3306,
       database: 'hypertube',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
