@@ -6,33 +6,25 @@ const password = ref("");
 const firstName = ref("");
 const lastName = ref("");
 const email = ref("");
+const axios = useAxios();
 
 const handleOnSubmit = async () => {
-
   const userInfo = {
-    username:username.value,
-    password:password.value,
-    firstName:firstName.value,
-    lastName:lastName.value,
-    email:email.value,
+    username: username.value,
+    password: password.value,
+    firstName: firstName.value,
+    lastName: lastName.value,
+    email: email.value,
   };
 
   // Maybe use axios and helper to implement for api call
   // This is a only test to see if db is correctly implemented in backend
   try {
-    await fetch('http://localhost:5000/users', {
-      method:'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ ...userInfo })
-    })
+    await axios.post("/users", { ...userInfo });
   } catch (e) {
     console.error(e);
   }
-
-
-}
+};
 </script>
 
 <template>
@@ -100,7 +92,9 @@ const handleOnSubmit = async () => {
             label="Password"
             autocomplete="current-password"
           />
-          <Button class="mt-4 w-full sm:col-span-2" type="submit">Register</Button>
+          <Button class="mt-4 w-full sm:col-span-2" type="submit"
+            >Register</Button
+          >
         </form>
       </section>
     </div>

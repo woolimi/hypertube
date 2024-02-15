@@ -18,7 +18,7 @@ module.exports = {
     sourceType: "module",
   },
   rules: {
-    "no-console": "warn",
+    "no-console": "off",
     "no-alert": "error",
     "vue/no-v-html": "error",
     "vue/multi-word-component-names": "off",
