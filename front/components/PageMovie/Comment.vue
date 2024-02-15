@@ -20,6 +20,15 @@ defineProps({
     <aside>
       <p class="text-primary-400">{{ item.username }}</p>
       <p>{{ item.content }}</p>
+
+      <div class="p-buttonset flex justify-end">
+        <button severity="info" class="rounded-l-md bg-green-600 px-3 py-2">
+          <i class="pi pi-pencil"></i>
+        </button>
+        <button severity="danger" class="rounded-r-md bg-red-600 px-3 py-2">
+          <i class="pi pi-trash"></i>
+        </button>
+      </div>
     </aside>
   </div>
 </template>
