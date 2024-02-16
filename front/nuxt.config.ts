@@ -1,6 +1,10 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import dotenv from "dotenv";
 import path from "path";
 
+dotenv.config({ path: "../.env" });
+
+console.log(process.env);
 export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ["~/assets/styles/main.scss", "primeicons/primeicons.css"],
