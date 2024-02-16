@@ -4,8 +4,8 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev",
-    "preview": "nuxt preview",
+    "dev": "nuxi dev",
+    "preview": "nuxi preview",
     "postinstall": "nuxt prepare",
     "lint": "eslint './**/*.{js,ts,vue}' --fix",
     "stylelint": "stylelint './**/*.{scss,css,vue}' --fix",

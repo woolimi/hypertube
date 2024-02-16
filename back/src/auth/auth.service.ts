@@ -11,7 +11,7 @@ export class AuthService {
 
   getCookieWithJwtAccessToken(userId: number) {
     const payload = { userId };
-    const expire = parseInt(process.env.JWT_ACCESS_DURATION) * 1000 * 60;
+    const expire = parseInt(process.env.JWT_ACCESS_DURATION) * 60;
     const token = this.jwtService.sign(payload, {
       secret: process.env.JWT_SECRET,
       expiresIn: `${expire}s`,
@@ -20,13 +20,13 @@ export class AuthService {
       accessToken: token,
       domain: 'localhost',
       path: '/',
-      // httpOnly: true,
-      maxAge: expire,
+      httpOnly: true,
+      expires: new Date(Date.now() + 1000 * expire),
     };
   }
   getCookieWithJwtRefreshToken(userId: number) {
     const payload = { userId };
-    const expire = parseInt(process.env.JWT_REFRESH_DURATION) * 1000 * 60;
+    const expire = parseInt(process.env.JWT_REFRESH_DURATION) * 60;
     const token = this.jwtService.sign(payload, {
       secret: process.env.JWT_SECRET,
       expiresIn: `${expire}s`,
@@ -35,8 +35,8 @@ export class AuthService {
       refreshToken: token,
       domain: 'localhost',
       path: '/',
-      // httpOnly: true,
-      maxAge: expire,
+      httpOnly: true,
+      expires: new Date(Date.now() + 1000 * expire),
     };
   }
 
@@ -46,14 +46,14 @@ export class AuthService {
         accessOption: {
           domain: 'localhost',
           path: '/',
-          // httpOnly: true,
-          maxAge: 0,
+          httpOnly: true,
+          expires: new Date(),
         },
         refreshOption: {
           domain: 'localhost',
           path: '/',
-          // httpOnly: true,
-          maxAge: 0,
+          httpOnly: true,
+          expires: new Date(),
         },
       },
     ];

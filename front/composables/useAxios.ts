@@ -11,6 +11,6 @@ export const useAxios = () => {
         ? `Bearer ${accessToken.value}`
         : undefined,
     },
-    // withCredentials: true,
+    withCredentials: true,
   });
 };

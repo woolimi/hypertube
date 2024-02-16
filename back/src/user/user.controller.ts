@@ -38,8 +38,8 @@ export class UserController {
   @Post()
   //TODO: to change using dto maybe?
   async create(
-    @Body() user: User,
     @Res({ passthrough: true }) res,
+    @Body() user: User,
   ): Promise<void> {
     const createdUser = await this.userService.create(user);
     const { accessToken, ...accessOption } =
@@ -50,7 +50,14 @@ export class UserController {
     res.cookie('accessToken', accessToken, accessOption);
     res.cookie('refreshToken', refreshToken, refreshOption);
     res.status(201);
-    res.send('User created successfully');
+    res.json({
+      accessToken: accessToken,
+      id: createdUser.id,
+      username: createdUser.username,
+      email: createdUser.email,
+      firstName: createdUser.firstName,
+      lastName: createdUser.lastName,
+    });
   }
 
   @Put(':id')
