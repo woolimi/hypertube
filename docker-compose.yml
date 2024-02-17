@@ -2,7 +2,7 @@ version: "3.8" # Updated to the latest version
 services:
   db:
     image: mysql:latest
-    container_name:  "db-postgres"
+    container_name:  "db-mysql"
     environment:
       - TZ=Asia/Seoul
     env_file:
@@ -11,14 +11,12 @@ services:
       - "3306:3306"
     networks:
       - default
-    aliases:
-      - db-postgres
   back:
     container_name: "back-nestjs"
     env_file:
      - ./.env
     ports:
-      - "5000:5000"
+      - "3005:3005"
     build:
       context: .
       dockerfile: Dockerfile.back
@@ -26,22 +24,18 @@ services:
       - db
     networks:
       - default
-    aliases:
-      - back-nestjs
     restart: unless-stopped
-  front:
-    container_name: "front-nextjs"
-    build:
-      context: .
-      dockerfile: Dockerfile.front
-    env_file:
-     - ./.env
-    ports:
-      - "3000:3000"
-    networks:
-      - default
-    aliases:
-      - front-nextjs
+  # front:
+  #   container_name: "front-nextjs"
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.front
+  #   env_file:
+  #    - ./.env
+  #   ports:
+  #     - "3000:3000"
+  #   networks:
+  #     - default
 
 networks:
   default:

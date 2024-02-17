@@ -10,6 +10,7 @@ async function bootstrap() {
       credentials: true,
     },
   });
+
   const config = new DocumentBuilder()
     .setTitle('Hypertube API')
     .setDescription('API Documentation for Hypertube.')
@@ -20,6 +21,6 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
 
   app.use(cookieParser());
-  await app.listen(5000);
+  await app.listen(3005);
 }
 bootstrap();
