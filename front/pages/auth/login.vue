@@ -21,6 +21,8 @@ const onLogin = async () => {
     console.error(e.message);
   }
 };
+const onGoogleLogin = () =>
+  (window.location.href = `${useRuntimeConfig().public.BACK_HOST}/auth/google/login`);
 </script>
 
 <template>
@@ -37,7 +39,7 @@ const onLogin = async () => {
           <SocialButton aria-label="42 login" class="h-[56px] w-[56px] !p-0">
             <FtLogo class="h-8 w-8" />
           </SocialButton>
-          <SocialButton aria-label="Google login">
+          <SocialButton aria-label="Google login" @click="onGoogleLogin">
             <i class="pi pi-google text-[24px]"></i>
           </SocialButton>
           <SocialButton aria-label="Github login">

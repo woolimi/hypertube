@@ -32,6 +32,14 @@ export class UserService {
     });
   }
 
+  async findOneByEmail(email: string): Promise<User> {
+    return this.userRepository.findOne({
+      where: {
+        email,
+      },
+    });
+  }
+
   async create(user: CreateUserDto): Promise<User> {
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(user.password, salt);

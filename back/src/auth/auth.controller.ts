@@ -6,12 +6,14 @@ import {
   UseGuards,
   UnauthorizedException,
   Body,
+  Get,
 } from '@nestjs/common';
 import { LocalAuthGuard } from './local-auth.guard';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { UserService } from 'src/user/user.service';
 import { CreateUserDto } from 'src/auth/dto/create-user.dto';
+import { GoogleAuthGuard } from './google-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -110,5 +112,16 @@ export class AuthController {
     delete userData.refreshToken;
 
     return { ...userData, accessToken };
+  }
+
+  @Get('google/login')
+  @UseGuards(GoogleAuthGuard)
+  async googleLogin() {}
+
+  @Get('google/redirect')
+  @UseGuards(GoogleAuthGuard)
+  async googleCallback(@Request() req, @Response({ passthrough: true }) res) {
+    this.login(req, res);
+    res.redirect(process.env.FRONT_HOST);
   }
 }

@@ -50,9 +50,15 @@ export class User {
   @Column()
   password: string;
 
+  @Column({ default: '' })
+  image: string;
+
   @Column({ default: false })
   emailVerified: boolean;
 
   @Column({ default: '' })
   refreshToken: string;
+
+  @Column({ default: 'local' })
+  provider: string;
 }

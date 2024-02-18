@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
+import { Profile } from 'passport-google-oauth20';
 
 @Injectable()
 export class AuthService {
@@ -20,6 +21,29 @@ export class AuthService {
       const { password, ...rest } = user;
       return rest;
     }
+    return null;
+  }
+
+  async validateGoogleUser(profile: Profile) {
+    const { name, emails, photos, displayName } = profile;
+    const email = emails.filter((e) => e.verified)[0]?.value;
+
+    if (!email) return null;
+    const user = await this.userService.findOneByEmail(email);
+
+    if (!user) {
+      const newUser = await this.userService.create({
+        firstName: name.givenName,
+        lastName: name.familyName,
+        username: displayName,
+        email,
+        image: photos[0].value,
+        provider: 'google',
+        password: new Date().toString().slice(10, 30),
+      });
+      return newUser;
+    }
+
     return null;
   }
 
