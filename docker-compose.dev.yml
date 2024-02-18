@@ -17,3 +17,11 @@ services: # 이 항목 밑에 실행하려는 컨테이너 들을 정의
   db:
     volumes:
       - ./db:/var/lib/mysql
+  nodetest:
+    build:
+      target: development
+    ports:
+      - "24679:24678"
+    volumes:
+      - ./nodetest:/usr/src/app
+      - /usr/src/app/node_modules

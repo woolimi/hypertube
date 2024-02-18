@@ -36,6 +36,17 @@ services:
       - "3000:3000"
     networks:
       - default
+  nodetest:
+    container_name: "nodetest"
+    build:
+      context: .
+      dockerfile: Dockerfile.nodetest
+    env_file:
+    - ./.env
+    ports:
+      - "3099:3000"
+    networks:
+      - default
 
 networks:
   default:
