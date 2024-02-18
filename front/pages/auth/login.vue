@@ -23,6 +23,8 @@ const onLogin = async () => {
 };
 const onGoogleLogin = () =>
   (window.location.href = `${useRuntimeConfig().public.BACK_HOST}/auth/google/login`);
+const onFtLogin = () =>
+  (window.location.href = `${useRuntimeConfig().public.BACK_HOST}/auth/ft/login`);
 </script>
 
 <template>
@@ -36,7 +38,11 @@ const onGoogleLogin = () =>
 
       <section class="mt-10">
         <div class="flex items-center justify-center gap-2">
-          <SocialButton aria-label="42 login" class="h-[56px] w-[56px] !p-0">
+          <SocialButton
+            aria-label="42 login"
+            class="h-[56px] w-[56px] !p-0"
+            @click="onFtLogin"
+          >
             <FtLogo class="h-8 w-8" />
           </SocialButton>
           <SocialButton aria-label="Google login" @click="onGoogleLogin">

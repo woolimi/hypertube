@@ -10,6 +10,7 @@ const onLogout = async () => {
     console.error(error);
   }
 };
+const { userData } = storeToRefs(useUserStore());
 </script>
 
 <template>
@@ -21,7 +22,7 @@ const onLogout = async () => {
       class="flex items-center justify-center"
     >
       <Avatar
-        image="https://i.pravatar.cc/300?u=wpark"
+        :image="userData.image"
         shape="circle"
         class="overflow-hidden"
         size="large"

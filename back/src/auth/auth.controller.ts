@@ -14,6 +14,7 @@ import { JwtAuthGuard } from './jwt-auth.guard';
 import { UserService } from 'src/user/user.service';
 import { CreateUserDto } from 'src/auth/dto/create-user.dto';
 import { GoogleAuthGuard } from './google-auth.guard';
+import { FtAuthGuard } from './ft-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -121,6 +122,17 @@ export class AuthController {
   @Get('google/redirect')
   @UseGuards(GoogleAuthGuard)
   async googleCallback(@Request() req, @Response({ passthrough: true }) res) {
+    this.login(req, res);
+    res.redirect(process.env.FRONT_HOST);
+  }
+
+  @Get('ft/login')
+  @UseGuards(FtAuthGuard)
+  async ftLogin() {}
+
+  @Get('ft/redirect')
+  @UseGuards(FtAuthGuard)
+  async ftCallback(@Request() req, @Response({ passthrough: true }) res) {
     this.login(req, res);
     res.redirect(process.env.FRONT_HOST);
   }

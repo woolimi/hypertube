@@ -3,11 +3,12 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
 
-const email = ref("wpark@student.42.fr");
-const username = ref("wpark");
-const firstName = ref("Woo");
-const lastName = ref("Park");
-const avatar = ref("https://i.pravatar.cc/300?u=wpark");
+const { userData } = storeToRefs(useUserStore());
+const email = ref(userData.value?.email);
+const username = ref(userData.value?.username);
+const firstName = ref(userData.value?.firstName);
+const lastName = ref(userData.value?.lastName);
+const avatar = ref(userData.value?.image);
 const password = ref("");
 </script>
 <template>

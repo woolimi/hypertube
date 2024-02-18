@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
-import * as bcrypt from 'bcrypt';
+import bcrypt from 'bcrypt';
 import { Profile } from 'passport-google-oauth20';
+import randomstring from 'randomstring';
 
 @Injectable()
 export class AuthService {
@@ -32,10 +33,11 @@ export class AuthService {
     const user = await this.userService.findOneByEmail(email, 'google');
 
     if (!user) {
+      const _username = await this.createUsernameIfDuplicated(displayName);
       const newUser = await this.userService.create({
         firstName: name.givenName,
         lastName: name.familyName,
-        username: displayName,
+        username: _username,
         email,
         image: photos[0].value,
         provider: 'google',
@@ -46,6 +48,42 @@ export class AuthService {
     } else {
       return user;
     }
+  }
+
+  async validateFtUser(profile: Profile) {
+    const { name, emails, _json, username, provider } = profile;
+    const email = emails[0]?.value;
+    const image = (_json as any).image.link;
+
+    if (!email) return null;
+    const user = await this.userService.findOneByEmail(email, provider);
+
+    if (!user) {
+      const _username = await this.createUsernameIfDuplicated(username);
+      console.log(username, _username);
+      const newUser = await this.userService.create({
+        firstName: name.givenName,
+        lastName: name.familyName,
+        username: _username,
+        email,
+        image: image,
+        provider: provider,
+        password: new Date().toString().slice(10, 30),
+        emailVerified: true,
+      });
+      return newUser;
+    } else {
+      return user;
+    }
+  }
+
+  async createUsernameIfDuplicated(username: string) {
+    const isDuplicated = await this.userService.findOneByUsername(username);
+    if (isDuplicated) {
+      const suffix = randomstring.generate(4);
+      return `${username}_${suffix}`;
+    }
+    return username;
   }
 
   getCookieWithJwtAccessToken(userId: string) {
