@@ -15,6 +15,7 @@ import { UserService } from 'src/user/user.service';
 import { CreateUserDto } from 'src/auth/dto/create-user.dto';
 import { GoogleAuthGuard } from './google-auth.guard';
 import { FtAuthGuard } from './ft-auth.guard';
+import { GithubAuthGuard } from './github-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -133,6 +134,17 @@ export class AuthController {
   @Get('ft/redirect')
   @UseGuards(FtAuthGuard)
   async ftCallback(@Request() req, @Response({ passthrough: true }) res) {
+    this.login(req, res);
+    res.redirect(process.env.FRONT_HOST);
+  }
+
+  @Get('github/login')
+  @UseGuards(GithubAuthGuard)
+  async githubLogin() {}
+
+  @Get('github/redirect')
+  @UseGuards(GithubAuthGuard)
+  async githubCallback(@Request() req, @Response({ passthrough: true }) res) {
     this.login(req, res);
     res.redirect(process.env.FRONT_HOST);
   }

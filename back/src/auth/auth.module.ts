@@ -8,6 +8,7 @@ import { LocalStrategy } from './local.strategy';
 import { JwtStrategy } from './jwt.strategy';
 import { GoogleStrategy } from './google.strategy';
 import { FtStrategy } from './ft.strategy';
+import { GithubStrategy } from './github.strategy';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { FtStrategy } from './ft.strategy';
     JwtStrategy,
     GoogleStrategy,
     FtStrategy,
+    GithubStrategy,
   ],
   exports: [],
 })

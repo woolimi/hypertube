@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
 import bcrypt from 'bcrypt';
-import { Profile } from 'passport-google-oauth20';
+import { Profile as GoogleProfile } from 'passport-google-oauth20';
+import { Profile as GithubProfile } from 'passport-github2';
 import randomstring from 'randomstring';
 
 @Injectable()
@@ -25,12 +26,12 @@ export class AuthService {
     return null;
   }
 
-  async validateGoogleUser(profile: Profile) {
-    const { name, emails, photos, displayName } = profile;
+  async validateGoogleUser(profile: GoogleProfile) {
+    const { name, emails, photos, displayName, provider } = profile;
     const email = emails.filter((e) => e.verified)[0]?.value;
 
     if (!email) return null;
-    const user = await this.userService.findOneByEmail(email, 'google');
+    const user = await this.userService.findOneByEmail(email, provider);
 
     if (!user) {
       const _username = await this.createUsernameIfDuplicated(displayName);
@@ -40,7 +41,7 @@ export class AuthService {
         username: _username,
         email,
         image: photos[0].value,
-        provider: 'google',
+        provider,
         password: randomstring.generate(20),
         emailVerified: true,
       });
@@ -50,7 +51,35 @@ export class AuthService {
     }
   }
 
-  async validateFtUser(profile: Profile) {
+  async validateGithubUser(profile: GithubProfile) {
+    const { username, name, emails, photos, provider, displayName } = profile;
+    const email = emails[0].value;
+    const image = photos[0].value;
+
+    if (!email) return null;
+    const user = await this.userService.findOneByEmail(email, provider);
+
+    if (!user) {
+      const _username = await this.createUsernameIfDuplicated(username);
+      const [firstName, lastName] = displayName?.split(' ');
+      const newUser = await this.userService.create({
+        firstName: firstName || '',
+        lastName: lastName || '',
+        username: _username,
+        email,
+        image,
+        provider,
+        password: randomstring.generate(20),
+        emailVerified: true,
+      });
+      return newUser;
+    } else {
+      return user;
+    }
+  }
+
+  // 42 passport doesn't export Profile type...
+  async validateFtUser(profile: GoogleProfile) {
     const { name, emails, _json, username, provider } = profile;
     const email = emails[0]?.value;
     const image = (_json as any).image.link;

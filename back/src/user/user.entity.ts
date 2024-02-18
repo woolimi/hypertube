@@ -13,9 +13,8 @@ export class User {
   @ApiProperty({
     description: 'First Name',
     example: 'marvin',
-    required: true,
   })
-  @Column()
+  @Column({ default: '' })
   firstName: string;
 
   @ApiProperty({
@@ -23,7 +22,7 @@ export class User {
     example: 'gaye',
     required: true,
   })
-  @Column()
+  @Column({ default: '' })
   lastName: string;
 
   @ApiProperty({

@@ -5,7 +5,7 @@ const localePath = useLocalePath();
 const username = ref("");
 const password = ref("");
 const axios = useAxios();
-const { doLogin } = useAuth();
+const { doLogin, onGoogleLogin, onGithubLogin, onFtLogin } = useAuth();
 
 const isDisabled = computed(() => !username.value || !password.value);
 const onLogin = async () => {
@@ -21,10 +21,6 @@ const onLogin = async () => {
     console.error(e.message);
   }
 };
-const onGoogleLogin = () =>
-  (window.location.href = `${useRuntimeConfig().public.BACK_HOST}/auth/google/login`);
-const onFtLogin = () =>
-  (window.location.href = `${useRuntimeConfig().public.BACK_HOST}/auth/ft/login`);
 </script>
 
 <template>
@@ -48,7 +44,7 @@ const onFtLogin = () =>
           <SocialButton aria-label="Google login" @click="onGoogleLogin">
             <i class="pi pi-google text-[24px]"></i>
           </SocialButton>
-          <SocialButton aria-label="Github login">
+          <SocialButton aria-label="Github login" @click="onGithubLogin">
             <i class="pi pi-github text-[24px]"></i>
           </SocialButton>
         </div>

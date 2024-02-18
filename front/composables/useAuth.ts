@@ -53,6 +53,14 @@ export const useAuth = () => {
     startRefreshAuth(api);
   };
 
+  const onGoogleLogin = () =>
+    (window.location.href = `${useRuntimeConfig().public.BACK_HOST}/auth/google/login`);
+  const onFtLogin = () =>
+    (window.location.href = `${useRuntimeConfig().public.BACK_HOST}/auth/ft/login`);
+  const onGithubLogin = () => {
+    window.location.href = `${useRuntimeConfig().public.BACK_HOST}/auth/github/login`;
+  };
+
   return {
     refreshToken,
     startRefreshAuth,
@@ -60,5 +68,8 @@ export const useAuth = () => {
     doLogin,
     doLogout,
     doRegister,
+    onGoogleLogin,
+    onFtLogin,
+    onGithubLogin,
   };
 };

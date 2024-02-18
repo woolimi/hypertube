@@ -11,7 +11,7 @@ const firstName = ref("");
 const lastName = ref("");
 const email = ref("");
 const localePath = useLocalePath();
-const auth = useAuth();
+const { doRegister, onGoogleLogin, onGithubLogin, onFtLogin } = useAuth();
 
 // TODO: Validation and show error message
 const handleOnSubmit = async () => {
@@ -24,7 +24,7 @@ const handleOnSubmit = async () => {
   };
 
   try {
-    await auth.doRegister(axios, userInfo);
+    await doRegister(axios, userInfo);
     await navigateTo({ path: localePath("auth-verify-email") });
   } catch (e) {
     console.error(e);
@@ -43,13 +43,17 @@ const handleOnSubmit = async () => {
 
     <section class="mt-3">
       <div class="flex items-center justify-center gap-2">
-        <SocialButton aria-label="42 login" class="h-[56px] w-[56px] !p-0">
+        <SocialButton
+          aria-label="42 register"
+          class="h-[56px] w-[56px] !p-0"
+          @click="onFtLogin"
+        >
           <FtLogo class="h-8 w-8" />
         </SocialButton>
-        <SocialButton aria-label="Google login">
+        <SocialButton aria-label="Google register" @click="onGoogleLogin">
           <i class="pi pi-google text-[24px]"></i>
         </SocialButton>
-        <SocialButton aria-label="Github login">
+        <SocialButton aria-label="Github register" @click="onGithubLogin">
           <i class="pi pi-github text-[24px]"></i>
         </SocialButton>
       </div>
