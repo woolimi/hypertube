@@ -7,7 +7,7 @@ FROM base AS dependencies
 
 WORKDIR /usr/src/app
 COPY ./back/package*.json ./back/pnpm-lock.yaml ./
-RUN pnpm install
+RUN pnpm install --prod=false
 
 FROM base AS build
 

@@ -6,6 +6,14 @@ services: # 이 항목 밑에 실행하려는 컨테이너 들을 정의
     volumes: # 실시간 코드 수정을 위한 volumes 설정
       - ./back:/usr/src/app
       - /usr/src/app/node_modules
+  front:
+    build:
+      target: development
+    ports:
+      - "24678:24678"
+    volumes:
+      - ./front:/usr/src/app
+      - /usr/src/app/node_modules
   db:
     volumes:
       - ./db:/var/lib/mysql

@@ -25,17 +25,17 @@ services:
     networks:
       - default
     restart: unless-stopped
-  # front:
-  #   container_name: "front-nextjs"
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile.front
-  #   env_file:
-  #    - ./.env
-  #   ports:
-  #     - "3000:3000"
-  #   networks:
-  #     - default
+  front:
+    container_name: "front-nuxt"
+    build:
+      context: .
+      dockerfile: Dockerfile.front
+    env_file:
+     - ./.env
+    ports:
+      - "3000:3000"
+    networks:
+      - default
 
 networks:
   default:
