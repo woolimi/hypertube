@@ -32,10 +32,11 @@ export class UserService {
     });
   }
 
-  async findOneByEmail(email: string): Promise<User> {
+  async findOneByEmail(email: string, provider: string): Promise<User> {
     return this.userRepository.findOne({
       where: {
         email,
+        provider,
       },
     });
   }

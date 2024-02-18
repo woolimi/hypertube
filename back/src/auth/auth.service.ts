@@ -29,7 +29,7 @@ export class AuthService {
     const email = emails.filter((e) => e.verified)[0]?.value;
 
     if (!email) return null;
-    const user = await this.userService.findOneByEmail(email);
+    const user = await this.userService.findOneByEmail(email, 'google');
 
     if (!user) {
       const newUser = await this.userService.create({
@@ -40,11 +40,12 @@ export class AuthService {
         image: photos[0].value,
         provider: 'google',
         password: new Date().toString().slice(10, 30),
+        emailVerified: true,
       });
       return newUser;
+    } else {
+      return user;
     }
-
-    return null;
   }
 
   getCookieWithJwtAccessToken(userId: string) {

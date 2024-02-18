@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const useAxios = () => {
-  const baseURL = "http://localhost:5000";
+  const baseURL = useRuntimeConfig().public.BACK_HOST;
   const { userData } = storeToRefs(useUserStore());
 
   return axios.create({

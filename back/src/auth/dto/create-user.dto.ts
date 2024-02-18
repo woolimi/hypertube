@@ -33,4 +33,7 @@ export class CreateUserDto {
 
   @IsOptional()
   provider: string;
+
+  @IsOptional()
+  emailVerified: boolean;
 }
