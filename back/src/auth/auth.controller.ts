@@ -8,14 +8,14 @@ import {
   Body,
   Get,
 } from '@nestjs/common';
-import { LocalAuthGuard } from './local-auth.guard';
+import { LocalAuthGuard } from 'src/guards/local-auth.guard';
 import { AuthService } from './auth.service';
-import { JwtAuthGuard } from './jwt-auth.guard';
+import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { UserService } from 'src/user/user.service';
 import { CreateUserDto } from 'src/auth/dto/create-user.dto';
-import { GoogleAuthGuard } from './google-auth.guard';
-import { FtAuthGuard } from './ft-auth.guard';
-import { GithubAuthGuard } from './github-auth.guard';
+import { GoogleAuthGuard } from 'src/guards/google-auth.guard';
+import { FtAuthGuard } from 'src/guards/ft-auth.guard';
+import { GithubAuthGuard } from 'src/guards/github-auth.guard';
 
 @Controller('auth')
 export class AuthController {
