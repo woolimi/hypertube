@@ -2635,6 +2635,10 @@ packages:
     engines: {node: '>=12'}
     dev: false
 
+  /dummy-package@1.0.0:
+    resolution: {integrity: sha512-I9Cl3EhPd1z3ZxiC4W45zqUkO/Zam1jWs4+KY1DfPka+4B0EZ7/ikWbMHiIohkaZpwjEOP8M3/oohXKVRguTFw==}
+    dev: false
+
   /eastasianwidth@0.2.0:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
 

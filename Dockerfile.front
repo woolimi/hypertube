@@ -1,11 +1,11 @@
 FROM node:lts-slim AS base
-
 RUN npm i -g pnpm
+# RUN corepack enable # what is this?
 
 FROM base AS dependencies
 
 WORKDIR /usr/src/app
-COPY ./front/package*.json ./front/pnpm-lock.yaml ./
+COPY ./front/package*.json ./front/pnpm-lock.yaml  ./
 RUN pnpm install --prod=false
 
 FROM base AS build
@@ -30,7 +30,6 @@ ENV NODE_ENV=${NODE_ENV}
 
 WORKDIR /usr/src/app
 RUN pnpm prune --prod
-COPY --from=build /usr/src/app/dist ./dist
 COPY --from=build /usr/src/app/node_modules ./node_modules
 
 CMD [ "node", ".output/server/index.mjs" ]
