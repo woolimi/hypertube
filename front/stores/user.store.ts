@@ -2,6 +2,7 @@ import type { UserData } from "~/types";
 
 export const useUserStore = defineStore("user", () => {
   const userData = ref<UserData>({} as UserData);
+  const refreshTokenIntervalId = ref();
 
   const isLoggedIn = computed(() => !!userData.value.accessToken);
   const registrationSteps = ref([
@@ -28,5 +29,11 @@ export const useUserStore = defineStore("user", () => {
     }
   });
 
-  return { isLoggedIn, userData, registrationSteps, userRegistrationStatus };
+  return {
+    isLoggedIn,
+    userData,
+    registrationSteps,
+    userRegistrationStatus,
+    refreshTokenIntervalId,
+  };
 });

@@ -5,14 +5,13 @@ definePageMeta({
   layout: "register",
 });
 const axios = useAxios();
-const { userData } = storeToRefs(useUserStore());
-
 const username = ref("");
 const password = ref("");
 const firstName = ref("");
 const lastName = ref("");
 const email = ref("");
 const localePath = useLocalePath();
+const auth = useAuth();
 
 // TODO: Validation and show error message
 const handleOnSubmit = async () => {
@@ -25,8 +24,7 @@ const handleOnSubmit = async () => {
   };
 
   try {
-    const { data } = await axios.post("/users", { ...userInfo });
-    userData.value = data;
+    await auth.doRegister(axios, userInfo);
     await navigateTo({ path: localePath("auth-verify-email") });
   } catch (e) {
     console.error(e);

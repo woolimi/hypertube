@@ -4,6 +4,23 @@ import FtLogo from "~/assets/icons/42.svg";
 const localePath = useLocalePath();
 const username = ref("");
 const password = ref("");
+const axios = useAxios();
+const { doLogin } = useAuth();
+
+const isDisabled = computed(() => !username.value || !password.value);
+const onLogin = async () => {
+  try {
+    await doLogin(axios, {
+      username: username.value,
+      password: password.value,
+    });
+    await navigateTo({ path: localePath("index") });
+    // TODO: Success Login popup
+  } catch (e) {
+    // TODO: Error popup
+    console.error(e.message);
+  }
+};
 </script>
 
 <template>
@@ -36,7 +53,10 @@ const password = ref("");
       </div>
 
       <section class="flex w-full flex-col text-center">
-        <form class="flex max-w-[450px] flex-col gap-2">
+        <form
+          class="flex max-w-[450px] flex-col gap-2"
+          @submit.prevent="onLogin"
+        >
           <BaseInput
             v-model="username"
             type="text"
@@ -49,7 +69,9 @@ const password = ref("");
             label="Password"
             autocomplete="current-password"
           />
-          <Button class="mt-4 w-full">Login </Button>
+          <Button type="submit" class="mt-4 w-full" :disabled="isDisabled"
+            >Login
+          </Button>
         </form>
 
         <div class="mt-5">

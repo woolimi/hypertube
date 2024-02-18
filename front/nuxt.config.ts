@@ -13,6 +13,11 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+  runtimeConfig: {
+    public: {
+      JWT_ACCESS_DURATION: process.env.JWT_ACCESS_DURATION,
+    },
+  },
   primevue: {
     options: {
       ripple: true,

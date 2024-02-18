@@ -4,49 +4,55 @@ import { ApiProperty } from '@nestjs/swagger';
 @Entity('user')
 export class User {
   @ApiProperty({
-    description: '유저 DB테이블 ID번호',
-    example: 1,
+    description: 'User ID',
+    example: '703fe062-b7d0-48a3-a0a5-baa7ab833047',
   })
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @ApiProperty({
-    description: '이름 (First Name)',
+    description: 'First Name',
     example: 'marvin',
     required: true,
   })
-  @Column({ type: 'varchar', name: 'lastName', length: 20, unique: true })
+  @Column()
   firstName: string;
 
   @ApiProperty({
-    description: '성 (Last Name)',
+    description: 'Last Name',
     example: 'gaye',
     required: true,
   })
-  @Column({ type: 'varchar', name: 'firstName', length: 20, unique: true })
+  @Column()
   lastName: string;
 
-  // @ApiProperty({
-  //   description: '유저 아이디',
-  //   example: 'marvin',
-  //   required: true,
-  // })
-  @Column({ type: 'varchar', name: 'username', length: 20, unique: true })
+  @ApiProperty({
+    description: 'Username',
+    example: 'marvin',
+    required: true,
+  })
+  @Column({ unique: true })
   username: string;
 
   @ApiProperty({
-    description: '이메일 주소',
+    description: 'Email address',
     example: 'marvin@student.42.fr',
     required: true,
   })
-  @Column({ type: 'varchar', name: 'email', length: 40, unique: true })
+  @Column({ unique: true })
   email: string;
 
-  // @ApiProperty({
-  //   description: '비밀번호',
-  //   example: 'marvin',
-  //   required: true,
-  // })
-  @Column({ type: 'varchar', name: 'firstName', length: 20, unique: true })
+  @ApiProperty({
+    description: 'Password',
+    example: 'marvin',
+    required: true,
+  })
+  @Column()
   password: string;
+
+  @Column({ default: false })
+  emailVerified: boolean;
+
+  @Column({ default: '' })
+  refreshToken: string;
 }

@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import * as bcrypt from 'bcrypt';
+import { CreateUserDto } from '../auth/dto/create-user.dto';
 
 @Injectable()
 export class UserService {
@@ -15,7 +16,7 @@ export class UserService {
     return this.userRepository.find();
   }
 
-  async findOne(id: number): Promise<User> {
+  async findOneById(id: string): Promise<User> {
     return this.userRepository.findOne({
       where: {
         id,
@@ -23,7 +24,15 @@ export class UserService {
     });
   }
 
-  async create(user: User): Promise<User> {
+  async findOneByUsername(username: string): Promise<User> {
+    return this.userRepository.findOne({
+      where: {
+        username,
+      },
+    });
+  }
+
+  async create(user: CreateUserDto): Promise<User> {
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(user.password, salt);
 
@@ -31,12 +40,16 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
-  async update(id: number, user: User): Promise<User> {
+  async update(id: string, user: User): Promise<User> {
     await this.userRepository.update(id, user);
-    return this.findOne(id);
+    return user;
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: string): Promise<void> {
     await this.userRepository.delete(id);
+  }
+
+  async saveRefreshToken(id: string, refreshToken: string): Promise<void> {
+    await this.userRepository.update(id, { refreshToken });
   }
 }

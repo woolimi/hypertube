@@ -1,72 +1,43 @@
 import {
   Controller,
   Get,
-  Post,
   Body,
+  Req,
   Param,
   Put,
   Delete,
-  Res,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
-import { AuthService } from 'src/auth/auth.service';
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { UserDto } from './dto/user.dto';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
-@ApiTags('User')
+@ApiTags('Users')
 @Controller('users')
 export class UserController {
-  constructor(
-    private authService: AuthService,
-    private readonly userService: UserService,
-  ) { }
+  constructor(private readonly userService: UserService) {}
 
-  @ApiOperation({ summary: '전체 유저 확인' })
+  @ApiOperation({ summary: 'Get all users' })
+  @UseGuards(JwtAuthGuard)
   @Get()
-  async findAll(): Promise<User[]> {
+  async findAll(@Req() req): Promise<User[]> {
     return this.userService.findAll();
   }
 
-  @ApiOkResponse({ type: UserDto })
-  @ApiOperation({ summary: '유저 확인' })
+  @ApiOperation({ summary: 'Get user by id' })
   @Get(':id')
-  async findOne(@Param('id') id: number): Promise<User> {
-    return this.userService.findOne(id);
-  }
-
-  @Post()
-  //TODO: to change using dto maybe?
-  async create(
-    @Res({ passthrough: true }) res,
-    @Body() user: User,
-  ): Promise<void> {
-    const createdUser = await this.userService.create(user);
-    const { accessToken, ...accessOption } =
-      this.authService.getCookieWithJwtAccessToken(createdUser.id);
-    const { refreshToken, ...refreshOption } =
-      this.authService.getCookieWithJwtRefreshToken(createdUser.id);
-
-    res.cookie('accessToken', accessToken, accessOption);
-    res.cookie('refreshToken', refreshToken, refreshOption);
-    res.status(201);
-    res.json({
-      accessToken: accessToken,
-      id: createdUser.id,
-      username: createdUser.username,
-      email: createdUser.email,
-      firstName: createdUser.firstName,
-      lastName: createdUser.lastName,
-    });
+  async findOne(@Param('id') id: string): Promise<User> {
+    return this.userService.findOneById(id);
   }
 
   @Put(':id')
-  async update(@Param('id') id: number, @Body() user: User): Promise<User> {
+  async update(@Param('id') id: string, @Body() user: User): Promise<User> {
     return this.userService.update(id, user);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: number): Promise<void> {
+  async remove(@Param('id') id: string): Promise<void> {
     return this.userService.remove(id);
   }
 }
