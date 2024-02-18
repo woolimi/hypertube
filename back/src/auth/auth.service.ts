@@ -41,7 +41,7 @@ export class AuthService {
         email,
         image: photos[0].value,
         provider: 'google',
-        password: new Date().toString().slice(10, 30),
+        password: randomstring.generate(20),
         emailVerified: true,
       });
       return newUser;
@@ -60,7 +60,6 @@ export class AuthService {
 
     if (!user) {
       const _username = await this.createUsernameIfDuplicated(username);
-      console.log(username, _username);
       const newUser = await this.userService.create({
         firstName: name.givenName,
         lastName: name.familyName,
@@ -68,7 +67,7 @@ export class AuthService {
         email,
         image: image,
         provider: provider,
-        password: new Date().toString().slice(10, 30),
+        password: randomstring.generate(20),
         emailVerified: true,
       });
       return newUser;

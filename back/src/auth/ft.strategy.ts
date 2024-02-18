@@ -15,7 +15,6 @@ export class FtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(accessToken: string, refreshToken: string, profile: Profile) {
-    // console.log(profile);
     const user = await this.authService.validateFtUser(profile);
 
     return user;
