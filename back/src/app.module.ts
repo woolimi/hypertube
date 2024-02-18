@@ -9,7 +9,7 @@ import { AuthModule } from './auth/auth.module';
     ConfigModule.forRoot({ envFilePath: '../.env' }),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
+      host: 'db-mysql',
       port: 3306,
       username: process.env.MYSQL_USER,
       password: process.env.MYSQL_PASSWORD,
@@ -22,4 +22,4 @@ import { AuthModule } from './auth/auth.module';
     AuthModule,
   ],
 })
-export class AppModule {}
+export class AppModule { }
