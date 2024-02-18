@@ -10,7 +10,7 @@ export class FtStrategy extends PassportStrategy(Strategy) {
     super({
       clientID: process.env.FT_CLIENT_ID,
       clientSecret: process.env.FT_CLIENT_SECRET,
-      callbackURL: process.env.FT_CALLBACK_URL,
+      callbackURL: `${process.env.BACK_HOST}${process.env.FT_CALLBACK_URL}`,
     });
   }
 

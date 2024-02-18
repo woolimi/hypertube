@@ -1,4 +1,6 @@
 <script setup>
+import { onClickOutside } from "@vueuse/core";
+
 const localePath = useLocalePath();
 const options = ref([
   {

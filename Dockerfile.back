@@ -24,7 +24,7 @@ COPY --from=build /usr/src/app/dist ./dist
 COPY --from=build /usr/src/app/node_modules ./node_modules
 
 CMD ["pnpm", "run", "dev"]
-EXPOSE 3005
+EXPOSE 5000
 
 FROM base AS production
 
@@ -37,4 +37,4 @@ COPY --from=build /usr/src/app/dist ./dist
 COPY --from=build /usr/src/app/node_modules ./node_modules
 
 CMD ["node", "dist/main"]
-EXPOSE 3005
+EXPOSE 5000

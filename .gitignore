@@ -1,3 +1,4 @@
 .env
 .pnpm-store
-/db
+db/*
+!db/.gitkeep
