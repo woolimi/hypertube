@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, ManyToOne, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn, UpdateDateColumn, JoinColumn } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-
+import { Comment } from '../comment/comment.entity'
+import { MoviesWatched } from '../movie/movies-watched.entity';
 @Entity('user')
 export class User {
   @ApiProperty({
@@ -60,4 +61,16 @@ export class User {
 
   @Column({ default: 'local' })
   provider: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @OneToMany((type) => Comment, (comment) => comment.User)
+  Comments: Comment[];
+
+  @OneToMany((type) => MoviesWatched, (movieswatched) => movieswatched.User)
+  MoviesWatched: MoviesWatched[]
 }
