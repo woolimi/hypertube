@@ -47,8 +47,12 @@ export const useAuth = () => {
     stopRefreshAuth();
   };
 
-  const doRegister = async (api: AxiosInstance, info: UserData) => {
-    const { data } = await api.post("/auth/register", { ...info });
+  const doRegister = async (
+    api: AxiosInstance,
+    info: UserData,
+    lang: string,
+  ) => {
+    const { data } = await api.post(`/auth/register?lang=${lang}`, { ...info });
     userData.value = data;
     startRefreshAuth(api);
   };

@@ -7,6 +7,7 @@ import {
   UnauthorizedException,
   Body,
   Get,
+  Query,
 } from '@nestjs/common';
 import { LocalAuthGuard } from 'src/guards/local-auth.guard';
 import { AuthService } from './auth.service';
@@ -16,12 +17,14 @@ import { CreateUserDto } from 'src/auth/dto/create-user.dto';
 import { GoogleAuthGuard } from 'src/guards/google-auth.guard';
 import { FtAuthGuard } from 'src/guards/ft-auth.guard';
 import { GithubAuthGuard } from 'src/guards/github-auth.guard';
+import { EmailService } from './email.service';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private authService: AuthService,
     private userService: UserService,
+    private emailService: EmailService,
   ) {}
 
   @UseGuards(LocalAuthGuard)
@@ -65,6 +68,7 @@ export class AuthController {
   async register(
     @Body() user: CreateUserDto,
     @Response({ passthrough: true }) res,
+    @Query('lang') lang,
   ) {
     const createdUser = await this.userService.create(user);
     const { accessToken, ...accessOption } =
@@ -77,6 +81,12 @@ export class AuthController {
 
     delete createdUser.refreshToken;
     delete createdUser.password;
+
+    // Send email confirmation email
+    this.emailService.sendVerifyEmail(
+      { id: createdUser.id, email: createdUser.email },
+      lang,
+    );
 
     return { ...createdUser, accessToken };
   }

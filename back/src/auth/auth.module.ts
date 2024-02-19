@@ -9,6 +9,7 @@ import { JwtStrategy } from 'src/auth/strategies/jwt.strategy';
 import { GoogleStrategy } from 'src/auth/strategies/google.strategy';
 import { FtStrategy } from 'src/auth/strategies/ft.strategy';
 import { GithubStrategy } from 'src/auth/strategies/github.strategy';
+import { EmailService } from './email.service';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { GithubStrategy } from 'src/auth/strategies/github.strategy';
     GoogleStrategy,
     FtStrategy,
     GithubStrategy,
+    EmailService,
   ],
   exports: [],
 })
