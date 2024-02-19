@@ -145,17 +145,6 @@ export class AuthService {
     };
   }
 
-  getVerifyEmailToken(userId: string) {
-    const expiration = this.getExpirationAccess();
-    return this.jwtService.sign(
-      { userId },
-      {
-        secret: process.env.JWT_VERIFICATION_SECRET,
-        expiresIn: `${expiration}s`,
-      },
-    );
-  }
-
   private getExpirationAccess() {
     return parseInt(process.env.JWT_ACCESS_DURATION) * 60;
   }

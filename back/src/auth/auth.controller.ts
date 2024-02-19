@@ -8,6 +8,7 @@ import {
   Body,
   Get,
   Query,
+  BadRequestException,
 } from '@nestjs/common';
 import { LocalAuthGuard } from 'src/guards/local-auth.guard';
 import { AuthService } from './auth.service';
@@ -18,6 +19,7 @@ import { GoogleAuthGuard } from 'src/guards/google-auth.guard';
 import { FtAuthGuard } from 'src/guards/ft-auth.guard';
 import { GithubAuthGuard } from 'src/guards/github-auth.guard';
 import { EmailService } from './email.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('auth')
 export class AuthController {
@@ -25,6 +27,7 @@ export class AuthController {
     private authService: AuthService,
     private userService: UserService,
     private emailService: EmailService,
+    private jwtService: JwtService,
   ) {}
 
   @UseGuards(LocalAuthGuard)
@@ -70,7 +73,25 @@ export class AuthController {
     @Response({ passthrough: true }) res,
     @Query('lang') lang,
   ) {
-    const createdUser = await this.userService.create(user);
+    const found = await this.userService.findOneByEmail(
+      user.email,
+      user.provider || 'local',
+    );
+
+    let createdUser = null;
+    if (found && !found.emailVerified) {
+      createdUser = await this.userService.update(found.id, {
+        ...found,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        username: user.username,
+      });
+    } else if (found) {
+      throw new BadRequestException('Email already exists');
+    } else {
+      createdUser = await this.userService.create(user);
+    }
+
     const { accessToken, ...accessOption } =
       this.authService.getCookieWithJwtAccessToken(createdUser.id);
     const { refreshToken, ...refreshOption } =
@@ -83,9 +104,9 @@ export class AuthController {
     delete createdUser.password;
 
     // Send email confirmation email
-    this.emailService.sendVerifyEmail(
+    await this.emailService.sendVerifyEmail(
       { id: createdUser.id, email: createdUser.email },
-      lang,
+      lang || 'en',
     );
 
     return { ...createdUser, accessToken };
@@ -124,6 +145,20 @@ export class AuthController {
     delete userData.refreshToken;
 
     return { ...userData, accessToken };
+  }
+
+  @Get('/verify-email')
+  async verifyEmail(
+    @Query('token') token,
+    @Response({ passthrough: true }) res,
+  ) {
+    const payload = this.jwtService.verify(token, {
+      secret: process.env.JWT_SECRET,
+    });
+    const user = await this.userService.findOneById(payload.userId);
+    await this.userService.update(user.id, { ...user, emailVerified: true });
+
+    res.redirect(process.env.FRONT_HOST);
   }
 
   @Get('google/login')
