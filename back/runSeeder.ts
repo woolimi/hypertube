@@ -6,7 +6,6 @@ import { User } from './src/user/user.entity';
 import { Comment } from './src/comment/comment.entity';
 import { Movie } from './src/movie/movie.entity';
 import { MoviesWatched } from './src/movie/movies-watched.entity';
-import { UserFactory } from './src/database/factory/user.factory';
 import MainSeeder from 'src/database/seeds/user.seed';
 
 

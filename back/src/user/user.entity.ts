@@ -31,7 +31,7 @@ export class User {
     example: 'marvin',
     required: true,
   })
-  @Column({ unique: true })
+  @Column({ unique: true, default: '' })
   username: string;
 
   @ApiProperty({
@@ -39,7 +39,7 @@ export class User {
     example: 'marvin@student.42.fr',
     required: true,
   })
-  @Column({ unique: true })
+  @Column({ unique: true, default: '' })
   email: string;
 
   @ApiProperty({
@@ -47,7 +47,7 @@ export class User {
     example: 'marvin',
     required: true,
   })
-  @Column()
+  @Column({ default: '' })
   password: string;
 
   @Column({ default: '' })

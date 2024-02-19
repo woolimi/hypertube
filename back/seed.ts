@@ -21,15 +21,15 @@ const options: DataSourceOptions & SeederOptions = {
   username: process.env.MYSQL_USER,
   password: process.env.MYSQL_PASSWORD,
   database: process.env.MYSQL_DATABASE,
-  // entities: [
-  //   User, Comment, Movie, MoviesWatched
-  // ],
+  entities: [
+    User, Comment, Movie, MoviesWatched
+  ],
   // additional config options brought by typeorm-extension
   synchronize: true,
   logging: true,
   migrations: [],
   subscribers: [],
-  factories: [],
+  factories: [UserFactory],
   seeds: [MainSeeder],
 };
 
