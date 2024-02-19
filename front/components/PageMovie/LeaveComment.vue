@@ -1,4 +1,7 @@
-<script setup></script>
+<script setup>
+const comment = ref()
+</script>
+
 <template>
   <form class="flex gap-4" @submit.prevent="() => {}">
     <Avatar
@@ -9,7 +12,7 @@
     />
     <div>
       <Textarea
-        v-model="value"
+        v-model="comment"
         class="w-full"
         auto-resize
         rows="5"

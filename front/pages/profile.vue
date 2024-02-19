@@ -3,6 +3,10 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
 
+definePageMeta({
+  middleware: ['loose-auth']
+})
+
 const { userData } = storeToRefs(useUserStore());
 const email = ref(userData.value?.email);
 const username = ref(userData.value?.username);

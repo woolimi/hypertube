@@ -1,6 +1,10 @@
 <script setup>
 import FtLogo from "~/assets/icons/42.svg";
 
+definePageMeta({
+  middleware: ['non-auth']
+})
+
 const localePath = useLocalePath();
 const username = ref("");
 const password = ref("");

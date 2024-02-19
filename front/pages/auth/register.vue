@@ -2,8 +2,10 @@
 import FtLogo from "~/assets/icons/42.svg";
 
 definePageMeta({
-  layout: "register",
+  layout: "auth",
+  middleware: ['non-auth']
 });
+
 const axios = useAxios();
 const username = ref("");
 const password = ref("");

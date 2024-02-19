@@ -1,6 +1,7 @@
 <script setup>
 definePageMeta({
-  layout: "register",
+  layout: "auth",
+  middleware: ["strict-auth"],
 });
 </script>
 
