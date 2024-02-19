@@ -8,24 +8,69 @@ definePageMeta({
 });
 
 const { userData } = storeToRefs(useUserStore());
+const axios = useAxios();
+
 const email = ref(userData.value?.email);
 const username = ref(userData.value?.username);
 const firstName = ref(userData.value?.firstName);
 const lastName = ref(userData.value?.lastName);
 const avatar = ref(userData.value?.image);
 const password = ref("");
+const fileInput = ref(null);
+
+function onUpload(event) {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+
+    reader.onload = async (e) => {
+      const formData = new FormData();
+      formData.append('image', file);
+      const { id } = userData.value;
+      if (id) {
+        formData.append('userId', id);
+        try {
+          // method I - use FileReader
+          // await axios.put(`/users/avatar`, formData)
+          // avatar.value = reader.result;
+
+          // method II - update url sent by server response
+          const res = await axios.put(`/users/avatar`, formData);
+          avatar.value = res.data;
+        } catch(e) {
+          console.error(e);
+        }
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+function onClickAvatar(event) {
+  fileInput.value.click();
+}
+
 </script>
 <template>
   <main class="min-h-[calc(100vh-64px)] px-4 pb-20 pt-[112px] md:px-8">
     <div class="mx-auto flex max-w-[540px] flex-col flex-wrap gap-10">
       <section>
         <h2 class="text-3xl font-bold text-primary-400">Profile</h2>
-        <div class="mx-auto flex gap-10 rounded-lg bg-surface-900 p-4">
+        <div class="mx-auto flex gap-5 justify-center items-center rounded-lg bg-surface-900 p-4">
           <Avatar
             :image="avatar"
             size="xlarge"
             shape="circle"
-            class="overflow-hidden"
+            class="overflow-hidden m-auto cursor-pointer"
+            @click="onClickAvatar"
+          />
+          <input
+            type="file"
+            @change="onUpload"
+            ref="fileInput"
+            class="hidden"
+            accept="image/*"
+            maxlength="1000000"
           />
           <aside class="grid flex-1 grid-cols-1 gap-6 md:grid-cols-2">
             <BaseInput
