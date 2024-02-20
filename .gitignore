@@ -2,3 +2,4 @@
 .pnpm-store
 db/*
 !db/.gitkeep
+pnpm-lock.yaml

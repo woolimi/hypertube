@@ -6,8 +6,9 @@ RUN pnpm install glob rimraf
 FROM base AS dependencies
 
 WORKDIR /usr/src/app
-COPY ./back/package*.json ./back/pnpm-lock.yaml ./
-RUN pnpm config set store-dir /usr/src/app/.pnpm-store --global
+COPY ./back/package.json  ./
+RUN mkdir -p /.pnpm-store
+RUN pnpm config set store-dir /.pnpm-store
 RUN pnpm install --prod=false
 
 FROM base AS build
