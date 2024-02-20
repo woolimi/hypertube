@@ -14,10 +14,16 @@ const email = ref(userData.value?.email);
 const username = ref(userData.value?.username);
 const firstName = ref(userData.value?.firstName);
 const lastName = ref(userData.value?.lastName);
-const avatar = ref(userData.value?.image);
+const avatar = computed({
+  get() {
+    return userData.value?.image;
+  },
+  set(image) {
+    userData.value.image = image;
+  },
+});
 const password = ref("");
 const fileInput = ref(null);
-const router = useRouter();
 
 function onUpload(event) {
   const file = event.target.files[0];
@@ -32,16 +38,16 @@ function onUpload(event) {
         formData.append("userId", id);
         try {
           // method I - use FileReader
-          // await axios.put(`/users/avatar`, formData)
-          // avatar.value = reader.result;
+          await axios.put(`/users/avatar`, formData);
+          avatar.value = reader.result;
 
           // method II - update url sent by server response
           // const res = await axios.put(`/users/avatar`, formData);
           // avatar.value = res.data;
 
           // method III - useRouter to refresh page - TODO: put loader
-          await axios.put(`/users/avatar`, formData);
-          router.go();
+          // await axios.put(`/users/avatar`, formData);
+          // router.go();
         } catch (error) {
           console.error(error);
         }
