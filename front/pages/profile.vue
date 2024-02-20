@@ -63,13 +63,19 @@ function onClickAvatar() {
         <div
           class="mx-auto flex items-center justify-center gap-5 rounded-lg bg-surface-900 p-4"
         >
-          <Avatar
-            :image="avatar"
-            size="xlarge"
-            shape="circle"
-            class="m-auto cursor-pointer overflow-hidden"
-            @click="onClickAvatar"
-          />
+          <div class="relative flex items-center justify-center">
+            <Avatar
+              :image="avatar"
+              size="xlarge"
+              shape="circle"
+              class="m-auto overflow-hidden"
+            />
+            <i
+              class="pi pi-images absolute m-auto cursor-pointer opacity-0 transition-opacity duration-300 hover:opacity-100"
+              style="font-size: 2rem"
+              @click="onClickAvatar"
+            />
+          </div>
           <input
             ref="fileInput"
             type="file"
