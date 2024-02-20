@@ -5,7 +5,6 @@ import { Movie } from '../movie/movie.entity';
 @Entity('movieswatched')
 export class MoviesWatched {
 
-
   @Column('int', { primary: true, name: 'movie_id' })
   movieId: number;
 

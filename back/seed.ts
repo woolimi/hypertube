@@ -7,7 +7,10 @@ import { Movie } from './src/movie/movie.entity';
 import { MoviesWatched } from './src/movie/movies-watched.entity';
 import { UserFactory } from "./src/database/factory/user.factory";
 import dotenv from 'dotenv';
-import MainSeeder from "./src/database/seeds/user.seed";
+import CommentsSeeder from "./src/database/seeds/02.comments.seed";
+import { CommentFactory } from "./src/database/factory/comment.factory";
+import { UserSeeder } from "./src/database/seeds/01.user.seed";
+import { MovieFactory } from "./src/database/factory/movie.factory";
 
 dotenv.config();
 // const {
@@ -29,8 +32,8 @@ const options: DataSourceOptions & SeederOptions = {
   logging: true,
   migrations: [],
   subscribers: [],
-  factories: [UserFactory],
-  seeds: [MainSeeder],
+  factories: [UserFactory, CommentFactory, MovieFactory],
+  seeds: [UserSeeder],
 };
 
 const dataSourceCheck = new DataSource(options);
