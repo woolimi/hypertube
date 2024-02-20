@@ -1,4 +1,13 @@
-import typeorm, { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import typeorm, {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from '../user/user.entity';
 import { Movie } from '../movie/movie.entity';
@@ -49,5 +58,5 @@ export class Comment {
     name: 'movie_id',
     referencedColumnName: 'id',
   })
-  Movie: Movie;
+  Movie: typeorm.Relation<Movie>;
 }

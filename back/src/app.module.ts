@@ -6,6 +6,11 @@ import { AuthModule } from './auth/auth.module';
 import { CommentModule } from './comment/comment.module';
 import { MovieModule } from './movie/movie.module';
 import { join } from 'path';
+import { AppController } from './app.controller';
+import { User } from './user/user.entity';
+import { Movie } from './movie/movie.entity';
+import { Comment } from './comment/comment.entity';
+import { MoviesWatched } from './movie/movies-watched.entity';
 
 @Module({
   imports: [
@@ -26,5 +31,6 @@ import { join } from 'path';
     CommentModule,
     MovieModule,
   ],
+  controllers: [AppController],
 })
 export class AppModule {}

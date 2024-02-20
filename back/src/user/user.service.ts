@@ -5,13 +5,15 @@ import { User } from './user.entity';
 import bcrypt from 'bcrypt';
 
 import { CreateUserDto } from '../auth/dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdateResult } from 'typeorm';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  ) { }
+  ) {}
 
   async findAll(): Promise<User[]> {
     return this.userRepository.find();
@@ -50,9 +52,8 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
-  async update(id: string, user: User): Promise<User> {
-    await this.userRepository.update(id, user);
-    return user;
+  async update(id: string, user: UpdateUserDto): Promise<UpdateResult> {
+    return await this.userRepository.update(id, user);
   }
 
   async remove(id: string): Promise<void> {

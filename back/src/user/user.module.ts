@@ -13,4 +13,4 @@ import { Comment } from 'src/comment/comment.entity';
   providers: [UserService, UserRepository, JwtService],
   exports: [UserService],
 })
-export class UserModule { }
+export class UserModule {}
