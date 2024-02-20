@@ -17,28 +17,33 @@ const lastName = ref(userData.value?.lastName);
 const avatar = ref(userData.value?.image);
 const password = ref("");
 const fileInput = ref(null);
+const router = useRouter();
 
 function onUpload(event) {
   const file = event.target.files[0];
   if (file) {
     const reader = new FileReader();
 
-    reader.onload = async (e) => {
+    reader.onload = async () => {
       const formData = new FormData();
-      formData.append('image', file);
+      formData.append("image", file);
       const { id } = userData.value;
       if (id) {
-        formData.append('userId', id);
+        formData.append("userId", id);
         try {
           // method I - use FileReader
           // await axios.put(`/users/avatar`, formData)
           // avatar.value = reader.result;
 
           // method II - update url sent by server response
-          const res = await axios.put(`/users/avatar`, formData);
-          avatar.value = res.data;
-        } catch(e) {
-          console.error(e);
+          // const res = await axios.put(`/users/avatar`, formData);
+          // avatar.value = res.data;
+
+          // method III - useRouter to refresh page - TODO: put loader
+          await axios.put(`/users/avatar`, formData);
+          router.go();
+        } catch (error) {
+          console.error(error);
         }
       }
     };
@@ -46,31 +51,32 @@ function onUpload(event) {
   }
 }
 
-function onClickAvatar(event) {
+function onClickAvatar() {
   fileInput.value.click();
 }
-
 </script>
 <template>
   <main class="min-h-[calc(100vh-64px)] px-4 pb-20 pt-[112px] md:px-8">
     <div class="mx-auto flex max-w-[540px] flex-col flex-wrap gap-10">
       <section>
         <h2 class="text-3xl font-bold text-primary-400">Profile</h2>
-        <div class="mx-auto flex gap-5 justify-center items-center rounded-lg bg-surface-900 p-4">
+        <div
+          class="mx-auto flex items-center justify-center gap-5 rounded-lg bg-surface-900 p-4"
+        >
           <Avatar
             :image="avatar"
             size="xlarge"
             shape="circle"
-            class="overflow-hidden m-auto cursor-pointer"
+            class="m-auto cursor-pointer overflow-hidden"
             @click="onClickAvatar"
           />
           <input
-            type="file"
-            @change="onUpload"
             ref="fileInput"
+            type="file"
             class="hidden"
             accept="image/*"
             maxlength="1000000"
+            @change="onUpload"
           />
           <aside class="grid flex-1 grid-cols-1 gap-6 md:grid-cols-2">
             <BaseInput
