@@ -3,24 +3,47 @@ import type { AxiosInstance } from "axios";
 import type { UserData } from "~/types";
 
 export const useAuth = () => {
+  const BACK_HOST = useRuntimeConfig().public.BACK_HOST;
   const { userData } = storeToRefs(useUserStore());
   const refreshTokenIntervalId = ref();
   const tokenDurationMins = Number(
     useRuntimeConfig().public.JWT_ACCESS_DURATION,
   );
 
-  const refreshToken = async (api: AxiosInstance) => {
+  const doRefreshTokenServer = async () => {
+    if (userData.value.username) return;
+
+    const cookie = useRequestHeaders(["cookie"]);
     try {
-      const { data } = await api.post("/auth/refresh");
-      userData.value = data;
+      const data: UserData = await $fetch(
+        `http://back-nestjs:3005/auth/refresh`,
+        {
+          method: "POST",
+          headers: {
+            ...cookie,
+            Authorization: `Bearer ${userData.value.accessToken}`,
+          },
+        },
+      );
+      userData.value = data || {};
     } catch (error: any) {
       console.error(error.message);
     }
   };
 
-  const startRefreshAuth = (api: AxiosInstance) => {
+  const doRefreshTokenClient = async () => {
+    const axios = useAxios();
+    try {
+      const { data } = await axios.post(`/auth/refresh`);
+      userData.value = data || {};
+    } catch (error: any) {
+      console.error(error.message);
+    }
+  };
+
+  const startRefreshAuth = () => {
     refreshTokenIntervalId.value = setInterval(
-      () => refreshToken(api),
+      () => doRefreshTokenClient(),
       (tokenDurationMins - 1) * 60 * 1000,
     );
   };
@@ -38,7 +61,7 @@ export const useAuth = () => {
       password: info.password,
     });
     userData.value = data;
-    startRefreshAuth(api);
+    startRefreshAuth();
   };
 
   const doLogout = async (api: AxiosInstance) => {
@@ -54,19 +77,19 @@ export const useAuth = () => {
   ) => {
     const { data } = await api.post(`/auth/register?lang=${lang}`, { ...info });
     userData.value = data;
-    startRefreshAuth(api);
+    startRefreshAuth();
   };
 
   const onGoogleLogin = () =>
-    (window.location.href = `${useRuntimeConfig().public.BACK_HOST}/auth/google/login`);
-  const onFtLogin = () =>
-    (window.location.href = `${useRuntimeConfig().public.BACK_HOST}/auth/ft/login`);
+    (window.location.href = `${BACK_HOST}/auth/google/login`);
+  const onFtLogin = () => (window.location.href = `${BACK_HOST}/auth/ft/login`);
   const onGithubLogin = () => {
-    window.location.href = `${useRuntimeConfig().public.BACK_HOST}/auth/github/login`;
+    window.location.href = `${BACK_HOST}/auth/github/login`;
   };
 
   return {
-    refreshToken,
+    doRefreshTokenServer,
+    doRefreshTokenClient,
     startRefreshAuth,
     stopRefreshAuth,
     doLogin,

@@ -4,8 +4,8 @@ import "swiper/css/free-mode";
 import "swiper/css/pagination";
 
 definePageMeta({
-  middleware: ['loose-auth']
-})
+  middleware: ["loose-auth"],
+});
 
 const { userData } = storeToRefs(useUserStore());
 const email = ref(userData.value?.email);
@@ -62,6 +62,7 @@ const password = ref("");
               type="password"
               class="w-full"
               placeholder="Enter new password"
+              autocomplete="none"
             />
             <Button
               label="Update"

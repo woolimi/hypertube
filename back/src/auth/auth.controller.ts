@@ -9,6 +9,7 @@ import {
   Get,
   Query,
   BadRequestException,
+  Logger,
 } from '@nestjs/common';
 import { LocalAuthGuard } from 'src/guards/local-auth.guard';
 import { AuthService } from './auth.service';
@@ -51,19 +52,24 @@ export class AuthController {
     return { ...user, accessToken };
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post('/logout')
   async logout(@Request() req, @Response({ passthrough: true }) res) {
-    const user = req.user;
     const option = {
-      domain: 'localhost',
+      domain: process.env.DOMAIN,
       path: '/',
       httpOnly: true,
       expires: new Date(),
     };
     res.cookie('refreshToken', '', option);
     res.cookie('accessToken', '', option);
-    await this.userService.saveRefreshToken(user.userId, '');
+
+    const accessToken = req.cookies['accessToken'];
+    if (!accessToken) return {};
+
+    const payload = this.jwtService.verify(accessToken, {
+      secret: process.env.JWT_SECRET,
+    });
+    await this.userService.saveRefreshToken(payload.userId, '');
     return {};
   }
 
@@ -115,21 +121,32 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Post('/refresh')
   async refresh(@Request() req, @Response({ passthrough: true }) res) {
+    Logger.log('Refresh token called');
     const oldRefreshToken = req.cookies['refreshToken'];
-    const { refreshToken: dbOldRefreshToken } =
-      await this.userService.findOneById(req.user.userId);
+    const option = {
+      domain: process.env.DOMAIN,
+      path: '/',
+      httpOnly: true,
+      expires: new Date(),
+    };
 
-    if (!oldRefreshToken || dbOldRefreshToken !== oldRefreshToken) {
-      const option = {
-        domain: 'localhost',
-        path: '/',
-        httpOnly: true,
-        expires: new Date(),
-      };
+    if (!oldRefreshToken) {
+      Logger.error('No refresh token');
       res.cookie('accessToken', '', option);
       res.cookie('refreshToken', '', option);
       throw new UnauthorizedException();
     }
+
+    // TODO: Check why front call refreshTokenServer two times
+    // const { refreshToken: dbOldRefreshToken } =
+    //   await this.userService.findOneById(req.user.userId);
+
+    // if (!oldRefreshToken || dbOldRefreshToken !== oldRefreshToken) {
+    //   Logger.error('Invalid refresh token');
+    //   res.cookie('accessToken', '', option);
+    //   res.cookie('refreshToken', '', option);
+    //   throw new UnauthorizedException();
+    // }
 
     const userId = req.user.userId;
     const { accessToken, ...accessOption } =
@@ -143,6 +160,7 @@ export class AuthController {
     await this.userService.saveRefreshToken(userId, refreshToken);
     const userData = await this.userService.findOneById(userId);
     delete userData.refreshToken;
+    delete userData.password;
 
     return { ...userData, accessToken };
   }
@@ -150,6 +168,7 @@ export class AuthController {
   @Get('/verify-email')
   async verifyEmail(
     @Query('token') token,
+    @Query('lang') lang,
     @Response({ passthrough: true }) res,
   ) {
     const payload = this.jwtService.verify(token, {
@@ -158,7 +177,7 @@ export class AuthController {
     const user = await this.userService.findOneById(payload.userId);
     await this.userService.update(user.id, { ...user, emailVerified: true });
 
-    res.redirect(process.env.FRONT_HOST);
+    res.redirect(`${process.env.FRONT_HOST}/${lang}/auth/email-confirmed`);
   }
 
   @Get('google/login')
