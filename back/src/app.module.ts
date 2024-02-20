@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { CommentModule } from './comment/comment.module';
 import { MovieModule } from './movie/movie.module';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { MovieModule } from './movie/movie.module';
       username: process.env.MYSQL_USER,
       password: process.env.MYSQL_PASSWORD,
       database: process.env.MYSQL_DATABASE,
-      entities: ['./src/entities/*.entity{.ts,.js}'],
+      entities: [join(__dirname, '**', '*.entity.{ts,js}')],
       // synchronize: true,
       // migrationsRun: true,
     }),
