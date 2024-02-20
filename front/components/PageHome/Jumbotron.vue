@@ -5,7 +5,9 @@
         :class="$style.hero"
         class="flex h-[400px] flex-col items-center justify-center"
       >
-        <h1 class="mb-10 max-w-[600px] pt-[100px] text-5xl">
+        <h1
+          class="mb-10 max-w-[600px] px-2 pt-[100px] text-center text-4xl sm:text-5xl"
+        >
           <p><span class="text-primary-400">Unlimited</span> movies</p>
           <p><span class="text-primary-400">Watch</span> anywhere</p>
         </h1>
