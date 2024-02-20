@@ -12,9 +12,6 @@ import { MovieFactory } from 'src/database/factory/movie.factory';
 import { MainSeeder } from 'src/database/seeds/01.main.seed';
 
 dotenv.config();
-// const {
-//   DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME,
-// } = process.env;
 
 const options: DataSourceOptions & SeederOptions = {
   type: 'mysql',
@@ -24,7 +21,7 @@ const options: DataSourceOptions & SeederOptions = {
   password: process.env.MYSQL_PASSWORD,
   database: process.env.MYSQL_DATABASE,
   entities: [User, Comment, Movie, MoviesWatched],
-  // additional config options brought by typeorm-extension
+
   synchronize: true,
   logging: true,
   migrations: [],
