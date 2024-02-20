@@ -5,8 +5,9 @@ RUN npm i -g pnpm
 FROM base AS dependencies
 
 WORKDIR /usr/src/app
-COPY ./front/package*.json ./front/pnpm-lock.yaml  ./
-RUN pnpm config set store-dir /usr/src/app/.pnpm-store --global
+COPY ./front/package.json  ./
+RUN mkdir -p /.pnpm-store
+RUN pnpm config set store-dir /.pnpm-store
 RUN pnpm install --prod=false
 
 FROM base AS build

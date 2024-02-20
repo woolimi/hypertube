@@ -1,2 +1,4 @@
 ./back/dist
 ./back/node_modules
+./back/.pnpm-store
+./back/pnpm-lock.yaml
