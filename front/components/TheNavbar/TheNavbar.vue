@@ -12,7 +12,10 @@ const { isLoggedIn } = storeToRefs(useUserStore());
         <LanguageSelector />
       </div>
 
-      <NuxtLink :to="localePath('index')">
+      <NuxtLink
+        :to="localePath('index')"
+        class="absolute left-[50%] -translate-x-1/2"
+      >
         <img
           src="~/assets/images/logo-big.png"
           alt="hypertube logo"

@@ -5,6 +5,7 @@ export const useUserStore = defineStore("user", () => {
   const refreshTokenIntervalId = ref();
 
   const isLoggedIn = computed(() => !!userData.value.accessToken);
+  const isEmailVerified = computed(() => userData.value.emailVerified);
   const registrationSteps = ref([
     {
       label: "Register",
@@ -31,6 +32,7 @@ export const useUserStore = defineStore("user", () => {
 
   return {
     isLoggedIn,
+    isEmailVerified,
     userData,
     registrationSteps,
     userRegistrationStatus,

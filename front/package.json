@@ -9,8 +9,8 @@
     "postinstall": "nuxt prepare",
     "lint": "eslint './**/*.{js,ts,vue}' --fix",
     "stylelint": "stylelint './**/*.{scss,css,vue}' --fix",
-    "lint-staged": "ls",
-    "prepare": "ls"
+    "lint-staged": "lint-staged",
+    "prepare": "cd .. && husky front/.husky"
   },
   "lint-staged": {
     "*.scss": [

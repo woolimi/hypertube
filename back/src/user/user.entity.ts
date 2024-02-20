@@ -1,12 +1,10 @@
 import {
   Entity,
-  ManyToOne,
   PrimaryGeneratedColumn,
   Column,
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
-  JoinColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Comment } from 'src/comment/comment.entity';

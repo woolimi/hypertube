@@ -1,4 +1,9 @@
 <script setup>
+
+definePageMeta({
+  middleware: ['strict-auth']
+})
+
 const { data } = await useAsyncData("mountains", async () => {
   // TODO: get movie by mid
   // TODO: get comments by mid

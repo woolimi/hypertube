@@ -4,7 +4,7 @@ export const useAxios = () => {
   const baseURL = useRuntimeConfig().public.BACK_HOST;
   const { userData } = storeToRefs(useUserStore());
 
-  return axios.create({
+  const api = axios.create({
     baseURL,
     headers: {
       Authorization: userData.value.accessToken
@@ -13,4 +13,5 @@ export const useAxios = () => {
     },
     withCredentials: true,
   });
+  return api;
 };

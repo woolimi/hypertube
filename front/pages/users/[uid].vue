@@ -1,4 +1,7 @@
 <script setup>
+definePageMeta({
+  middleware: ["strict-auth"],
+})
 const route = useRoute();
 const { data } = await useAsyncData(`users-${route.params.uid}`, async () => {
   return {

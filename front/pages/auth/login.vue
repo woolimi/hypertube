@@ -1,12 +1,16 @@
 <script setup>
 import FtLogo from "~/assets/icons/42.svg";
 
+definePageMeta({
+  middleware: ["non-auth"],
+});
+
 const localePath = useLocalePath();
 const username = ref("");
 const password = ref("");
 const axios = useAxios();
 const { doLogin, onGoogleLogin, onGithubLogin, onFtLogin } = useAuth();
-
+const { isEmailVerified } = storeToRefs(useUserStore());
 const isDisabled = computed(() => !username.value || !password.value);
 const onLogin = async () => {
   try {
@@ -14,7 +18,11 @@ const onLogin = async () => {
       username: username.value,
       password: password.value,
     });
-    await navigateTo({ path: localePath("index") });
+    if (isEmailVerified.value) {
+      await navigateTo({ path: localePath("index") });
+    } else {
+      await navigateTo({ path: localePath("auth-verify-email") });
+    }
     // TODO: Success Login popup
   } catch (e) {
     // TODO: Error popup

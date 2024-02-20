@@ -2,8 +2,10 @@
 import FtLogo from "~/assets/icons/42.svg";
 
 definePageMeta({
-  layout: "register",
+  layout: "auth",
+  middleware: ["non-auth"],
 });
+
 const axios = useAxios();
 const username = ref("");
 const password = ref("");
@@ -12,6 +14,7 @@ const lastName = ref("");
 const email = ref("");
 const localePath = useLocalePath();
 const { doRegister, onGoogleLogin, onGithubLogin, onFtLogin } = useAuth();
+const { locale } = useI18n();
 
 // TODO: Validation and show error message
 const handleOnSubmit = async () => {
@@ -24,7 +27,7 @@ const handleOnSubmit = async () => {
   };
 
   try {
-    await doRegister(axios, userInfo);
+    await doRegister(axios, userInfo, locale.value);
     await navigateTo({ path: localePath("auth-verify-email") });
   } catch (e) {
     console.error(e);
