@@ -26,6 +26,8 @@ const options: DataSourceOptions & SeederOptions = {
   logging: true,
   migrations: [],
   subscribers: [],
+
+  // seeding
   factories: [UserFactory, CommentFactory, MovieFactory],
   seeds: [MainSeeder],
 };
