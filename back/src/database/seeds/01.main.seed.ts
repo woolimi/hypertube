@@ -1,12 +1,12 @@
 import { Seeder, SeederFactoryManager } from 'typeorm-extension';
 import { DataSource } from 'typeorm';
-import { User } from '../../user/user.entity';
+import { User } from 'src/user/user.entity';
 
-import { faker } from "@faker-js/faker";
-import { Comment } from '../../comment/comment.entity';
-import { Movie } from '../../movie/movie.entity';
+import { faker } from '@faker-js/faker';
+import { Comment } from 'src/comment/comment.entity';
+import { Movie } from 'src/movie/movie.entity';
 
-export class UserSeeder implements Seeder {
+export class MainSeeder implements Seeder {
   public async run(
     dataSource: DataSource,
     factoryManager: SeederFactoryManager,
@@ -21,17 +21,16 @@ export class UserSeeder implements Seeder {
 
     const movies = await movieFactory.saveMany(10); // Seed 7 users
 
-    const comments = await Promise.all(Array(17)
-      .fill("")
-      .map(async () => {
-        const comment = await commentFactory.make(
-          {
+    const comments = await Promise.all(
+      Array(17)
+        .fill('')
+        .map(async () => {
+          const comment = await commentFactory.make({
             User: faker.helpers.arrayElement(users),
-            Movie: faker.helpers.arrayElement(movies)
-          }
-        ); // Assuming there is a make() method
-        return comment;
-      })
+            Movie: faker.helpers.arrayElement(movies),
+          }); // Assuming there is a make() method
+          return comment;
+        }),
     );
 
     // Save the comments
