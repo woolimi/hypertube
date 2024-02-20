@@ -5,7 +5,7 @@ import { UserService } from './user.service';
 import { UserRepository } from './user.repository';
 import { User } from './user.entity';
 import { JwtService } from '@nestjs/jwt';
-import { Comment } from 'src/comment/comment.entity'
+import { Comment } from 'src/comment/comment.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, Comment])],

@@ -1,7 +1,16 @@
-import { Entity, ManyToOne, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn, UpdateDateColumn, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn,
+  JoinColumn,
+} from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { Comment } from '../comment/comment.entity'
-import { MoviesWatched } from '../movie/movies-watched.entity';
+import { Comment } from 'src/comment/comment.entity';
+import { MoviesWatched } from 'src/movie/movies-watched.entity';
 @Entity('user')
 export class User {
   @ApiProperty({
@@ -31,7 +40,7 @@ export class User {
     example: 'marvin',
     required: true,
   })
-  @Column({ unique: true })
+  @Column({ unique: true, default: '' })
   username: string;
 
   @ApiProperty({
@@ -39,7 +48,7 @@ export class User {
     example: 'marvin@student.42.fr',
     required: true,
   })
-  @Column({ unique: true })
+  @Column({ unique: true, default: '' })
   email: string;
 
   @ApiProperty({
@@ -47,7 +56,7 @@ export class User {
     example: 'marvin',
     required: true,
   })
-  @Column()
+  @Column({ default: '' })
   password: string;
 
   @Column({ default: '' })
@@ -72,5 +81,5 @@ export class User {
   Comments: Comment[];
 
   @OneToMany((type) => MoviesWatched, (movieswatched) => movieswatched.User)
-  MoviesWatched: MoviesWatched[]
+  MoviesWatched: MoviesWatched[];
 }

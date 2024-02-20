@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import typeorm, { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from '../user/user.entity';
 import { Movie } from '../movie/movie.entity';
@@ -42,7 +42,7 @@ export class Comment {
     name: 'user_id',
     referencedColumnName: 'id',
   })
-  User: User;
+  User: typeorm.Relation<User>;
 
   @ManyToOne((type) => Movie, (movie) => movie.Comments)
   @JoinColumn({
