@@ -8,7 +8,7 @@ import {
   Delete,
   UseInterceptors,
   UseGuards,
-  UploadedFile
+  UploadedFile,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
@@ -23,7 +23,7 @@ import { cleanImageFile } from 'src/helper';
 @ApiTags('Users')
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService) {}
 
   @ApiOperation({ summary: 'Get all users' })
   @UseGuards(JwtAuthGuard)

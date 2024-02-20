@@ -1,10 +1,9 @@
-import { Entity, PrimaryColumn, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { User } from '../user/user.entity';
 import { Movie } from '../movie/movie.entity';
 
 @Entity('movieswatched')
 export class MoviesWatched {
-
   @Column('int', { primary: true, name: 'movie_id' })
   movieId: number;
 
@@ -13,7 +12,7 @@ export class MoviesWatched {
 
   @ManyToOne((type) => User, (user) => user.MoviesWatched, {
     onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
+    onUpdate: 'CASCADE',
   })
   @JoinColumn({
     name: 'user_id',
@@ -23,7 +22,7 @@ export class MoviesWatched {
 
   @ManyToOne((type) => Movie, (movie) => movie.MoviesWatched, {
     onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
+    onUpdate: 'CASCADE',
   })
   @JoinColumn({
     name: 'movie_id',
