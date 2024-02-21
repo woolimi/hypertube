@@ -53,5 +53,12 @@
     "description": "Vous pouvez maintenant profiter du film !",
     "title": "E-mail confirmé !",
     "watch": "Regarder un film"
+  },
+  "Error": {
+    "REQUIRED": "{value} est obligatoire",
+    "MAX_LENGTH": "{value} doit comporter mois de {length} caractères",
+    "MIN_LENGTH": "{value} doit comporter au moins {length} caractères.",
+    "INVALID_LOGIN": "Nom d'utilisateur ou mot de passe invalide",
+    "GENERAL_ERROR": "Erreur inattendue"
   }
 }

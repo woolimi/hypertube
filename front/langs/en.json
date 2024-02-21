@@ -53,5 +53,12 @@
     "description": "You can now enjoy movie!",
     "title": "Email confirmed!",
     "watch": "Watch movie"
+  },
+  "Error": {
+    "REQUIRED": " {value} is required",
+    "MAX_LENGTH": "{value} must be less than {length}",
+    "MIN_LENGTH": "{value} must be at least {length} characters long.",
+    "INVALID_LOGIN": "Invalid username or password",
+    "GENERAL_ERROR": "Unexpected error"
   }
 }

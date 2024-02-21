@@ -11,9 +11,62 @@ const password = ref("");
 const axios = useAxios();
 const { doLogin, onGoogleLogin, onGithubLogin, onFtLogin } = useAuth();
 const { isEmailVerified } = storeToRefs(useUserStore());
-const isDisabled = computed(() => !username.value || !password.value);
+const loading = ref(false);
+const dirty = ref(false);
+const { validator } = useValidator();
+const { t } = useI18n();
+
+const { error: errorUsername } = validator(dirty, username, [
+  (value) =>
+    !value.length
+      ? t("Error.REQUIRED", { value: t("AuthLogin.username") })
+      : "",
+  (value) =>
+    value.length < 2
+      ? t("Error.MIN_LENGTH", {
+          value: t("AuthLogin.username"),
+          length: 2,
+        })
+      : "",
+  (value) =>
+    value.length > 20
+      ? t("Error.MAX_LENGTH", {
+          value: t("AuthLogin.username"),
+          length: 20,
+        })
+      : "",
+]);
+
+const { error: errorPassword } = validator(dirty, password, [
+  (value) =>
+    !value.length
+      ? t("Error.REQUIRED", { value: t("AuthLogin.password") })
+      : "",
+  (value) =>
+    value.length < 8
+      ? t("Error.MIN_LENGTH", {
+          value: t("AuthLogin.password"),
+          length: 8,
+        })
+      : "",
+  (value) =>
+    value.length > 40
+      ? t("Error.MAX_LENGTH", {
+          value: t("AuthLogin.password"),
+          length: 40,
+        })
+      : "",
+]);
+const errorGlobal = ref("");
+
 const onLogin = async () => {
+  dirty.value = true;
+  if (errorUsername.value || errorPassword.value) {
+    return;
+  }
+
   try {
+    loading.value = true;
     await doLogin(axios, {
       username: username.value,
       password: password.value,
@@ -23,10 +76,15 @@ const onLogin = async () => {
     } else {
       await navigateTo({ path: localePath("auth-verify-email") });
     }
-    // TODO: Success Login popup
+    errorGlobal.value = "";
   } catch (e) {
-    // TODO: Error popup
-    console.error(e.message);
+    if (e.response && e.response.data.code) {
+      errorGlobal.value = t(`Error.${e.response.data.code}`);
+    } else {
+      errorGlobal.value = t(`Error.GENERAL_ERROR`);
+    }
+  } finally {
+    loading.value = false;
   }
 };
 </script>
@@ -74,16 +132,27 @@ const onLogin = async () => {
             type="text"
             :label="$t('AuthLogin.username')"
             autocomplete="username"
+            :error-message="errorUsername"
+            :error="!!errorGlobal"
           />
           <BaseInput
             v-model="password"
             type="password"
             :label="$t('AuthLogin.password')"
             autocomplete="current-password"
+            :error-message="errorPassword"
+            :error="!!errorGlobal"
           />
-          <Button type="submit" class="mt-4 w-full" :disabled="isDisabled">
-            {{ $t("AuthLogin.login") }}
-          </Button>
+          <Button
+            type="submit"
+            class="mt-4 w-full"
+            :loading="loading"
+            :label="loading ? null : $t('AuthLogin.login')"
+          />
+
+          <small v-if="dirty && errorGlobal" class="mt-2 text-lg text-red-500">
+            {{ errorGlobal }}
+          </small>
         </form>
 
         <div class="mt-5" v-html="$t('AuthLogin.noAccount')" />

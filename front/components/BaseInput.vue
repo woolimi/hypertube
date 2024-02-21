@@ -22,6 +22,14 @@ const props = defineProps({
     type: String,
     default: undefined,
   },
+  error: {
+    type: Boolean,
+    default: false,
+  },
+  errorMessage: {
+    type: String,
+    default: "",
+  },
 });
 const emit = defineEmits(["update:modelValue"]);
 const { modelValue } = useVModels(props, emit);
@@ -37,6 +45,27 @@ const id = useIdStore().get();
       :type="type"
       :placeholder="placeholder"
       :autocomplete="autocomplete"
+      :class="{ '!border-red-500': error || errorMessage }"
     />
+    <Transition name="fade">
+      <small v-if="errorMessage" class="text-red-500">{{ errorMessage }}</small>
+    </Transition>
   </div>
 </template>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 100ms ease-out;
+}
+
+.fade-leave-to,
+.fade-enter-from {
+  opacity: 0;
+}
+
+.fade-enter-to,
+.fade-leave-from {
+  opacity: 1;
+}
+</style>
