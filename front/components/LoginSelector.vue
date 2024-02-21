@@ -2,13 +2,14 @@
 import { onClickOutside } from "@vueuse/core";
 
 const localePath = useLocalePath();
-const options = ref([
+const { t } = useI18n();
+const options = computed(() => [
   {
-    name: "Login",
+    name: t("Navbar.LoginSelector.login"),
     value: "auth-login",
   },
   {
-    name: "Register",
+    name: t("Navbar.LoginSelector.register"),
     value: "auth-register",
   },
 ]);
@@ -35,7 +36,7 @@ onClickOutside(target, () => {
     <ul
       v-if="showDropdown"
       :class="$style.dropdown"
-      class="absolute right-0 top-[calc(100%+10px)] flex min-w-[100px] flex-col gap-1 rounded-lg bg-white p-1 text-black"
+      class="absolute right-0 top-[calc(100%+10px)] flex min-w-[140px] flex-col gap-1 rounded-lg bg-white p-1 text-black"
     >
       <li v-for="option in options" :key="option.value">
         <NuxtLink

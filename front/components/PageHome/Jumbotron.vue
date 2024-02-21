@@ -8,14 +8,17 @@
         <h1
           class="mb-10 max-w-[600px] px-2 pt-[100px] text-center text-4xl sm:text-5xl"
         >
-          <p><span class="text-primary-400">Unlimited</span> movies</p>
-          <p><span class="text-primary-400">Watch</span> anywhere</p>
+          <p v-html="$t('Home.Jumbotron.title1')"></p>
+          <p v-html="$t('Home.Jumbotron.title2')"></p>
         </h1>
 
         <div class="max-w-[600px]">
           <InputGroup class="flex">
-            <InputText placeholder="Type here..." class="w-full" />
-            <Button label="Search" />
+            <InputText
+              :placeholder="$t('Home.Search.placeholder')"
+              class="w-full"
+            />
+            <Button :label="$t('Home.Search.label')" />
           </InputGroup>
         </div>
       </div>
