@@ -6,6 +6,7 @@ export const useUserStore = defineStore("user", () => {
 
   const isLoggedIn = computed(() => !!userData.value.accessToken);
   const isEmailVerified = computed(() => userData.value.emailVerified);
+
   return {
     isLoggedIn,
     isEmailVerified,
