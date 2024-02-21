@@ -8,6 +8,8 @@ definePageMeta({
 });
 
 const { userData } = storeToRefs(useUserStore());
+// const { validator } = useValidator();
+const { t } = useI18n();
 const axios = useAxios();
 const router = useRouter();
 
@@ -57,7 +59,9 @@ function onClickAvatar() {
   <main class="min-h-[calc(100vh-64px)] px-4 pb-20 pt-[112px] md:px-8">
     <div class="mx-auto flex max-w-[540px] flex-col flex-wrap gap-10">
       <section>
-        <h2 class="text-3xl font-bold text-primary-400">Profile</h2>
+        <h2 class="text-3xl font-bold text-primary-400">
+          {{ $t("Profile.Profile.title") }}
+        </h2>
         <div
           class="mx-auto flex items-center justify-center gap-5 rounded-lg bg-surface-900 p-4"
         >
@@ -85,43 +89,59 @@ function onClickAvatar() {
           <aside class="grid flex-1 grid-cols-1 gap-6 md:grid-cols-2">
             <BaseInput
               v-model="username"
-              label="Username"
+              :label="$t('Profile.Profile.username')"
               class="md:col-span-2"
             />
-            <BaseInput v-model="firstName" label="First name" />
-            <BaseInput v-model="lastName" label="Last name" />
+            <BaseInput
+              v-model="firstName"
+              :label="$t('Profile.Profile.firstName')"
+            />
+            <BaseInput
+              v-model="lastName"
+              :label="$t('Profile.Profile.lastName')"
+            />
             <div class="col-span-1 text-right sm:col-span-2">
-              <Button label="Update profile" class="w-full sm:w-fit" disabled />
+              <Button
+                :label="`${$t('_Global.update')} ${t('Profile.Profile.title')}`"
+                class="w-full sm:w-fit"
+                disabled
+              />
             </div>
           </aside>
         </div>
       </section>
 
       <section>
-        <h2 class="text-3xl font-bold text-primary-400">Account</h2>
+        <h2 class="text-3xl font-bold text-primary-400">
+          {{ $t("Profile.Account.title") }}
+        </h2>
         <div class="mx-auto flex flex-col gap-4 rounded-lg bg-surface-900 p-4">
           <form class="flex flex-col items-end gap-3 sm:flex-row">
             <BaseInput
               v-model="email"
-              label="Email"
+              :label="$t('Profile.Account.email')"
               type="email"
               class="w-full"
             />
-            <Button label="Update" class="w-full sm:w-fit" disabled />
+            <Button
+              :label="$t('_Global.update')"
+              class="whitespace-nowrap sm:w-fit"
+              disabled
+            />
           </form>
 
           <form class="flex flex-col items-end gap-3 sm:flex-row">
             <BaseInput
               v-model="password"
-              label="Password"
+              :label="$t('Profile.Account.password')"
               type="password"
               class="w-full"
-              placeholder="Enter new password"
+              :placeholder="$t('Profile.Account.enterNewPassword')"
               autocomplete="none"
             />
             <Button
-              label="Update"
-              class="sm:py-none w-full sm:w-fit"
+              :label="$t('_Global.update')"
+              class="whitespace-nowrap sm:w-fit"
               disabled
             />
           </form>
@@ -129,7 +149,9 @@ function onClickAvatar() {
       </section>
 
       <section>
-        <h2 class="text-3xl font-bold text-primary-400">Watched list</h2>
+        <h2 class="text-3xl font-bold text-primary-400">
+          {{ $t("Profile.WatchedList.title") }}
+        </h2>
       </section>
     </div>
   </main>
