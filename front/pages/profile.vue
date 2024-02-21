@@ -3,15 +3,25 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
 
+import { useProfile } from "../composables/useProfile";
+
 definePageMeta({
   middleware: ["loose-auth"],
 });
 
 const { userData } = storeToRefs(useUserStore());
-// const { validator } = useValidator();
+const {
+  validator,
+  passwordRule,
+  emailRule,
+  minLengthRule,
+  maxLengthRule,
+  requiredRule,
+  DEFAULT_MAX,
+  DEFAULT_MIN,
+} = useValidator();
 const { t } = useI18n();
-const axios = useAxios();
-const router = useRouter();
+const { updateAvatar, updateProfile } = useProfile();
 
 const email = ref(userData.value?.email);
 const username = ref(userData.value?.username);
@@ -28,27 +38,104 @@ const avatar = computed({
 const password = ref("");
 const fileInput = ref(null);
 
-function onUpload(event) {
-  const file = event.target.files[0];
-  if (file) {
-    const reader = new FileReader();
+const dirtyProfile = ref(false);
+const dirtyEmail = ref(false);
+const dirtyPassword = ref(false);
 
-    reader.onload = async () => {
-      const formData = new FormData();
-      formData.append("image", file);
-      const { id } = userData.value;
-      if (id) {
-        formData.append("userId", id);
-        try {
-          await axios.put(`/users/avatar`, formData);
-          router.go();
-        } catch (error) {
-          console.error(error);
-        }
-      }
-    };
-    reader.readAsDataURL(file);
+const { error: errorUsername } = validator(dirtyProfile, username, [
+  requiredRule(t("Error.REQUIRED", { value: t("Profile.Profile.username") })),
+  minLengthRule(
+    t("Error.MIN_LENGTH", {
+      value: t("Profile.Profile.username"),
+      length: DEFAULT_MIN,
+    }),
+  ),
+  maxLengthRule(
+    t("Error.MAX_LENGTH", {
+      value: t("Profile.Profile.username"),
+      length: DEFAULT_MAX,
+    }),
+  ),
+]);
+
+const { error: errorFirstName } = validator(dirtyProfile, firstName, [
+  requiredRule(t("Error.REQUIRED", { value: t("Profile.Profile.firstName") })),
+  minLengthRule(
+    t("Error.MIN_LENGTH", {
+      value: t("Profile.Profile.firstName"),
+      length: DEFAULT_MIN,
+    }),
+  ),
+  maxLengthRule(
+    t("Error.MAX_LENGTH", {
+      value: t("Profile.Profile.firstName"),
+      length: DEFAULT_MAX,
+    }),
+  ),
+]);
+
+const { error: errorLastName } = validator(dirtyProfile, lastName, [
+  requiredRule(t("Error.REQUIRED", { value: t("Profile.Profile.lastName") })),
+  minLengthRule(
+    t("Error.MIN_LENGTH", {
+      value: t("Profile.Profile.lastName"),
+      length: DEFAULT_MIN,
+    }),
+  ),
+  maxLengthRule(
+    t("Error.MAX_LENGTH", {
+      value: t("Profile.Profile.lastName"),
+      length: DEFAULT_MAX,
+    }),
+  ),
+]);
+
+const { error: errorEmail } = validator(dirtyEmail, email, [
+  requiredRule(t("Error.REQUIRED", { value: t("Profile.Account.email") })),
+  emailRule(t("Error.INVALID_EMAIL")),
+]);
+
+const { error: errorPassword } = validator(dirtyPassword, password, [
+  requiredRule(t("Error.REQUIRED", { value: t("Profile.Account.password") })),
+  passwordRule(t("Error.INVALID_PASSWORD")),
+]);
+
+//TODO: put error handling
+async function onUpdateProfile() {
+  dirtyProfile.value = true;
+  if (errorUsername.value || errorFirstName.value || errorLastName.value) {
+    return;
   }
+  await updateProfile(userData.value.id, {
+    username: username.value,
+    firstName: firstName.value,
+    lastName: lastName.value,
+  });
+  dirtyProfile.value = false;
+}
+
+//TODO: put error handling
+async function onUpdateEmail() {
+  dirtyEmail.value = true;
+  if (errorEmail.value) {
+    return;
+  }
+  await updateProfile(userData.value.id, {
+    email: email.value,
+  });
+  dirtyEmail.value = false;
+}
+
+//TODO: put error handling
+async function onUpdatePassword() {
+  dirtyPassword.value = true;
+  if (errorPassword.value) {
+    return;
+  }
+  await updateProfile(userData.value.id, {
+    password: password.value,
+  });
+  dirtyPassword.value = false;
 }
 
 function onClickAvatar() {
@@ -84,27 +171,30 @@ function onClickAvatar() {
             class="hidden"
             accept="image/*"
             maxlength="1000000"
-            @change="onUpload"
+            @change="updateAvatar"
           />
           <aside class="grid flex-1 grid-cols-1 gap-6 md:grid-cols-2">
             <BaseInput
               v-model="username"
+              :error-message="errorUsername"
               :label="$t('Profile.Profile.username')"
               class="md:col-span-2"
             />
             <BaseInput
               v-model="firstName"
+              :error-message="errorFirstName"
               :label="$t('Profile.Profile.firstName')"
             />
             <BaseInput
               v-model="lastName"
+              :error-message="errorLastName"
               :label="$t('Profile.Profile.lastName')"
             />
             <div class="col-span-1 text-right sm:col-span-2">
               <Button
                 :label="`${$t('_Global.update')} ${t('Profile.Profile.title')}`"
                 class="w-full sm:w-fit"
-                disabled
+                @click="onUpdateProfile"
               />
             </div>
           </aside>
@@ -116,21 +206,23 @@ function onClickAvatar() {
           {{ $t("Profile.Account.title") }}
         </h2>
         <div class="mx-auto flex flex-col gap-4 rounded-lg bg-surface-900 p-4">
-          <form class="flex flex-col items-end gap-3 sm:flex-row">
+          <div class="flex flex-col items-start gap-3 sm:flex-row">
             <BaseInput
               v-model="email"
+              :error-message="errorEmail"
               :label="$t('Profile.Account.email')"
+              autocomplete="none"
               type="email"
               class="w-full"
             />
             <Button
               :label="$t('_Global.update')"
-              class="whitespace-nowrap sm:w-fit"
-              disabled
+              class="mt-7 whitespace-nowrap sm:w-fit"
+              @click="onUpdateEmail"
             />
-          </form>
+          </div>
 
-          <form class="flex flex-col items-end gap-3 sm:flex-row">
+          <div class="flex flex-col items-start gap-3 sm:flex-row">
             <BaseInput
               v-model="password"
               :label="$t('Profile.Account.password')"
@@ -138,13 +230,14 @@ function onClickAvatar() {
               class="w-full"
               :placeholder="$t('Profile.Account.enterNewPassword')"
               autocomplete="none"
+              :error-message="errorPassword"
             />
             <Button
               :label="$t('_Global.update')"
-              class="whitespace-nowrap sm:w-fit"
-              disabled
+              class="mt-7 whitespace-nowrap sm:w-fit"
+              @click="onUpdatePassword"
             />
-          </form>
+          </div>
         </div>
       </section>
 
