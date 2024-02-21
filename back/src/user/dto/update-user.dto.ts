@@ -29,7 +29,7 @@ export class UpdateUserDto {
   email?: string;
 
   @IsNotEmpty()
-  @Length(8, 20)
+  @Length(8, 40)
   @IsOptional()
   password?: string;
 
