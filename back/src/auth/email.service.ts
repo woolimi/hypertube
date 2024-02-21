@@ -31,7 +31,7 @@ export class EmailService {
     );
 
     await this.emailjs.send(process.env.EMAILJS_SERVICE_ID, template[lang], {
-      link: `${process.env.BACK_HOST}/auth/verify-email?token=${token}`,
+      link: `${process.env.BACK_HOST}/auth/verify-email?token=${token}&lang=${lang}`,
     });
   }
 }

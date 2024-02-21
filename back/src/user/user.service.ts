@@ -35,11 +35,10 @@ export class UserService {
     });
   }
 
-  async findOneByEmail(email: string, provider: string): Promise<User> {
+  async findOneByEmail(email: string): Promise<User> {
     return this.userRepository.findOne({
       where: {
         email,
-        provider,
       },
     });
   }
@@ -61,6 +60,7 @@ export class UserService {
   }
 
   async saveRefreshToken(id: string, refreshToken: string): Promise<void> {
+    console.log('id', id);
     await this.userRepository.update(id, { refreshToken });
   }
 }
