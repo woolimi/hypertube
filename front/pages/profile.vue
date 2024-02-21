@@ -9,6 +9,7 @@ definePageMeta({
 
 const { userData } = storeToRefs(useUserStore());
 const axios = useAxios();
+const router = useRouter();
 
 const email = ref(userData.value?.email);
 const username = ref(userData.value?.username);
@@ -37,17 +38,8 @@ function onUpload(event) {
       if (id) {
         formData.append("userId", id);
         try {
-          // method I - use FileReader
           await axios.put(`/users/avatar`, formData);
-          avatar.value = reader.result;
-
-          // method II - update url sent by server response
-          // const res = await axios.put(`/users/avatar`, formData);
-          // avatar.value = res.data;
-
-          // method III - useRouter to refresh page - TODO: put loader
-          // await axios.put(`/users/avatar`, formData);
-          // router.go();
+          router.go();
         } catch (error) {
           console.error(error);
         }
