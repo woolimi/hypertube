@@ -1,16 +1,22 @@
-import emailjs from '@emailjs/nodejs';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import NodeMailer from 'nodemailer';
+import { ServiceUnavailableException } from '@nestjs/common';
 
 @Injectable()
 export class EmailService {
-  public emailjs;
+  public transporter;
 
   constructor(private readonly jwtService: JwtService) {
-    this.emailjs = emailjs;
-    this.emailjs.init({
-      publicKey: process.env.EMAILJS_PUBLIC_KEY,
-      privateKey: process.env.EMAILJS_PRIVATE_KEY,
+    this.transporter = NodeMailer.createTransport({
+      service: 'gmail',
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.GMAIL_ID,
+        pass: process.env.GMAIL_PASSWORD,
+      },
     });
   }
 
@@ -18,10 +24,6 @@ export class EmailService {
     data: { id: string; email: string },
     lang: 'en' | 'fr',
   ) {
-    const template = {
-      en: 'template_4u8p9b3',
-      fr: 'template_snc2bgr',
-    };
     const token = this.jwtService.sign(
       { userId: data.id },
       {
@@ -29,9 +31,31 @@ export class EmailService {
         expiresIn: `${24 * 60 * 60}s`, // 24 hours
       },
     );
-
-    await this.emailjs.send(process.env.EMAILJS_SERVICE_ID, template[lang], {
-      link: `${process.env.BACK_HOST}/auth/verify-email?token=${token}&lang=${lang}`,
-    });
+    const template = {
+      en: {
+        subject: 'Verify your email',
+        html: `<a href="${process.env.BACK_HOST}/auth/verify-email?token=${token}&lang=${lang}">Verify your email</a>`,
+      },
+      fr: {
+        subject: 'Verifier votre email',
+        html: `<a href="${process.env.BACK_HOST}/auth/verify-email?token=${token}&lang=${lang}">Verifier votre email</a>`,
+      },
+    };
+    const mailOptions = {
+      from: {
+        name: 'Hypertube',
+        address: process.env.GMAIL_ID,
+      },
+      to: data.email,
+      subject: template[lang].subject,
+      html: template[lang].html,
+    };
+    try {
+      await this.transporter.sendMail(mailOptions);
+      Logger.log('Email sent to ' + data.email);
+      Logger.log(template[lang].html);
+    } catch (error) {
+      throw new ServiceUnavailableException("Can't send email");
+    }
   }
 }
