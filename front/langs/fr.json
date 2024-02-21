@@ -58,6 +58,7 @@
     "REQUIRED": "{value} est obligatoire",
     "MAX_LENGTH": "{value} doit comporter mois de {length} caractères",
     "MIN_LENGTH": "{value} doit comporter au moins {length} caractères.",
-    "INVALID_LOGIN": "Nom d'utilisateur ou mot de passe invalide"
+    "INVALID_LOGIN": "Nom d'utilisateur ou mot de passe invalide",
+    "GENERAL_ERROR": "Erreur inattendue"
   }
 }

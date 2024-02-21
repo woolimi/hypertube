@@ -81,7 +81,7 @@ const onLogin = async () => {
     if (e.response && e.response.data.code) {
       errorGlobal.value = t(`Error.${e.response.data.code}`);
     } else {
-      errorGlobal.value = t(`Error.${e.response.data.code}`);
+      errorGlobal.value = t(`Error.GENERAL_ERROR`);
     }
   } finally {
     loading.value = false;

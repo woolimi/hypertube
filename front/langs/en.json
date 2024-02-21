@@ -58,6 +58,7 @@
     "REQUIRED": " {value} is required",
     "MAX_LENGTH": "{value} must be less than {length}",
     "MIN_LENGTH": "{value} must be at least {length} characters long.",
-    "INVALID_LOGIN": "Invalid username or password"
+    "INVALID_LOGIN": "Invalid username or password",
+    "GENERAL_ERROR": "Unexpected error"
   }
 }
