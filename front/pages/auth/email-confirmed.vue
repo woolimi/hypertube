@@ -8,12 +8,14 @@ definePageMeta({
 <template>
   <div class="mt-10 flex w-full max-w-[450px] flex-col items-center gap-4">
     <h1 class="text-center text-3xl font-[800] sm:text-4xl lg:mb-10">
-      Email confirmed!
+      {{ $t("AuthEmailConfirmed.title") }}
     </h1>
-    <p class="text-center text-2xl text-gray-400">You can now enjoy movie!</p>
+    <p class="text-center text-2xl text-gray-400">
+      {{ $t("AuthEmailConfirmed.description") }}
+    </p>
     <div>
       <NuxtLink :to="localePath('index')">
-        <Button label="Watch movie" />
+        <Button :label="$t('AuthEmailConfirmed.watch')" />
       </NuxtLink>
     </div>
   </div>

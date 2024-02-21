@@ -1,0 +1,57 @@
+{
+  "Home": {
+    "Jumbotron": {
+      "title1": "Films <span class=\"text-primary-400\">illimités</span>",
+      "title2": "Regardez <span class=\"text-primary-400\">partout</span>"
+    },
+    "Search": {
+      "label": "Voir",
+      "placeholder": "Écrivez ici..."
+    },
+    "Movies": {
+      "title": "Les films"
+    }
+  },
+  "Footer": {
+    "copyright": "Tous droits réservés."
+  },
+  "Navbar": {
+    "LoginSelector": {
+      "login": "Se connecter",
+      "register": "S'inscrire"
+    }
+  },
+  "AuthLogin": {
+    "title": "Connectez-vous pour accéder",
+    "username": "Nom d'utilisateur",
+    "password": "Mot de passe",
+    "login": "Se connecter",
+    "noAccount": "<p>Vous n'avez pas de compte ?</p><p>Cliquez <a class=\"text-primary-500 hover:text-primary-400 underline\" href=\"/fr/auth/register\"> ici </a> pour vous inscrire</p>",
+    "or": "OU"
+  },
+  "AuthRegister": {
+    "title": "Bienvenue sur Hypertube !",
+    "description": "Créez un compte pour profiter de films en illimité",
+    "or": "OU",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "email": "E-mail",
+    "username": "Nom d'utilisateur",
+    "password": "Mot de passe",
+    "register": "S'inscrire",
+    "Stepper": {
+      "step3": "Fin",
+      "step2": "Vérifier E-mail",
+      "step1": "S'inscrire"
+    }
+  },
+  "AuthVerifyEmail": {
+    "description": "Veuillez vérifier votre boîte aux lettres",
+    "title": "En attente de votre email de confirmation"
+  },
+  "AuthEmailConfirmed": {
+    "description": "Vous pouvez maintenant profiter du film !",
+    "title": "E-mail confirmé !",
+    "watch": "Regarder un film"
+  }
+}

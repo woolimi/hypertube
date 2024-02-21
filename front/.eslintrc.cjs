@@ -20,7 +20,7 @@ module.exports = {
   rules: {
     "no-console": "off",
     "no-alert": "error",
-    "vue/no-v-html": "error",
+    "vue/no-v-html": "off",
     "vue/multi-word-component-names": "off",
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error",

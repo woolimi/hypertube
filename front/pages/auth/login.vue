@@ -37,7 +37,7 @@ const onLogin = async () => {
   >
     <div class="mt-10 flex w-full max-w-[450px] flex-col items-center gap-4">
       <h1 class="text-center text-2xl font-[800] md:text-4xl lg:mb-10">
-        Login to get access
+        {{ $t("AuthLogin.title") }}
       </h1>
 
       <section class="mt-10">
@@ -60,7 +60,7 @@ const onLogin = async () => {
 
       <div class="flex w-full items-center gap-3">
         <hr class="w-full border-[1px] border-white" />
-        or
+        {{ $t("AuthLogin.or") }}
         <hr class="w-full border-[1px] border-white" />
       </div>
 
@@ -72,28 +72,21 @@ const onLogin = async () => {
           <BaseInput
             v-model="username"
             type="text"
-            label="Username"
+            :label="$t('AuthLogin.username')"
             autocomplete="username"
           />
           <BaseInput
             v-model="password"
             type="password"
-            label="Password"
+            :label="$t('AuthLogin.password')"
             autocomplete="current-password"
           />
-          <Button type="submit" class="mt-4 w-full" :disabled="isDisabled"
-            >Login
+          <Button type="submit" class="mt-4 w-full" :disabled="isDisabled">
+            {{ $t("AuthLogin.login") }}
           </Button>
         </form>
 
-        <div class="mt-5">
-          <p>You don't have an account yet?</p>
-          <p>
-            Click
-            <BaseLink :to="localePath('auth-register')"> here </BaseLink> to
-            register
-          </p>
-        </div>
+        <div class="mt-5" v-html="$t('AuthLogin.noAccount')" />
       </section>
     </div>
   </main>

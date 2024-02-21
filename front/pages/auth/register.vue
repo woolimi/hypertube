@@ -38,10 +38,10 @@ const handleOnSubmit = async () => {
 <template>
   <div class="mt-10 flex w-full max-w-[450px] flex-col items-center gap-4">
     <h1 class="text-center text-2xl font-[800] md:text-4xl lg:mb-10">
-      Welcome to Hypertube!
+      {{ $t("AuthRegister.title") }}
     </h1>
     <p class="text-center text-lg text-gray-400">
-      Create an account to enjoy unlimited movies
+      {{ $t("AuthRegister.description") }}
     </p>
 
     <section class="mt-3">
@@ -64,7 +64,7 @@ const handleOnSubmit = async () => {
 
     <div class="flex w-full items-center gap-3">
       <hr class="w-full border-[1px] border-white" />
-      or
+      {{ $t("AuthRegister.or") }}
       <hr class="w-full border-[1px] border-white" />
     </div>
 
@@ -73,37 +73,37 @@ const handleOnSubmit = async () => {
         <BaseInput
           v-model="firstName"
           type="text"
-          label="First name"
+          :label="$t('AuthRegister.firstName')"
           autocomplete="given-name"
         />
         <BaseInput
           v-model="lastName"
           type="text"
-          label="Last name"
+          :label="$t('AuthRegister.lastName')"
           autocomplete="family-name"
         />
         <BaseInput
           v-model="email"
           type="email"
-          label="Email"
+          :label="$t('AuthRegister.email')"
           autocomplete="email"
           class="sm:col-span-2"
         />
         <BaseInput
           v-model="username"
           type="text"
-          label="Username"
+          :label="$t('AuthRegister.username')"
           autocomplete="username"
         />
         <BaseInput
           v-model="password"
           type="password"
-          label="Password"
+          :label="$t('AuthRegister.password')"
           autocomplete="current-password"
         />
-        <Button class="mt-4 w-full sm:col-span-2" type="submit"
-          >Register</Button
-        >
+        <Button class="mt-4 w-full sm:col-span-2" type="submit">
+          {{ $t("AuthRegister.register") }}
+        </Button>
       </form>
     </section>
   </div>
