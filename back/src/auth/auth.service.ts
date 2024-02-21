@@ -31,7 +31,7 @@ export class AuthService {
     const email = emails.filter((e) => e.verified)[0]?.value;
 
     if (!email) return null;
-    const user = await this.userService.findOneByEmail(email, provider);
+    const user = await this.userService.findOneByEmail(email);
 
     if (!user) {
       const _username = await this.createUsernameIfDuplicated(displayName);
@@ -57,7 +57,7 @@ export class AuthService {
     const image = photos[0].value;
 
     if (!email) return null;
-    const user = await this.userService.findOneByEmail(email, provider);
+    const user = await this.userService.findOneByEmail(email);
 
     if (!user) {
       const _username = await this.createUsernameIfDuplicated(username);
@@ -85,7 +85,7 @@ export class AuthService {
     const image = (_json as any).image.link;
 
     if (!email) return null;
-    const user = await this.userService.findOneByEmail(email, provider);
+    const user = await this.userService.findOneByEmail(email);
 
     if (!user) {
       const _username = await this.createUsernameIfDuplicated(username);

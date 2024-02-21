@@ -12,7 +12,9 @@ definePageMeta({
     </h1>
     <p class="text-center text-2xl text-gray-400">You can now enjoy movie!</p>
     <div>
-      <Button label="Watch movie" />
+      <NuxtLink :to="localePath('index')">
+        <Button label="Watch movie" />
+      </NuxtLink>
     </div>
   </div>
 </template>

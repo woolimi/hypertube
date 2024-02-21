@@ -79,19 +79,11 @@ export class AuthController {
     @Response({ passthrough: true }) res,
     @Query('lang') lang,
   ) {
-    const found = await this.userService.findOneByEmail(
-      user.email,
-      user.provider || 'local',
-    );
+    const found = await this.userService.findOneByEmail(user.email);
 
     let createdUser = null;
     if (found && !found.emailVerified) {
-      createdUser = await this.userService.update(found.id, {
-        ...found,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        username: user.username,
-      });
+      createdUser = found;
     } else if (found) {
       throw new BadRequestException('Email already exists');
     } else {
