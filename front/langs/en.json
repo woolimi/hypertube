@@ -40,7 +40,9 @@
     "INVALID_PASSWORD": "Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a digit, and a special character.",
     "MAX_LENGTH": "{value} must be less than {length}",
     "MIN_LENGTH": "{value} must be at least {length} characters long.",
-    "REQUIRED": " {value} is required"
+    "REQUIRED": " {value} is required",
+    "EMAIL_ALREADY_EXISTS": "Email already exists.",
+    "USERNAME_ALREADY_EXISTS": "Username already exists."
   },
   "Footer": {
     "copyright": "All Rights Reserved."

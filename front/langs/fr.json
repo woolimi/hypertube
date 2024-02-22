@@ -47,7 +47,9 @@
     "INVALID_PASSWORD": "Le mot de passe doit avoir au moins 8 caractères et contenir une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial.",
     "MAX_LENGTH": "{value} doit comporter mois de {length} caractères",
     "MIN_LENGTH": "{value} doit comporter au moins {length} caractères.",
-    "REQUIRED": "{value} est obligatoire"
+    "REQUIRED": "{value} est obligatoire",
+    "EMAIL_ALREADY_EXISTS": "L'adresse e-mail existe déjà.",
+    "USERNAME_ALREADY_EXISTS": "Le nom d'utilisateur existe déjà."
   },
   "Footer": {
     "copyright": "Tous droits réservés."
