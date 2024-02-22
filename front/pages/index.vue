@@ -1,21 +1,27 @@
 <script setup>
-import { map, pipe, range, toArray } from "@fxts/core";
+const axios = useAxios();
+const info = reactive({
+  page: 1,
+  total_pages: 0,
+  total_results: 0,
+});
 
-const movies = ref(
-  pipe(
-    range(20),
-    map(() => ({
-      image: "/thumbnail.jpeg",
-      title: "Don't look up",
-      description:
-        "Deux astronomes méconnus entreprennent une tournée médiatique pour prévenir l'humanité qu'une comète fonce sur la Terre. Mais cela n'a pas l'air d'inquiéter grand monde.",
-      genre: ["SF", "Comedies", "Drames sociaux"],
-      score: 4.5,
-      mid: 12345,
-    })),
-    toArray,
-  ),
-);
+const { localeProperties } = useI18n();
+const movies = ref([]);
+
+onMounted(async () => {
+  const { data } = await axios.get("/movies/", {
+    params: {
+      page: info.page,
+      language: localeProperties.value.iso,
+    },
+  });
+  const { page, total_pages, total_results, results } = data;
+  info.page = page;
+  info.total_pages = total_pages;
+  info.total_results = total_results;
+  movies.value = results;
+});
 </script>
 
 <template>

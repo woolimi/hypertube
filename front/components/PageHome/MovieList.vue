@@ -1,9 +1,12 @@
-<script setup>
+<script setup lang="ts">
+import type { PropType } from "vue";
+
+import type { MovieData } from "~/types";
+
 // TODO: Add infinite scroll
-// TODO: Different Thumbnail for watched movies
 defineProps({
   items: {
-    type: Array,
+    type: Array as PropType<MovieData[]>,
     default: () => [],
   },
   title: {
