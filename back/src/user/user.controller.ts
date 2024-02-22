@@ -4,7 +4,7 @@ import {
   Body,
   Req,
   Param,
-  Put,
+  Patch,
   Delete,
   UseInterceptors,
   UseGuards,
@@ -32,7 +32,7 @@ export class UserController {
     return this.userService.findAll();
   }
 
-  @Put('avatar')
+  @Patch('avatar')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(
     FileInterceptor('image', {
@@ -64,7 +64,7 @@ export class UserController {
     return this.userService.findOneById(id);
   }
 
-  @Put(':id')
+  @Patch(':id')
   async update(
     @Param('id') id: string,
     @Body() user: UpdateUserDto,

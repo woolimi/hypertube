@@ -52,7 +52,11 @@ export class UserService {
   }
 
   async update(id: string, user: UpdateUserDto): Promise<UpdateResult> {
-    return await this.userRepository.update(id, user);
+    if (user.password) {
+      user.password = await this.cryptPassword(user.password);
+    }
+
+    return this.userRepository.update(id, user);
   }
 
   async remove(id: string): Promise<void> {
@@ -62,5 +66,10 @@ export class UserService {
   async saveRefreshToken(id: string, refreshToken: string): Promise<void> {
     console.log('id', id);
     await this.userRepository.update(id, { refreshToken });
+  }
+
+  async cryptPassword(password: string): Promise<string> {
+    const salt = await bcrypt.genSalt();
+    return bcrypt.hash(password, salt);
   }
 }

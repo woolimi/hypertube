@@ -1,19 +1,64 @@
 {
+  "_Global": {
+    "update": "Update"
+  },
+  "AuthEmailConfirmed": {
+    "description": "You can now enjoy movie!",
+    "title": "Email confirmed!",
+    "watch": "Watch movie"
+  },
+  "AuthLogin": {
+    "login": "Login",
+    "noAccount": "<p>You don't have an account yet?</p><p>Click <a class=\"text-primary-500 hover:text-primary-400 underline\" href=\"/en/auth/register\"> here </a> to register</p>",
+    "or": "OR",
+    "password": "Password",
+    "title": "Login to get access",
+    "username": "Username"
+  },
+  "AuthRegister": {
+    "description": "Create an account to enjoy unlimited movies",
+    "email": "Email",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "or": "OR",
+    "password": "Password",
+    "register": "Register",
+    "Stepper": {
+      "step1": "Register",
+      "step2": "Verify email",
+      "step3": "Done"
+    },
+    "title": "Welcome to Hypertube!",
+    "username": "Username"
+  },
+  "AuthVerifyEmail": {
+    "description": "Please check your mail box",
+    "title": "Waiting for your email confirmation"
+  },
+  "Error": {
+    "GENERAL_ERROR": "Unexpected error",
+    "INVALID_EMAIL": "Invalid email address",
+    "INVALID_LOGIN": "Invalid username or password",
+    "INVALID_PASSWORD": "Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a digit, and a special character.",
+    "MAX_LENGTH": "{value} must be less than {length}",
+    "MIN_LENGTH": "{value} must be at least {length} characters long.",
+    "REQUIRED": " {value} is required"
+  },
+  "Footer": {
+    "copyright": "All Rights Reserved."
+  },
   "Home": {
     "Jumbotron": {
       "title1": "<span class=\"text-primary-400\">Unlimited</span> movies",
       "title2": "<span class=\"text-primary-400\">Watch</span> everywhere"
     },
+    "Movies": {
+      "title": "Movies"
+    },
     "Search": {
       "label": "Search",
       "placeholder": "Type here..."
-    },
-    "Movies": {
-      "title": "Movies"
     }
-  },
-  "Footer": {
-    "copyright": "All Rights Reserved."
   },
   "Navbar": {
     "LoginSelector": {
@@ -21,44 +66,21 @@
       "register": "Register"
     }
   },
-  "AuthLogin": {
-    "title": "Login to get access",
-    "username": "Username",
-    "password": "Password",
-    "login": "Login",
-    "noAccount": "<p>You don't have an account yet?</p><p>Click <a class=\"text-primary-500 hover:text-primary-400 underline\" href=\"/en/auth/register\"> here </a> to register</p>",
-    "or": "OR"
-  },
-  "AuthRegister": {
-    "title": "Welcome to Hypertube!",
-    "description": "Create an account to enjoy unlimited movies",
-    "or": "OR",
-    "firstName": "First name",
-    "lastName": "Last name",
-    "email": "Email",
-    "username": "Username",
-    "password": "Password",
-    "register": "Register",
-    "Stepper": {
-      "step1": "Register",
-      "step2": "Verify email",
-      "step3": "Done"
+  "Profile": {
+    "Account": {
+      "email": "Email",
+      "enterNewPassword": "Enter new password",
+      "password": "Password",
+      "title": "Account"
+    },
+    "Profile": {
+      "firstName": "First name",
+      "lastName": "Last name",
+      "title": "Profile",
+      "username": "Username"
+    },
+    "WatchedList": {
+      "title": "Watched list"
     }
-  },
-  "AuthVerifyEmail": {
-    "description": "Please check your mail box",
-    "title": "Waiting for your email confirmation"
-  },
-  "AuthEmailConfirmed": {
-    "description": "You can now enjoy movie!",
-    "title": "Email confirmed!",
-    "watch": "Watch movie"
-  },
-  "Error": {
-    "REQUIRED": " {value} is required",
-    "MAX_LENGTH": "{value} must be less than {length}",
-    "MIN_LENGTH": "{value} must be at least {length} characters long.",
-    "INVALID_LOGIN": "Invalid username or password",
-    "GENERAL_ERROR": "Unexpected error"
   }
 }

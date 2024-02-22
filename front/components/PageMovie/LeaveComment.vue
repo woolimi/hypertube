@@ -1,5 +1,5 @@
 <script setup>
-const comment = ref()
+const comment = ref();
 </script>
 
 <template>
