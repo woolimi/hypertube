@@ -70,16 +70,10 @@ export const useValidator = () => {
     dirty: ComputedRef<boolean>,
     firstName: ComputedRef<string>,
     t: any, //I18n
-<<<<<<< HEAD
+
   ) => {
     return validator(dirty, firstName, [
       requiredRule(t("Error.REQUIRED", { value: t("_Global.firstName") })),
-=======
-    pageModule: any,
-  ) => {
-    return validator(dirty, firstName, [
-      requiredRule(t("Error.REQUIRED", { value: pageModule })),
->>>>>>> bed6999 (refactor: generate globally used validators for profile and account info)
       minLengthRule(
         t("Error.MIN_LENGTH", {
           value: t("_Global.firstName"),
@@ -97,11 +91,10 @@ export const useValidator = () => {
 
   const lastNameValidator = (
     dirty: ComputedRef<boolean>,
-    lastName: ComputedRef<string>,
+    password: ComputedRef<string>,
     t: any, //I18n
   ) => {
-    return validator(dirty, lastName, [
-<<<<<<< HEAD
+    return validator(dirty, password, [
       requiredRule(t("Error.REQUIRED", { value: t("_Global.lastName") })),
       minLengthRule(
         t("Error.MIN_LENGTH", {
@@ -118,12 +111,6 @@ export const useValidator = () => {
     ]);
   };
 
-=======
-      requiredRule(t("Error.REQUIRED", { value: t("_Global.password") })),
-      passwordRule(t("Error.INVALID_PASSWORD")),
-    ]);
-  };
->>>>>>> bed6999 (refactor: generate globally used validators for profile and account info)
   const emailValidator = (
     dirty: ComputedRef<boolean>,
     email: ComputedRef<string>,
@@ -137,27 +124,12 @@ export const useValidator = () => {
 
   const passwordValidator = (
     dirty: ComputedRef<boolean>,
-    password: ComputedRef<string>,
+    lastName: ComputedRef<string>,
     t: any, //I18n
   ) => {
-    return validator(dirty, password, [
+    return validator(dirty, lastName, [
       requiredRule(t("Error.REQUIRED", { value: t("_Global.password") })),
-<<<<<<< HEAD
       passwordRule(t("Error.INVALID_PASSWORD")),
-=======
-      minLengthRule(
-        t("Error.MIN_LENGTH", {
-          value: t("_Global.password"),
-          length: DEFAULT_MIN,
-        }),
-      ),
-      maxLengthRule(
-        t("Error.MAX_LENGTH", {
-          value: t("_Global.password"),
-          length: DEFAULT_MAX,
-        }),
-      ),
->>>>>>> bed6999 (refactor: generate globally used validators for profile and account info)
     ]);
   };
 

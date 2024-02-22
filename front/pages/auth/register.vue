@@ -32,10 +32,6 @@ const { error: errorEmail } = emailValidator(dirty, email, t);
 const { error: errorPassword } = passwordValidator(dirty, password, t);
 const errorGlobal = ref("");
 
-const browserLanguage = process.client
-  ? navigator.language.toLowerCase()
-  : "en";
-const locale = browserLanguage.startsWith("fr") ? "fr" : "en";
 
 // TODO: Validation and show error message
 const handleOnSubmit = async () => {
@@ -59,9 +55,7 @@ const handleOnSubmit = async () => {
 
   try {
     loading.value = true;
-
     await doRegister(axios, userInfo, locale.value);
-
     await navigateTo({ path: localePath("auth-verify-email") });
     errorGlobal.value = "";
   } catch (e) {
