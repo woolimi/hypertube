@@ -12,14 +12,11 @@ definePageMeta({
 //TODO: divide files for each block(Profile, Account, WatchedList)
 const { userData } = storeToRefs(useUserStore());
 const {
-  validator,
-  passwordRule,
-  emailRule,
-  minLengthRule,
-  maxLengthRule,
-  requiredRule,
-  DEFAULT_MAX,
-  DEFAULT_MIN,
+  usernameValidator,
+  emailValidator,
+  firstNameValidator,
+  lastNameValidator,
+  passwordValidator,
 } = useValidator();
 const { t } = useI18n();
 const { updateAvatar, updateProfile } = useProfile();
@@ -51,63 +48,18 @@ const loading = reactive({
   password: false,
 });
 
-const { error: errorUsername } = validator(dirtyProfile, username, [
-  requiredRule(t("Error.REQUIRED", { value: t("Profile.Profile.username") })),
-  minLengthRule(
-    t("Error.MIN_LENGTH", {
-      value: t("Profile.Profile.username"),
-      length: DEFAULT_MIN,
-    }),
-  ),
-  maxLengthRule(
-    t("Error.MAX_LENGTH", {
-      value: t("Profile.Profile.username"),
-      length: DEFAULT_MAX,
-    }),
-  ),
-]);
+const { error: errorUsername } = usernameValidator(dirtyProfile, firstName, t);
 
-const { error: errorFirstName } = validator(dirtyProfile, firstName, [
-  requiredRule(t("Error.REQUIRED", { value: t("Profile.Profile.firstName") })),
-  minLengthRule(
-    t("Error.MIN_LENGTH", {
-      value: t("Profile.Profile.firstName"),
-      length: DEFAULT_MIN,
-    }),
-  ),
-  maxLengthRule(
-    t("Error.MAX_LENGTH", {
-      value: t("Profile.Profile.firstName"),
-      length: DEFAULT_MAX,
-    }),
-  ),
-]);
+const { error: errorFirstName } = firstNameValidator(
+  dirtyProfile,
+  firstName,
+  t,
+);
+const { error: errorLastName } = lastNameValidator(dirtyProfile, lastName, t);
 
-const { error: errorLastName } = validator(dirtyProfile, lastName, [
-  requiredRule(t("Error.REQUIRED", { value: t("Profile.Profile.lastName") })),
-  minLengthRule(
-    t("Error.MIN_LENGTH", {
-      value: t("Profile.Profile.lastName"),
-      length: DEFAULT_MIN,
-    }),
-  ),
-  maxLengthRule(
-    t("Error.MAX_LENGTH", {
-      value: t("Profile.Profile.lastName"),
-      length: DEFAULT_MAX,
-    }),
-  ),
-]);
+const { error: errorEmail } = emailValidator(dirtyEmail, email, t);
 
-const { error: errorEmail } = validator(dirtyEmail, email, [
-  requiredRule(t("Error.REQUIRED", { value: t("Profile.Account.email") })),
-  emailRule(t("Error.INVALID_EMAIL")),
-]);
-
-const { error: errorPassword } = validator(dirtyPassword, password, [
-  requiredRule(t("Error.REQUIRED", { value: t("Profile.Account.password") })),
-  passwordRule(t("Error.INVALID_PASSWORD")),
-]);
+const { error: errorPassword } = passwordValidator(dirtyPassword, password, t);
 
 //TODO: put error handling - will do it after devide component
 async function onUpdateProfile() {
@@ -192,18 +144,18 @@ function onClickAvatar() {
             <BaseInput
               v-model="username"
               :error-message="errorUsername"
-              :label="$t('Profile.Profile.username')"
+              :label="$t('_Global.username')"
               class="md:col-span-2"
             />
             <BaseInput
               v-model="firstName"
               :error-message="errorFirstName"
-              :label="$t('Profile.Profile.firstName')"
+              :label="$t('_Global.firstName')"
             />
             <BaseInput
               v-model="lastName"
               :error-message="errorLastName"
-              :label="$t('Profile.Profile.lastName')"
+              :label="$t('_Global.lastName')"
             />
             <div class="col-span-1 text-right sm:col-span-2">
               <Button
@@ -230,7 +182,7 @@ function onClickAvatar() {
             <BaseInput
               v-model="email"
               :error-message="errorEmail"
-              :label="$t('Profile.Account.email')"
+              :label="$t('_Global.email')"
               autocomplete="none"
               type="email"
               class="w-full"
@@ -246,7 +198,7 @@ function onClickAvatar() {
           <div class="flex flex-col items-start gap-3 sm:flex-row">
             <BaseInput
               v-model="password"
-              :label="$t('Profile.Account.password')"
+              :label="$t('_Global.password')"
               type="password"
               class="w-full"
               :placeholder="$t('Profile.Account.enterNewPassword')"

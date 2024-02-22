@@ -1,6 +1,11 @@
 {
   "_Global": {
-    "update": "Update"
+    "update": "Update",
+    "username": "Username",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "password": "Password",
+    "email": "Email"
   },
   "AuthEmailConfirmed": {
     "description": "You can now enjoy movie!",
@@ -11,25 +16,18 @@
     "login": "Login",
     "noAccount": "<p>You don't have an account yet?</p><p>Click <a class=\"text-primary-500 hover:text-primary-400 underline\" href=\"/en/auth/register\"> here </a> to register</p>",
     "or": "OR",
-    "password": "Password",
-    "title": "Login to get access",
-    "username": "Username"
+    "title": "Login to get access"
   },
   "AuthRegister": {
     "description": "Create an account to enjoy unlimited movies",
-    "email": "Email",
-    "firstName": "First name",
-    "lastName": "Last name",
     "or": "OR",
-    "password": "Password",
     "register": "Register",
     "Stepper": {
       "step1": "Register",
       "step2": "Verify email",
       "step3": "Done"
     },
-    "title": "Welcome to Hypertube!",
-    "username": "Username"
+    "title": "Welcome to Hypertube!"
   },
   "AuthVerifyEmail": {
     "description": "Please check your mail box",
@@ -68,16 +66,11 @@
   },
   "Profile": {
     "Account": {
-      "email": "Email",
       "enterNewPassword": "Enter new password",
-      "password": "Password",
       "title": "Account"
     },
     "Profile": {
-      "firstName": "First name",
-      "lastName": "Last name",
-      "title": "Profile",
-      "username": "Username"
+      "title": "Profile"
     },
     "WatchedList": {
       "title": "Watched list"
