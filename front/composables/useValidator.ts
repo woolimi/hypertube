@@ -44,8 +44,101 @@ export const useValidator = () => {
     return (value: string) => (!value.length ? errorMessages : undefined);
   };
 
+  const usernameValidator = (
+    dirty: ComputedRef<boolean>,
+    username: ComputedRef<string>,
+    t: any, //I18n
+  ) => {
+    return validator(dirty, username, [
+      requiredRule(t("Error.REQUIRED", { value: t("_Global.username") })),
+      minLengthRule(
+        t("Error.MIN_LENGTH", {
+          value: t("_Global.username"),
+          length: DEFAULT_MIN,
+        }),
+      ),
+      maxLengthRule(
+        t("Error.MAX_LENGTH", {
+          value: t("_Global.username"),
+          length: DEFAULT_MAX,
+        }),
+      ),
+    ]);
+  };
+
+  const firstNameValidator = (
+    dirty: ComputedRef<boolean>,
+    firstName: ComputedRef<string>,
+    t: any, //I18n
+  ) => {
+    return validator(dirty, firstName, [
+      requiredRule(t("Error.REQUIRED", { value: t("_Global.firstName") })),
+      minLengthRule(
+        t("Error.MIN_LENGTH", {
+          value: t("_Global.firstName"),
+          length: DEFAULT_MIN,
+        }),
+      ),
+      maxLengthRule(
+        t("Error.MAX_LENGTH", {
+          value: t("_Global.firstName"),
+          length: DEFAULT_MAX,
+        }),
+      ),
+    ]);
+  };
+
+  const lastNameValidator = (
+    dirty: ComputedRef<boolean>,
+    lastName: ComputedRef<string>,
+    t: any, //I18n
+  ) => {
+    return validator(dirty, lastName, [
+      requiredRule(t("Error.REQUIRED", { value: t("_Global.lastName") })),
+      minLengthRule(
+        t("Error.MIN_LENGTH", {
+          value: t("_Global.lastName"),
+          length: DEFAULT_MIN,
+        }),
+      ),
+      maxLengthRule(
+        t("Error.MAX_LENGTH", {
+          value: t("_Global.lastName"),
+          length: DEFAULT_MAX,
+        }),
+      ),
+    ]);
+  };
+
+  const emailValidator = (
+    dirty: ComputedRef<boolean>,
+    email: ComputedRef<string>,
+    t: any, //I18n
+  ) => {
+    return validator(dirty, email, [
+      requiredRule(t("Error.REQUIRED", { value: t("_Global.email") })),
+      emailRule(t("Error.INVALID_EMAIL")),
+    ]);
+  };
+
+  const passwordValidator = (
+    dirty: ComputedRef<boolean>,
+    lastName: ComputedRef<string>,
+    t: any, //I18n
+  ) => {
+    return validator(dirty, lastName, [
+      requiredRule(t("Error.REQUIRED", { value: t("_Global.password") })),
+      passwordRule(t("Error.INVALID_PASSWORD")),
+    ]);
+  };
+
   return {
     validator,
+    usernameValidator,
+    firstNameValidator,
+    lastNameValidator,
+    emailValidator,
+    passwordValidator,
     passwordRule,
     emailRule,
     maxLengthRule,

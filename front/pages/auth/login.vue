@@ -13,47 +13,11 @@ const { doLogin, onGoogleLogin, onGithubLogin, onFtLogin } = useAuth();
 const { isEmailVerified } = storeToRefs(useUserStore());
 const loading = ref(false);
 const dirty = ref(false);
-const {
-  validator,
-  requiredRule,
-  minLengthRule,
-  maxLengthRule,
-  DEFAULT_MAX,
-  DEFAULT_MIN,
-} = useValidator();
+const { passwordValidator, usernameValidator } = useValidator();
 const { t } = useI18n();
 
-const { error: errorUsername } = validator(dirty, username, [
-  requiredRule(t("Error.REQUIRED", { value: t("AuthLogin.username") })),
-  minLengthRule(
-    t("Error.MIN_LENGTH", {
-      value: t("AuthLogin.username"),
-      length: DEFAULT_MIN,
-    }),
-  ),
-  maxLengthRule(
-    t("Error.MAX_LENGTH", {
-      value: t("AuthLogin.username"),
-      length: DEFAULT_MAX,
-    }),
-  ),
-]);
-
-const { error: errorPassword } = validator(dirty, password, [
-  requiredRule(t("Error.REQUIRED", { value: t("AuthLogin.password") })),
-  minLengthRule(
-    t("Error.MIN_LENGTH", {
-      value: t("AuthLogin.password"),
-      length: DEFAULT_MIN,
-    }),
-  ),
-  maxLengthRule(
-    t("Error.MAX_LENGTH", {
-      value: t("AuthLogin.password"),
-      length: DEFAULT_MAX,
-    }),
-  ),
-]);
+const { error: errorPassword } = passwordValidator(dirty, password, t);
+const { error: errorUsername } = usernameValidator(dirty, username, t);
 const errorGlobal = ref("");
 
 const onLogin = async () => {
@@ -127,7 +91,7 @@ const onLogin = async () => {
           <BaseInput
             v-model="username"
             type="text"
-            :label="$t('AuthLogin.username')"
+            :label="$t('_Global.username')"
             autocomplete="username"
             :error-message="errorUsername"
             :error="!!errorGlobal"
@@ -135,7 +99,7 @@ const onLogin = async () => {
           <BaseInput
             v-model="password"
             type="password"
-            :label="$t('AuthLogin.password')"
+            :label="$t('_Global.password')"
             autocomplete="current-password"
             :error-message="errorPassword"
             :error="!!errorGlobal"

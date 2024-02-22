@@ -1,6 +1,11 @@
 {
   "_Global": {
-    "update": "Mettre à jour"
+    "update": "Mettre à jour",
+    "password": "Mot de passe",
+    "username": "Nom d'utilisateur",
+    "email": "E-mail",
+    "firstName": "Prénom",
+    "lastName": "Nom de famille"
   },
   "AuthEmailConfirmed": {
     "description": "Vous pouvez maintenant profiter du film !",
