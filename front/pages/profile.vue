@@ -109,7 +109,7 @@ const { error: errorPassword } = validator(dirtyPassword, password, [
   passwordRule(t("Error.INVALID_PASSWORD")),
 ]);
 
-//TODO: put error handling
+//TODO: put error handling - will do it after devide component
 async function onUpdateProfile() {
   dirtyProfile.value = true;
   loading.profile = true;
@@ -125,7 +125,7 @@ async function onUpdateProfile() {
   loading.profile = false;
 }
 
-//TODO: put error handling
+//TODO: put error handling - will do it after devide component
 async function onUpdateEmail() {
   dirtyEmail.value = true;
   loading.email = true;
@@ -139,7 +139,7 @@ async function onUpdateEmail() {
   loading.email = false;
 }
 
-//TODO: put error handling
+//TODO: put error handling - will do it after devide component
 async function onUpdatePassword() {
   dirtyPassword.value = true;
   loading.password = true;
@@ -213,7 +213,7 @@ function onClickAvatar() {
                     ? null
                     : `${$t('_Global.update')} ${t('Profile.Profile.title')}`
                 "
-                class="w-full sm:w-fit"
+                class="w-full min-w-32 sm:w-fit"
                 @click="onUpdateProfile"
               />
             </div>
@@ -236,7 +236,7 @@ function onClickAvatar() {
               class="w-full"
             />
             <Button
-              class="w-full whitespace-nowrap sm:mt-7 sm:w-fit"
+              class="w-full min-w-32 whitespace-nowrap sm:mt-7 sm:w-fit"
               :loading="loading.email"
               :label="loading.email ? null : $t('_Global.update')"
               @click="onUpdateEmail"
@@ -254,7 +254,7 @@ function onClickAvatar() {
               :error-message="errorPassword"
             />
             <Button
-              class="w-full whitespace-nowrap sm:mt-7 sm:w-fit"
+              class="w-full min-w-32 whitespace-nowrap sm:mt-7 sm:w-fit"
               :loading="loading.password"
               :label="loading.password ? null : $t('_Global.update')"
               @click="onUpdatePassword"

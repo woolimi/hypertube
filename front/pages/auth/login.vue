@@ -13,49 +13,46 @@ const { doLogin, onGoogleLogin, onGithubLogin, onFtLogin } = useAuth();
 const { isEmailVerified } = storeToRefs(useUserStore());
 const loading = ref(false);
 const dirty = ref(false);
-const { validator } = useValidator();
+const {
+  validator,
+  requiredRule,
+  minLengthRule,
+  maxLengthRule,
+  DEFAULT_MAX,
+  DEFAULT_MIN,
+} = useValidator();
 const { t } = useI18n();
 
 const { error: errorUsername } = validator(dirty, username, [
-  (value) =>
-    !value.length
-      ? t("Error.REQUIRED", { value: t("AuthLogin.username") })
-      : "",
-  (value) =>
-    value.length < 2
-      ? t("Error.MIN_LENGTH", {
-          value: t("AuthLogin.username"),
-          length: 2,
-        })
-      : "",
-  (value) =>
-    value.length > 20
-      ? t("Error.MAX_LENGTH", {
-          value: t("AuthLogin.username"),
-          length: 20,
-        })
-      : "",
+  requiredRule(t("Error.REQUIRED", { value: t("AuthLogin.username") })),
+  minLengthRule(
+    t("Error.MIN_LENGTH", {
+      value: t("AuthLogin.username"),
+      length: DEFAULT_MIN,
+    }),
+  ),
+  maxLengthRule(
+    t("Error.MAX_LENGTH", {
+      value: t("AuthLogin.username"),
+      length: DEFAULT_MAX,
+    }),
+  ),
 ]);
 
 const { error: errorPassword } = validator(dirty, password, [
-  (value) =>
-    !value.length
-      ? t("Error.REQUIRED", { value: t("AuthLogin.password") })
-      : "",
-  (value) =>
-    value.length < 8
-      ? t("Error.MIN_LENGTH", {
-          value: t("AuthLogin.password"),
-          length: 8,
-        })
-      : "",
-  (value) =>
-    value.length > 40
-      ? t("Error.MAX_LENGTH", {
-          value: t("AuthLogin.password"),
-          length: 40,
-        })
-      : "",
+  requiredRule(t("Error.REQUIRED", { value: t("AuthLogin.password") })),
+  minLengthRule(
+    t("Error.MIN_LENGTH", {
+      value: t("AuthLogin.password"),
+      length: DEFAULT_MIN,
+    }),
+  ),
+  maxLengthRule(
+    t("Error.MAX_LENGTH", {
+      value: t("AuthLogin.password"),
+      length: DEFAULT_MAX,
+    }),
+  ),
 ]);
 const errorGlobal = ref("");
 

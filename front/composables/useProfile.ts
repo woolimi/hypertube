@@ -1,3 +1,5 @@
+import type { UserData } from "~/types";
+
 export const useProfile = () => {
   const axios = useAxios();
   const router = useRouter();
@@ -21,14 +23,7 @@ export const useProfile = () => {
     }
   }
 
-  interface UserInfo {
-    username?: string;
-    firstName?: string;
-    lastName?: string;
-    email?: string;
-    password?: string;
-  }
-  async function updateProfile(userId: string, userInfo: UserInfo) {
+  async function updateProfile(userId: string, userInfo: UserData) {
     try {
       await axios.patch("/users/" + userId, userInfo);
       router.go();
