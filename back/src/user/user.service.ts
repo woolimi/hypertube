@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Connection, Repository } from 'typeorm';
 import { User } from './user.entity';
 import bcrypt from 'bcrypt';
 
@@ -13,7 +13,8 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  ) {}
+    private connection: Connection,
+  ) { }
 
   async findAll(): Promise<User[]> {
     return this.userRepository.find();
@@ -47,8 +48,48 @@ export class UserService {
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(user.password, salt);
 
-    user.password = hash;
-    return this.userRepository.save(user);
+    const queryRunner = this.connection.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    const duplicateUsername = await queryRunner.manager
+      .getRepository(User)
+      .findOne({ where: [{ username: user.username }] });
+
+    const duplicateEmail = await queryRunner.manager
+      .getRepository(User)
+      .findOne({ where: [{ email: user.email }] });
+
+    // 기존 로직
+    // if (duplicateEmail && !duplicateEmail.emailVerified) {
+    //   return duplicateEmail;
+    // } else if (duplicateEmail) {
+    //   throw new UnauthorizedException({ code: 'EMAIL_ALREADY_EXISTS' });
+    // }
+
+    // 새로운 로직
+    if (duplicateEmail == duplicateUsername && duplicateEmail) {
+      if (!duplicateEmail.emailVerified) return duplicateEmail;
+    } else if (duplicateUsername) {
+      if (!duplicateUsername.emailVerified) return duplicateUsername;
+      else throw new UnauthorizedException({ code: 'USERNAME_ALREADY_EXISTS' });
+    } else if (duplicateEmail) {
+      if (!duplicateEmail.emailVerified) return duplicateEmail;
+      else throw new UnauthorizedException({ code: 'EMAIL_ALREADY_EXISTS' });
+    }
+
+    let createdUser;
+    try {
+      user.password = hash;
+      createdUser = await queryRunner.manager.getRepository(User).save(user);
+      await queryRunner.commitTransaction();
+    } catch (error) {
+      console.error(error);
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
+    return createdUser;
   }
 
   async update(id: string, user: UpdateUserDto): Promise<UpdateResult> {

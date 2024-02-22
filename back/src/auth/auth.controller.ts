@@ -29,7 +29,7 @@ export class AuthController {
     private userService: UserService,
     private emailService: EmailService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   @UseGuards(LocalAuthGuard)
   @Post('/login')
@@ -79,16 +79,7 @@ export class AuthController {
     @Response({ passthrough: true }) res,
     @Query('lang') lang,
   ) {
-    const found = await this.userService.findOneByEmail(user.email);
-
-    let createdUser = null;
-    if (found && !found.emailVerified) {
-      createdUser = found;
-    } else if (found) {
-      throw new BadRequestException('Email already exists');
-    } else {
-      createdUser = await this.userService.create(user);
-    }
+    const createdUser = await this.userService.create(user);
 
     const { accessToken, ...accessOption } =
       this.authService.getCookieWithJwtAccessToken(createdUser.id);
@@ -174,7 +165,7 @@ export class AuthController {
 
   @Get('google/login')
   @UseGuards(GoogleAuthGuard)
-  async googleLogin() {}
+  async googleLogin() { }
 
   @Get('google/redirect')
   @UseGuards(GoogleAuthGuard)
@@ -185,7 +176,7 @@ export class AuthController {
 
   @Get('ft/login')
   @UseGuards(FtAuthGuard)
-  async ftLogin() {}
+  async ftLogin() { }
 
   @Get('ft/redirect')
   @UseGuards(FtAuthGuard)
@@ -196,7 +187,7 @@ export class AuthController {
 
   @Get('github/login')
   @UseGuards(GithubAuthGuard)
-  async githubLogin() {}
+  async githubLogin() { }
 
   @Get('github/redirect')
   @UseGuards(GithubAuthGuard)
