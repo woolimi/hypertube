@@ -16,25 +16,18 @@
     "login": "Se connecter",
     "noAccount": "<p>Vous n'avez pas de compte ?</p><p>Cliquez <a class=\"text-primary-500 hover:text-primary-400 underline\" href=\"/fr/auth/register\"> ici </a> pour vous inscrire</p>",
     "or": "OU",
-    "password": "Mot de passe",
-    "title": "Connectez-vous pour accéder",
-    "username": "Nom d'utilisateur"
+    "title": "Connectez-vous pour accéder"
   },
   "AuthRegister": {
     "description": "Créez un compte pour profiter de films en illimité",
-    "email": "E-mail",
-    "firstName": "Prénom",
-    "lastName": "Nom",
     "or": "OU",
-    "password": "Mot de passe",
     "register": "S'inscrire",
     "Stepper": {
       "step1": "S'inscrire",
       "step2": "Vérifier E-mail",
       "step3": "Fin"
     },
-    "title": "Bienvenue sur Hypertube !",
-    "username": "Nom d'utilisateur"
+    "title": "Bienvenue sur Hypertube !"
   },
   "AuthVerifyEmail": {
     "description": "Veuillez vérifier votre boîte aux lettres",
@@ -73,16 +66,11 @@
   },
   "Profile": {
     "Account": {
-      "email": "Email",
       "enterNewPassword": "Mettre le nouveau mot de passe",
-      "password": "Mot de passe",
       "title": "Compte"
     },
     "Profile": {
-      "firstName": "Prénom",
-      "lastName": "Nom",
-      "title": "Profil",
-      "username": "Nom d'utilisateur"
+      "title": "Profil"
     },
     "WatchedList": {
       "title": "Liste déjà vu"
