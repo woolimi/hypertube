@@ -124,10 +124,10 @@ export const useValidator = () => {
 
   const passwordValidator = (
     dirty: ComputedRef<boolean>,
-    lastName: ComputedRef<string>,
+    password: ComputedRef<string>,
     t: any, //I18n
   ) => {
-    return validator(dirty, lastName, [
+    return validator(dirty, password, [
       requiredRule(t("Error.REQUIRED", { value: t("_Global.password") })),
       passwordRule(t("Error.INVALID_PASSWORD")),
     ]);
