@@ -90,10 +90,10 @@ export const useValidator = () => {
 
   const lastNameValidator = (
     dirty: ComputedRef<boolean>,
-    password: ComputedRef<string>,
+    lastName: ComputedRef<string>,
     t: any, //I18n
   ) => {
-    return validator(dirty, password, [
+    return validator(dirty, lastName, [
       requiredRule(t("Error.REQUIRED", { value: t("_Global.lastName") })),
       minLengthRule(
         t("Error.MIN_LENGTH", {
