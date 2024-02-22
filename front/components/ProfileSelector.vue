@@ -1,4 +1,5 @@
 <script setup>
+import defaultUser from "assets/images/default_user.webp";
 const axios = useAxios();
 const localePath = useLocalePath();
 const auth = useAuth();
@@ -22,7 +23,7 @@ const { userData } = storeToRefs(useUserStore());
       class="flex items-center justify-center"
     >
       <Avatar
-        :image="userData.image"
+        :image="userData.image.length > 0 ? userData.image : defaultUser"
         shape="circle"
         class="overflow-hidden"
         size="large"
