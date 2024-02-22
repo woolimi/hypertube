@@ -9,6 +9,7 @@ definePageMeta({
   middleware: ["loose-auth"],
 });
 
+//TODO: divide files for each block(Profile, Account, WatchedList)
 const { userData } = storeToRefs(useUserStore());
 const {
   validator,
@@ -38,9 +39,17 @@ const avatar = computed({
 const password = ref("");
 const fileInput = ref(null);
 
+/* dirtys */
 const dirtyProfile = ref(false);
 const dirtyEmail = ref(false);
 const dirtyPassword = ref(false);
+
+/* loading stataes for each update button */
+const loading = reactive({
+  profile: false,
+  email: false,
+  password: false,
+});
 
 const { error: errorUsername } = validator(dirtyProfile, username, [
   requiredRule(t("Error.REQUIRED", { value: t("Profile.Profile.username") })),
@@ -103,6 +112,7 @@ const { error: errorPassword } = validator(dirtyPassword, password, [
 //TODO: put error handling
 async function onUpdateProfile() {
   dirtyProfile.value = true;
+  loading.profile = true;
   if (errorUsername.value || errorFirstName.value || errorLastName.value) {
     return;
   }
@@ -112,11 +122,13 @@ async function onUpdateProfile() {
     lastName: lastName.value,
   });
   dirtyProfile.value = false;
+  loading.profile = false;
 }
 
 //TODO: put error handling
 async function onUpdateEmail() {
   dirtyEmail.value = true;
+  loading.email = true;
   if (errorEmail.value) {
     return;
   }
@@ -124,11 +136,13 @@ async function onUpdateEmail() {
     email: email.value,
   });
   dirtyEmail.value = false;
+  loading.email = false;
 }
 
 //TODO: put error handling
 async function onUpdatePassword() {
   dirtyPassword.value = true;
+  loading.password = true;
   if (errorPassword.value) {
     return;
   }
@@ -136,6 +150,7 @@ async function onUpdatePassword() {
     password: password.value,
   });
   dirtyPassword.value = false;
+  loading.password = false;
 }
 
 function onClickAvatar() {
@@ -150,7 +165,7 @@ function onClickAvatar() {
           {{ $t("Profile.Profile.title") }}
         </h2>
         <div
-          class="mx-auto flex items-center justify-center gap-5 rounded-lg bg-surface-900 p-4"
+          class="mx-auto flex flex-col items-center justify-center gap-5 rounded-lg bg-surface-900 p-4 sm:flex-row"
         >
           <div class="relative flex items-center justify-center">
             <Avatar
@@ -192,7 +207,12 @@ function onClickAvatar() {
             />
             <div class="col-span-1 text-right sm:col-span-2">
               <Button
-                :label="`${$t('_Global.update')} ${t('Profile.Profile.title')}`"
+                :loading="loading.profile"
+                :label="
+                  loading.profile
+                    ? null
+                    : `${$t('_Global.update')} ${t('Profile.Profile.title')}`
+                "
                 class="w-full sm:w-fit"
                 @click="onUpdateProfile"
               />
@@ -216,8 +236,9 @@ function onClickAvatar() {
               class="w-full"
             />
             <Button
-              :label="$t('_Global.update')"
-              class="mt-7 whitespace-nowrap sm:w-fit"
+              class="w-full whitespace-nowrap sm:mt-7 sm:w-fit"
+              :loading="loading.email"
+              :label="loading.email ? null : $t('_Global.update')"
               @click="onUpdateEmail"
             />
           </div>
@@ -233,8 +254,9 @@ function onClickAvatar() {
               :error-message="errorPassword"
             />
             <Button
-              :label="$t('_Global.update')"
-              class="mt-7 whitespace-nowrap sm:w-fit"
+              class="w-full whitespace-nowrap sm:mt-7 sm:w-fit"
+              :loading="loading.password"
+              :label="loading.password ? null : $t('_Global.update')"
               @click="onUpdatePassword"
             />
           </div>

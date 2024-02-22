@@ -29,8 +29,12 @@ export const useProfile = () => {
     password?: string;
   }
   async function updateProfile(userId: string, userInfo: UserInfo) {
-    console.log(userInfo);
-    return axios.patch("/users/" + userId, userInfo);
+    try {
+      await axios.patch("/users/" + userId, userInfo);
+      router.go();
+    } catch (e) {
+      console.error(e);
+    }
   }
   return {
     updateAvatar,
