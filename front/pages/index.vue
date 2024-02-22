@@ -11,7 +11,7 @@ const info = reactive({
 
 const { localeProperties } = useI18n();
 const movies = ref([]);
-const fetching = ref(false);
+const fetching = ref(true);
 
 const fetchMovies = async (page, language) => {
   return await axios.get("/movies/", {
@@ -56,6 +56,10 @@ watch(y, async (scrolledHeight) => {
 <template>
   <main class="min-h-[calc(100vh-64px)]">
     <Jumbotron />
-    <MovieList :items="movies" :title="$t('Home.Movies.title')" />
+    <MovieList
+      :items="movies"
+      :title="$t('Home.Movies.title')"
+      :loading="fetching"
+    />
   </main>
 </template>

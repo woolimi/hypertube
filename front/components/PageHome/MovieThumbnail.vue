@@ -15,15 +15,9 @@ defineProps({
 <template>
   <NuxtLink
     :to="localePath({ name: 'movies-mid', params: { mid: item.id } })"
-    class="relative"
+    class="relative block"
     :class="$style.link"
   >
-    <figure class="w-full">
-      <img
-        :src="`https://image.tmdb.org/t/p/w500/${item.poster_path}`"
-        class="w-full object-cover"
-      />
-    </figure>
     <div
       :class="$style.overlay"
       class="flex flex-col items-center justify-center p-4"
@@ -43,6 +37,13 @@ defineProps({
         </li>
       </ul>
     </div>
+
+    <figure class="w-full">
+      <img
+        :src="`https://image.tmdb.org/t/p/w500/${item.poster_path}`"
+        class="w-full object-cover"
+      />
+    </figure>
   </NuxtLink>
 </template>
 
@@ -57,7 +58,6 @@ defineProps({
   width: 100%;
   height: 100%;
   opacity: 0;
-  content: "";
 }
 
 .link:hover {
