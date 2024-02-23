@@ -34,6 +34,11 @@
     "description": "Please check your mail box",
     "title": "Waiting for your email confirmation"
   },
+  "AuthForgotPassword": {
+    "title": "Forgot Password?",
+    "description": "Retrieve your account password using your registered email.",
+    "submit": "Submit"
+  },
   "Error": {
     "EMAIL_ALREADY_EXISTS": "Email already exists.",
     "GENERAL_ERROR": "Unexpected error",

@@ -85,5 +85,9 @@
       "title": "Liste déjà vu",
       "noList": "Vous n'avez jamais vu aucun film."
     }
+  },
+  "AuthForgotPassword": {
+    "title": "Mot de passe oublié?",
+    "submit": "Soumettre"
   }
 }
