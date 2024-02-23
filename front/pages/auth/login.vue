@@ -117,6 +117,7 @@ const onLogin = async () => {
         </form>
 
         <div class="mt-5" v-html="$t('AuthLogin.noAccount')" />
+        <div class="mt-5" v-html="$t('AuthLogin.forgotPassword')" />
       </section>
     </div>
   </main>

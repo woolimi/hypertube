@@ -15,6 +15,7 @@
   "AuthLogin": {
     "login": "Login",
     "noAccount": "<p>You don't have an account yet?</p><p>Click <a class=\"text-primary-500 hover:text-primary-400 underline\" href=\"/en/auth/register\"> here </a> to register</p>",
+    "forgotPassword": "<p><a class=\"text-primary-500 hover:text-primary-400 underline\" href=\"/en/auth/forgot-password\"> Forgot password? </a></p>",
     "or": "OR",
     "title": "Login to get access"
   },

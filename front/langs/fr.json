@@ -16,7 +16,8 @@
     "login": "Se connecter",
     "noAccount": "<p>Vous n'avez pas de compte ?</p><p>Cliquez <a class=\"text-primary-500 hover:text-primary-400 underline\" href=\"/fr/auth/register\"> ici </a> pour vous inscrire</p>",
     "or": "OU",
-    "title": "Connectez-vous pour accéder"
+    "title": "Connectez-vous pour accéder",
+    "forgotPassword": "<p><a class=\"text-primary-500 hover:text-primary-400 underline\" href=\"/fr/auth/forgot-password\"> Mot de passe oublié ? \n</a></p>"
   },
   "AuthRegister": {
     "description": "Créez un compte pour profiter de films en illimité",
