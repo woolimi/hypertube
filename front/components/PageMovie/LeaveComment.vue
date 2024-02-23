@@ -1,11 +1,12 @@
 <script setup>
 const comment = ref();
+const { userData } = storeToRefs(useUserStore());
 </script>
 
 <template>
   <form class="flex gap-4" @submit.prevent="() => {}">
     <Avatar
-      image="https://i.pravatar.cc/300?u=wpark"
+      :image="userData.image"
       class="shrink-0 overflow-hidden"
       size="large"
       shape="circle"

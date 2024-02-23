@@ -1,98 +1,89 @@
-<script setup>
+<script setup lang="ts">
+import type { MovieData } from "~/types";
+
 definePageMeta({
   middleware: ["strict-auth"],
 });
 
-const { data } = await useAsyncData("mountains", async () => {
-  // TODO: get movie by mid
-  // TODO: get comments by mid
-  // TODO: Different Thumbnail for watched movie
+const axios = useAxios();
+const movie = ref<MovieData>({} as MovieData);
+const comments = computed(() => []);
+const route = useRoute();
+const { localeProperties } = useI18n();
+const fetching = ref(false);
 
-  return {
-    movie: {
-      image: "/thumbnail.jpeg",
-      title: "Don't look up",
-      description:
-        "Deux astronomes méconnus entreprennent une tournée médiatique pour prévenir l'humanité qu'une comète fonce sur la Terre. Mais cela n'a pas l'air d'inquiéter grand monde.",
-      genre: ["SF", "Comedies", "Drames sociaux"],
-      score: 4.5,
-      mid: 12345,
-      year: 2022,
-    },
-    comments: [
-      {
-        cid: 1,
-        username: "wpark",
-        content:
-          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum, eius ab. Voluptatum nobis quam dicta alias facere, vitae impedit cum quasi voluptatibus eveniet dignissimos eum adipisci enim quisquam error ratione?",
-        avatar: "https://i.pravatar.cc/300?u=wpark",
+onMounted(async () => {
+  try {
+    fetching.value = false;
+    const { data } = await axios.get("/movies/" + route.params.mid, {
+      params: {
+        language: localeProperties.value.iso,
       },
-      {
-        cid: 2,
-        username: "sucho",
-        content:
-          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum, eius ab. Voluptatum nobis quam dicta alias facere, vitae impedit cum quasi voluptatibus eveniet dignissimos eum adipisci enim quisquam error ratione?",
-        avatar: "https://i.pravatar.cc/300?u=sucho",
-        comments: [
-          {
-            cid: 3,
-            username: "kychoi",
-            content:
-              "Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum, eius ab. Voluptatum nobis quam dicta alias facere, vitae impedit cum quasi voluptatibus eveniet dignissimos eum adipisci enim quisquam error ratione?",
-            avatar: "https://i.pravatar.cc/300?u=kychoi",
-          },
-        ],
-      },
-      {
-        cid: 4,
-        username: "cjung-mo",
-        content:
-          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum, eius ab. Voluptatum nobis quam dicta alias facere, vitae impedit cum quasi voluptatibus eveniet dignissimos eum adipisci enim quisquam error ratione?Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum, eius ab. Voluptatum nobis quam dicta alias facere, vitae impedit cum quasi voluptatibus eveniet dignissimos eum adipisci enim quisquam error ratione?",
-        avatar: "https://i.pravatar.cc/300?u=cjung-mo",
-      },
-    ],
-  };
+    });
+    movie.value = data;
+  } catch (error) {
+    console.error(error);
+  } finally {
+    fetching.value = false;
+  }
 });
-const movie = computed(() => data.value?.movie ?? {});
-const comments = computed(() => data.value?.comments ?? []);
 </script>
 
 <template>
   <main class="min-h-[calc(100vh-64px)]">
-    <section class="mx-auto max-w-[760px] pt-[112px]">
-      <img :src="movie.image" class="h-full w-full object-cover" />
-    </section>
+    <div
+      class="mx-auto flex max-w-[1024px] flex-col justify-center gap-10 px-4 pt-[112px] md:flex-row"
+    >
+      <div class="mx-auto w-full max-w-[400px] md:w-[45%]">
+        <div
+          :style="{
+            backgroundImage: `url(https://image.tmdb.org/t/p/w500/${movie.poster_path})`,
+          }"
+          class="h-0 w-full bg-cover bg-no-repeat pb-[150%]"
+        ></div>
+      </div>
 
-    <section class="mx-auto max-w-[760px] p-4">
-      <ul class="flex flex-col gap-2 text-xl">
-        <li>
-          <span class="font-bold"> Title: </span>
-          <span class="text-primary-400">{{ movie.title }}</span>
-        </li>
-        <li>
-          <span class="font-bold"> Score: </span>
-          <span class="text-primary-400">{{ movie.score }}</span>
-        </li>
-        <li>
-          <span class="font-bold"> Genre: </span>
-          <p class="inline-flex flex-wrap gap-1">
+      <section class="flex w-full flex-col gap-2 p-4 text-xl md:w-[50%]">
+        <div class="flex flex-wrap gap-2">
+          <p class="font-bold">Title:</p>
+          <p class="text-primary-400">{{ movie.title }}</p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <p class="font-bold">Score:</p>
+          <p class="text-primary-400">{{ movie.vote_average }}</p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <p>Release Date:</p>
+          <p class="text-primary-400">
+            {{ new Date(movie.release_date).toLocaleDateString() }}
+          </p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <p>Original language:</p>
+          <p class="text-primary-400">
+            {{ movie.original_language }}
+          </p>
+        </div>
+        <div class="flex gap-2">
+          <p class="font-bold">Genre:</p>
+          <p class="inline-flex flex-wrap gap-2">
             <span
-              v-for="g in movie.genre"
-              :key="g"
+              v-for="g in movie.genres"
+              :key="g.id"
               class="rounded-[12px] bg-primary-400 px-3 py-1 text-sm font-semibold text-black"
             >
-              {{ g }}
+              {{ g.name }}
             </span>
           </p>
-        </li>
-        <li>
+        </div>
+        <div class="flex flex-col gap-2">
           <p class="font-bold">Description</p>
-          <p class="text-gray-400">
-            {{ movie.description }}
+          <p class="text-md text-gray-400">
+            {{ movie.overview }}
           </p>
-        </li>
-      </ul>
-    </section>
+        </div>
+      </section>
+    </div>
 
     <CommentList :items="comments" />
   </main>

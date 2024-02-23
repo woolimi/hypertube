@@ -3,6 +3,8 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
 
+import defaultUser from "assets/images/default_user.webp";
+
 import { useProfile } from "../composables/useProfile";
 
 definePageMeta({
@@ -121,7 +123,7 @@ function onClickAvatar() {
         >
           <div class="relative flex items-center justify-center">
             <Avatar
-              :image="avatar"
+              :image="avatar.length > 0 ? avatar : defaultUser"
               size="xlarge"
               shape="circle"
               class="m-auto overflow-hidden"
