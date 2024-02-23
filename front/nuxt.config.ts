@@ -66,6 +66,17 @@ export default defineNuxtConfig({
       useCookie: true,
       fallbackLocale: "en",
     },
-    locales: ["en", "fr"],
+    locales: [
+      {
+        code: "fr",
+        iso: "fr-FR",
+        name: "Français",
+      },
+      {
+        code: "en",
+        iso: "en-US",
+        name: "English",
+      },
+    ],
   },
 });
