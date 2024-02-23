@@ -1,12 +1,12 @@
-import { Injectable, Logger, UseGuards } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import axios, { AxiosInstance } from 'axios';
 import { MoviesQueryDto } from './dto/movies-query.dto';
 import { MovieQueryDto } from './dto/movie-query.dto';
-import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 
 @Injectable()
 export class MovieService {
   private tmdb: AxiosInstance;
+  private yts: AxiosInstance;
   private readonly Genre = {
     '12': {
       'en-US': 'Adventure',
@@ -89,6 +89,10 @@ export class MovieService {
         Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
       },
     });
+
+    this.yts = axios.create({
+      baseURL: 'https://yts.mx/api/v2/',
+    });
   }
 
   async getMovies(query: MoviesQueryDto) {
@@ -118,7 +122,6 @@ export class MovieService {
     };
   }
 
-  @UseGuards(JwtAuthGuard)
   async getMovie(movie_id, query: MovieQueryDto) {
     query.language = query.language || 'en-US';
 
@@ -129,5 +132,14 @@ export class MovieService {
     });
     data.vote_average = Number(data.vote_average).toFixed(1);
     return data;
+  }
+
+  async getMovieTorrent(imdb_id: string) {
+    const { data: response } = await this.yts.get(`movie_details.json`, {
+      params: {
+        imdb_id,
+      },
+    });
+    return response.data.movie?.torrents || [];
   }
 }

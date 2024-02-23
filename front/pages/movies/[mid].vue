@@ -21,6 +21,7 @@ onMounted(async () => {
       },
     });
     movie.value = data;
+    console.log(movie.value);
   } catch (error) {
     console.error(error);
   } finally {
@@ -43,7 +44,10 @@ onMounted(async () => {
         ></div>
       </div>
 
-      <section class="flex w-full flex-col gap-2 p-4 text-xl md:w-[50%]">
+      <section
+        :id="movie.imdb_id"
+        class="flex w-full flex-col gap-2 p-4 text-xl md:w-[50%]"
+      >
         <div class="flex flex-wrap gap-2">
           <p class="font-bold">Title:</p>
           <p class="text-primary-400">{{ movie.title }}</p>
@@ -85,6 +89,38 @@ onMounted(async () => {
       </section>
     </div>
 
+    <ul :class="$style.gridContainer" class="mx-auto max-w-[960px] px-4">
+      <li
+        v-for="(torrent, idx) in movie.torrents"
+        :key="torrent.url"
+        :data-torrent="torrent.url"
+        :data-hash="torrent.hash"
+        class="mx-auto w-full max-w-[720px] rounded-lg bg-slate-800 px-4 py-3"
+      >
+        <div class="mb-1 font-extrabold">
+          <span class="mr-1 text-primary-300">Torrent {{ idx + 1 }}</span>
+          <span class="text-gray-400">
+            ({{ torrent.seeds }} seeds, {{ torrent.peers }} peers)
+          </span>
+        </div>
+        <div class="flex justify-between">
+          <div class="mt-2 flex gap-2">
+            <Badge :size="null" severity="info" :value="torrent.type" />
+            <Badge :size="null" severity="danger" :value="torrent.quality" />
+          </div>
+          <Button label="Watch" icon="pi pi-youtube" />
+        </div>
+      </li>
+    </ul>
+
     <CommentList :items="comments" />
   </main>
 </template>
+
+<style lang="scss" module>
+.gridContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, auto));
+  gap: 1rem;
+}
+</style>
