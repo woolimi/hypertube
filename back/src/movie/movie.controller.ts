@@ -20,13 +20,7 @@ export class MovieController {
 
   @Get('/')
   async getMovies(
-    @Query(
-      new ValidationPipe({
-        transform: true,
-        transformOptions: { enableImplicitConversion: true },
-        forbidNonWhitelisted: true,
-      }),
-    )
+    @Query()
     query: MoviesQueryDto,
   ) {
     try {
