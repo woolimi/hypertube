@@ -52,7 +52,6 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "nuxt-svgo",
     "@nuxtjs/i18n",
-    "nuxt-swiper",
   ],
   pinia: {
     storesDirs: ["./stores/**"],

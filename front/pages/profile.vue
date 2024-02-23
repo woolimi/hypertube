@@ -1,8 +1,4 @@
 <script setup>
-import "swiper/css";
-import "swiper/css/free-mode";
-import "swiper/css/pagination";
-
 import { useProfile } from "../composables/useProfile";
 
 definePageMeta({
