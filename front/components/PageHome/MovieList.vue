@@ -22,7 +22,7 @@ defineProps({
 </script>
 
 <template>
-  <section class="mx-auto max-w-[960px] px-4 py-10">
+  <section class="mx-auto max-w-[1200px] px-4 py-10">
     <h2 class="mb-3 text-3xl font-bold text-primary-400">{{ title }}</h2>
 
     <div>
@@ -50,7 +50,7 @@ defineProps({
 <style lang="scss" module>
 .gridContainer {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, auto));
+  grid-template-columns: repeat(auto-fill, minmax(250px, auto));
   gap: 1rem;
 }
 

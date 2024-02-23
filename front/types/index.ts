@@ -20,5 +20,5 @@ export interface MovieData {
   title: string;
   vote_average: number; // 0.0 - 10.0
   vote_count: number;
-  genre_ids: Array<{ id: number; name: string }>;
+  genres: Array<{ id: number; name: string }>;
 }

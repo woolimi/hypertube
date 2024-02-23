@@ -1,11 +1,4 @@
-import {
-  IsBoolean,
-  IsIn,
-  IsInt,
-  IsOptional,
-  IsPositive,
-  IsString,
-} from 'class-validator';
+import { IsIn, IsInt, IsOptional, IsPositive, IsString } from 'class-validator';
 
 export class MoviesQueryDto {
   @IsInt()

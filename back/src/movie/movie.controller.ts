@@ -3,6 +3,7 @@ import {
   Get,
   InternalServerErrorException,
   Logger,
+  Param,
   Query,
   UseInterceptors,
   ValidationPipe,
@@ -10,31 +11,11 @@ import {
 import { MoviesQueryDto } from './dto/movies-query.dto';
 import { MovieService } from './movie.service';
 import { CacheInterceptor } from '@nestjs/cache-manager';
+import { MovieQueryDto } from './dto/movie-query.dto';
 
 @Controller('movies')
 @UseInterceptors(CacheInterceptor)
 export class MovieController {
-  private Genre = {
-    '12': 'Adventure',
-    '14': 'Fantasy',
-    '16': 'Animation',
-    '18': 'Drama',
-    '27': 'Horror',
-    '28': 'Action',
-    '35': 'Comedy',
-    '36': 'History',
-    '37': 'Western',
-    '53': 'Thriller',
-    '80': 'Crime',
-    '99': 'Documentary',
-    '878': 'Science Fiction',
-    '9648': 'Mystery',
-    '10402': 'Music',
-    '10749': 'Romance',
-    '10751': 'Family',
-    '10752': 'War',
-    '10770': 'TV Movie',
-  };
   constructor(private readonly movieService: MovieService) {}
 
   @Get('/')
@@ -49,18 +30,17 @@ export class MovieController {
     query: MoviesQueryDto,
   ) {
     try {
-      const { data } = await this.movieService.getTopRated(query);
-      const { results } = data;
+      return await this.movieService.getMovies(query);
+    } catch (error) {
+      Logger.error(error);
+      throw new InternalServerErrorException();
+    }
+  }
 
-      results.forEach((movie) => {
-        movie.genre_ids = movie.genre_ids.map((id) => ({
-          id: id,
-          name: this.Genre[id],
-        }));
-        movie.vote_average = Number(movie.vote_average).toFixed(1);
-      });
-
-      return { ...data, results };
+  @Get('/:movie_id')
+  async getMovie(@Param('movie_id') movie_id, @Query() query: MovieQueryDto) {
+    try {
+      return this.movieService.getMovie(movie_id, query);
     } catch (error) {
       Logger.error(error);
       throw new InternalServerErrorException();

@@ -64,7 +64,6 @@ export class UserService {
   }
 
   async saveRefreshToken(id: string, refreshToken: string): Promise<void> {
-    console.log('id', id);
     await this.userRepository.update(id, { refreshToken });
   }
 

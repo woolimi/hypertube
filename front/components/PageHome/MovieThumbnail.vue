@@ -29,7 +29,7 @@ defineProps({
       </p>
       <ul class="mt-5 flex flex-wrap justify-center gap-1">
         <li
-          v-for="genre in item.genre_ids"
+          v-for="genre in item.genres"
           :key="genre.id"
           class="rounded-[12px] bg-primary-500 px-2 py-1 text-xs font-bold text-black"
         >
