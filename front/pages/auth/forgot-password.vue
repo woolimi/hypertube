@@ -1,22 +1,26 @@
 <script setup>
 definePageMeta({
-  layout: "auth",
+  layout: "password-change",
   middleware: ["non-auth"],
 });
 
 // const axios = useAxios();
 
+const username = ref("");
 const email = ref("");
 const localePath = useLocalePath();
-const { emailValidator } = useValidator();
+const { emailValidator, usernameValidator } = useValidator();
 const { t } = useI18n();
-// const loading = ref(false);
+const loading = ref(false);
 const dirty = ref(false);
 const { error: errorEmail } = emailValidator(dirty, email, t);
+const { error: errorUsername } = usernameValidator(dirty, username, t);
+const errorGlobal = ref("");
+// const { locale } = useI18n();
 
 const handleOnSubmit = async () => {
   dirty.value = true;
-  if (errorEmail.value) return;
+  if (errorEmail.value || errorUsername.value) return;
 
   try {
     loading.value = true;
@@ -45,8 +49,18 @@ const handleOnSubmit = async () => {
       <div class="flex w-full items-center gap-3">
         {{ $t("AuthForgotPassword.description") }}
       </div>
+      <br />
       <section class="flex w-full flex-col text-center">
         <form class="grid max-w-[450px] gap-3" @submit.prevent="handleOnSubmit">
+          <BaseInput
+            v-model="username"
+            type="text"
+            :label="$t('_Global.username')"
+            class="sm:col-span-2"
+            autocomplete="username"
+            :error-message="errorUsername"
+            :error="!!errorGlobal"
+          />
           <BaseInput
             v-model="email"
             type="email"
@@ -56,9 +70,15 @@ const handleOnSubmit = async () => {
             :error-message="errorEmail"
             :error="!!errorGlobal"
           />
-          <Button class="mt-4 w-full sm:col-span-2" type="submit">
-            {{ $t("AuthForgotPassword.submit") }}
-          </Button>
+          <Button
+            class="mt-4 w-full sm:col-span-2"
+            type="submit"
+            :label="loading ? null : $t('AuthForgotPassword.submit')"
+            :loading="loading"
+          />
+          <small v-if="dirty && errorGlobal" class="mt-2 text-lg text-red-500">
+            {{ errorGlobal }}
+          </small>
         </form>
       </section>
     </div>
