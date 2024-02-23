@@ -10,9 +10,11 @@ const movie = ref<MovieData>({} as MovieData);
 const comments = computed(() => []);
 const route = useRoute();
 const { localeProperties } = useI18n();
+const fetching = ref(false);
 
 onMounted(async () => {
   try {
+    fetching.value = false;
     const { data } = await axios.get("/movies/" + route.params.mid, {
       params: {
         language: localeProperties.value.iso,
@@ -21,6 +23,8 @@ onMounted(async () => {
     movie.value = data;
   } catch (error) {
     console.error(error);
+  } finally {
+    fetching.value = false;
   }
 });
 </script>
@@ -30,7 +34,7 @@ onMounted(async () => {
     <div
       class="mx-auto flex max-w-[1024px] flex-col justify-center gap-10 px-4 pt-[112px] md:flex-row"
     >
-      <div class="mx-auto w-full max-w-[350px] md:w-[40%]">
+      <div class="mx-auto w-full max-w-[400px] md:w-[45%]">
         <div
           :style="{
             backgroundImage: `url(https://image.tmdb.org/t/p/w500/${movie.poster_path})`,
@@ -38,6 +42,7 @@ onMounted(async () => {
           class="h-0 w-full bg-cover bg-no-repeat pb-[150%]"
         ></div>
       </div>
+
       <section class="flex w-full flex-col gap-2 p-4 text-xl md:w-[50%]">
         <div class="flex flex-wrap gap-2">
           <p class="font-bold">Title:</p>
