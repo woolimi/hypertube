@@ -116,16 +116,6 @@ export class UserService {
     else if (duplicateUsername && duplicateUsername.username == user.username)
       throw new UnauthorizedException({ code: 'USERNAME_ALREADY_EXISTS' });
 
-    // if (duplicateEmail == duplicateUsername && duplicateEmail) {
-    //   if (!duplicateEmail.emailVerified) return duplicateEmail;
-    // } else if (duplicateUsername) {
-    //   if (!duplicateUsername.emailVerified) return duplicateUsername;
-    //   else throw new UnauthorizedException({ code: 'USERNAME_ALREADY_EXISTS' });
-    // } else if (duplicateEmail) {
-    //   if (!duplicateEmail.emailVerified) return duplicateEmail;
-    //   else throw new UnauthorizedException({ code: 'EMAIL_ALREADY_EXISTS' });
-    // }
-
     return this.userRepository.update(id, user);
   }
 
