@@ -8,6 +8,7 @@ import defaultUser from "assets/images/default_user.webp";
 import { useProfile } from "../composables/useProfile";
 
 definePageMeta({
+  layout: "profile",
   middleware: ["loose-auth"],
 });
 
@@ -63,21 +64,35 @@ const { error: errorEmail } = emailValidator(dirtyEmail, email, t);
 
 const { error: errorPassword } = passwordValidator(dirtyPassword, password, t);
 
+const errorUpdateProfile = ref("");
+
 //TODO: put error handling - will do it after devide component
-async function onUpdateProfile() {
+const onUpdateProfile = async () => {
   dirtyProfile.value = true;
-  loading.profile = true;
   if (errorUsername.value || errorFirstName.value || errorLastName.value) {
     return;
   }
-  await updateProfile(userData.value.id, {
-    username: username.value,
-    firstName: firstName.value,
-    lastName: lastName.value,
-  });
-  dirtyProfile.value = false;
-  loading.profile = false;
-}
+  try {
+    loading.profile = true;
+    await updateProfile(userData.value.id, {
+      username: username.value,
+      firstName: firstName.value,
+      lastName: lastName.value,
+    });
+    errorUpdateProfile.value = "";
+  } catch (e) {
+    if (e.response && e.response.data.code) {
+      errorUpdateProfile.value = t(`Error.${e.response.data.code}`);
+    } else {
+      errorUpdateProfile.value = t(`Error.GENERAL_ERROR`);
+    }
+  } finally {
+    loading.value = false;
+  }
+
+  // dirtyProfile.value = false;
+  // loading.profile = false;
+};
 
 //TODO: put error handling - will do it after devide component
 async function onUpdateEmail() {
@@ -112,15 +127,13 @@ function onClickAvatar() {
 }
 </script>
 <template>
-  <main class="min-h-[calc(100vh-64px)] px-4 pb-20 pt-[112px] md:px-8">
+  <main class="flex min-h-[calc(100vh-64px)] px-4 pb-20 pt-10 md:px-8">
     <div class="mx-auto flex max-w-[540px] flex-col flex-wrap gap-10">
       <section>
-        <h2 class="text-3xl font-bold text-primary-400">
+        <h2 class="mb-4 text-3xl font-bold text-primary-400">
           {{ $t("Profile.Profile.title") }}
         </h2>
-        <div
-          class="mx-auto flex flex-col items-center justify-center gap-5 rounded-lg bg-surface-900 p-4 sm:flex-row"
-        >
+        <div class="bg-surface-900">
           <div class="relative flex items-center justify-center">
             <Avatar
               :image="avatar.length > 0 ? avatar : defaultUser"
@@ -129,54 +142,74 @@ function onClickAvatar() {
               class="m-auto overflow-hidden"
             />
             <i
-              class="pi pi-images absolute m-auto cursor-pointer opacity-0 transition-opacity duration-300 hover:opacity-100"
+              class="pi pi-images absolute m-auto cursor-pointer p-20 opacity-0 transition-opacity duration-300 hover:opacity-100"
               style="font-size: 2rem"
               @click="onClickAvatar"
             />
+            <input
+              ref="fileInput"
+              type="file"
+              class="hidden"
+              accept="image/*"
+              maxlength="1000000"
+              @change="updateAvatar"
+            />
           </div>
-          <input
-            ref="fileInput"
-            type="file"
-            class="hidden"
-            accept="image/*"
-            maxlength="1000000"
-            @change="updateAvatar"
-          />
-          <aside class="grid flex-1 grid-cols-1 gap-6 md:grid-cols-2">
-            <BaseInput
-              v-model="username"
-              :error-message="errorUsername"
-              :label="$t('_Global.username')"
-              class="md:col-span-2"
-            />
-            <BaseInput
-              v-model="firstName"
-              :error-message="errorFirstName"
-              :label="$t('_Global.firstName')"
-            />
-            <BaseInput
-              v-model="lastName"
-              :error-message="errorLastName"
-              :label="$t('_Global.lastName')"
-            />
-            <div class="col-span-1 text-right sm:col-span-2">
-              <Button
-                :loading="loading.profile"
-                :label="
-                  loading.profile
-                    ? null
-                    : `${$t('_Global.update')} ${t('Profile.Profile.title')}`
-                "
-                class="w-full min-w-32 sm:w-fit"
-                @click="onUpdateProfile"
+          <br />
+          <div
+            class="mx-auto flex flex-col items-center justify-center gap-5 rounded-lg p-4 sm:flex-row"
+          >
+            <aside class="grid flex-1 grid-cols-1 gap-6 md:grid-cols-2">
+              <BaseInput
+                v-model="username"
+                type="text"
+                :label="$t('_Global.username')"
+                autocomplete="username"
+                :error-message="errorUsername"
+                :error="!!errorUpdateProfile"
+                class="md:col-span-2"
               />
-            </div>
-          </aside>
+              <BaseInput
+                v-model="firstName"
+                type="text"
+                :label="$t('_Global.firstName')"
+                autocomplete="string"
+                :error-message="errorFirstName"
+                :error="!!errorUpdateProfile"
+              />
+              <BaseInput
+                v-model="lastName"
+                type="text"
+                :label="$t('_Global.lastName')"
+                autocomplete="string"
+                :error-message="errorLastName"
+                :error="!!errorUpdateProfile"
+              />
+              <small
+                v-if="dirtyProfile && errorUpdateProfile"
+                class="mt-2 text-lg text-red-500"
+              >
+                {{ errorUpdateProfile }}
+              </small>
+              <div class="col-span-1 text-right sm:col-span-2">
+                <Button
+                  :loading="loading.profile"
+                  :label="
+                    loading.profile
+                      ? null
+                      : `${$t('_Global.update')} ${t('Profile.Profile.title')}`
+                  "
+                  class="w-full min-w-32 sm:w-fit"
+                  @click="onUpdateProfile"
+                />
+              </div>
+            </aside>
+          </div>
         </div>
       </section>
 
       <section>
-        <h2 class="text-3xl font-bold text-primary-400">
+        <h2 class="mb-4 text-3xl font-bold text-primary-400">
           {{ $t("Profile.Account.title") }}
         </h2>
         <div class="mx-auto flex flex-col gap-4 rounded-lg bg-surface-900 p-4">
@@ -218,7 +251,7 @@ function onClickAvatar() {
       </section>
 
       <section>
-        <h2 class="text-3xl font-bold text-primary-400">
+        <h2 class="mb-4 text-3xl font-bold text-primary-400">
           {{ $t("Profile.WatchedList.title") }}
         </h2>
       </section>
