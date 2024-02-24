@@ -99,7 +99,7 @@ const onUpdateProfile = async () => {
     errorUpdateProfile.value = "";
     userProfileUpdateSuccessful.value = "User profile update successful";
   } catch (e) {
-    console.log(e);
+    userProfileUpdateSuccessful.value = "";
     if (e.response && e.response.data.code) {
       errorUpdateProfile.value = t(`Error.${e.response.data.code}`);
     } else {
