@@ -22,8 +22,9 @@ const {
   passwordValidator,
 } = useValidator();
 const { t } = useI18n();
-const { updateAvatar, updateProfile } = useProfile();
+const { updateAvatar, updateProfile, updateProfileTwo } = useProfile();
 
+const axios = useAxios();
 const email = ref(userData.value?.email);
 const username = ref(userData.value?.username);
 const firstName = ref(userData.value?.firstName);
@@ -39,6 +40,14 @@ const avatar = computed({
 const password = ref("");
 const fileInput = ref(null);
 
+const isButtonDisabled = () => {
+  return (
+    userData.value?.username === username.value &&
+    userData.value?.firstName === firstName.value &&
+    userData.value?.lastName === lastName.value
+  );
+};
+
 /* dirtys */
 const dirtyProfile = ref(false);
 const dirtyEmail = ref(false);
@@ -51,7 +60,7 @@ const loading = reactive({
   password: false,
 });
 
-const { error: errorUsername } = usernameValidator(dirtyProfile, firstName, t);
+const { error: errorUsername } = usernameValidator(dirtyProfile, username, t);
 
 const { error: errorFirstName } = firstNameValidator(
   dirtyProfile,
@@ -64,6 +73,7 @@ const { error: errorEmail } = emailValidator(dirtyEmail, email, t);
 
 const { error: errorPassword } = passwordValidator(dirtyPassword, password, t);
 
+const userProfileUpdateSuccessful = ref("");
 const errorUpdateProfile = ref("");
 
 //TODO: put error handling - will do it after devide component
@@ -72,26 +82,32 @@ const onUpdateProfile = async () => {
   if (errorUsername.value || errorFirstName.value || errorLastName.value) {
     return;
   }
+  if (
+    userData.value.username === username.value &&
+    userData.value.firstName === firstName.value &&
+    userData.value.lastName === lastName.value
+  )
+    return;
   try {
     loading.profile = true;
-    await updateProfile(userData.value.id, {
+    await updateProfileTwo(axios, userData.value.id, {
       username: username.value,
       firstName: firstName.value,
       lastName: lastName.value,
     });
+    // TODO: instead of printing error
     errorUpdateProfile.value = "";
+    userProfileUpdateSuccessful.value = "User profile update successful";
   } catch (e) {
+    console.log(e);
     if (e.response && e.response.data.code) {
       errorUpdateProfile.value = t(`Error.${e.response.data.code}`);
     } else {
       errorUpdateProfile.value = t(`Error.GENERAL_ERROR`);
     }
   } finally {
-    loading.value = false;
+    loading.profile = false;
   }
-
-  // dirtyProfile.value = false;
-  // loading.profile = false;
 };
 
 //TODO: put error handling - will do it after devide component
@@ -159,51 +175,61 @@ function onClickAvatar() {
           <div
             class="mx-auto flex flex-col items-center justify-center gap-5 rounded-lg p-4 sm:flex-row"
           >
-            <aside class="grid flex-1 grid-cols-1 gap-6 md:grid-cols-2">
-              <BaseInput
-                v-model="username"
-                type="text"
-                :label="$t('_Global.username')"
-                autocomplete="username"
-                :error-message="errorUsername"
-                :error="!!errorUpdateProfile"
-                class="md:col-span-2"
-              />
-              <BaseInput
-                v-model="firstName"
-                type="text"
-                :label="$t('_Global.firstName')"
-                autocomplete="string"
-                :error-message="errorFirstName"
-                :error="!!errorUpdateProfile"
-              />
-              <BaseInput
-                v-model="lastName"
-                type="text"
-                :label="$t('_Global.lastName')"
-                autocomplete="string"
-                :error-message="errorLastName"
-                :error="!!errorUpdateProfile"
-              />
-              <small
-                v-if="dirtyProfile && errorUpdateProfile"
-                class="mt-2 text-lg text-red-500"
-              >
-                {{ errorUpdateProfile }}
-              </small>
-              <div class="col-span-1 text-right sm:col-span-2">
-                <Button
-                  :loading="loading.profile"
-                  :label="
-                    loading.profile
-                      ? null
-                      : `${$t('_Global.update')} ${t('Profile.Profile.title')}`
-                  "
-                  class="w-full min-w-32 sm:w-fit"
-                  @click="onUpdateProfile"
+            <form @submit.prevent="onUpdateProfile">
+              <aside class="grid flex-1 grid-cols-1 gap-6 md:grid-cols-2">
+                <BaseInput
+                  v-model="username"
+                  type="text"
+                  :label="$t('_Global.username')"
+                  autocomplete="username"
+                  :error-message="errorUsername"
+                  :error="!!errorUpdateProfile"
+                  class="md:col-span-2"
                 />
-              </div>
-            </aside>
+                <BaseInput
+                  v-model="firstName"
+                  type="text"
+                  :label="$t('_Global.firstName')"
+                  autocomplete="string"
+                  :error-message="errorFirstName"
+                  :error="!!errorUpdateProfile"
+                />
+                <BaseInput
+                  v-model="lastName"
+                  type="text"
+                  :label="$t('_Global.lastName')"
+                  autocomplete="string"
+                  :error-message="errorLastName"
+                  :error="!!errorUpdateProfile"
+                />
+                <small
+                  v-if="dirtyProfile && errorUpdateProfile"
+                  class="mt-2 text-lg text-red-500"
+                >
+                  {{ errorUpdateProfile }}
+                </small>
+                <small
+                  v-if="userProfileUpdateSuccessful"
+                  class="mt-2 text-lg text-blue-500"
+                >
+                  {{ userProfileUpdateSuccessful }}
+                </small>
+                <div class="col-span-1 text-right sm:col-span-2">
+                  <Button
+                    v-once
+                    type="submit"
+                    :loading="loading.profile"
+                    :label="
+                      loading.profile
+                        ? null
+                        : `${$t('_Global.update')} ${t('Profile.Profile.title')}`
+                    "
+                    class="w-full min-w-32 sm:w-fit"
+                    @click="isButtonDisabled ? null : onUpdateProfile"
+                  />
+                </div>
+              </aside>
+            </form>
           </div>
         </div>
       </section>

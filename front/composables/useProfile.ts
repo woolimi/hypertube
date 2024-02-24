@@ -1,3 +1,5 @@
+import type { AxiosInstance } from "axios";
+
 import type { UserData } from "~/types";
 
 export const useProfile = () => {
@@ -26,12 +28,21 @@ export const useProfile = () => {
   async function updateProfile(userId: string, userInfo: UserData) {
     try {
       await axios.patch("/users/" + userId, userInfo);
-      router.go();
     } catch (e) {
       console.error(e);
     }
   }
+
+  const updateProfileTwo = async (
+    api: AxiosInstance,
+    userId: string,
+    userInfo: UserData,
+  ) => {
+    await api.patch("/users/" + userId, userInfo);
+  };
+
   return {
+    updateProfileTwo,
     updateAvatar,
     updateProfile,
   };
