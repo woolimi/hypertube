@@ -40,12 +40,16 @@ const avatar = computed({
 const password = ref("");
 const fileInput = ref(null);
 
-const isButtonDisabled = () => {
+const isProfileUpdateButtonDisabled = () => {
   return (
     userData.value?.username === username.value &&
     userData.value?.firstName === firstName.value &&
     userData.value?.lastName === lastName.value
   );
+};
+
+const isEmailUpdateButtonDisabled = () => {
+  return userData.value?.email === email.value;
 };
 
 /* dirtys */
@@ -74,7 +78,10 @@ const { error: errorEmail } = emailValidator(dirtyEmail, email, t);
 const { error: errorPassword } = passwordValidator(dirtyPassword, password, t);
 
 const userProfileUpdateSuccessful = ref("");
+const userEmailUpdateSuccessful = ref("");
+
 const errorUpdateProfile = ref("");
+const errorUpdateEmail = ref("");
 
 //TODO: put error handling - will do it after devide component
 const onUpdateProfile = async () => {
@@ -113,15 +120,30 @@ const onUpdateProfile = async () => {
 //TODO: put error handling - will do it after devide component
 async function onUpdateEmail() {
   dirtyEmail.value = true;
-  loading.email = true;
+
   if (errorEmail.value) {
     return;
   }
-  await updateProfile(userData.value.id, {
-    email: email.value,
-  });
-  dirtyEmail.value = false;
-  loading.email = false;
+
+  if (userData.value.email === email.value) return;
+
+  try {
+    loading.email = true;
+    await updateProfileTwo(axios, userData.value.id, {
+      email: email.value,
+    });
+    errorUpdateEmail.value = "";
+    userEmailUpdateSuccessful.value = "User Email update successful";
+  } catch (e) {
+    userEmailUpdateSuccessful.value = "";
+    if (e.response && e.response.data.code) {
+      errorUpdateEmail.value = t(`Error.${e.response.data.code}`);
+    } else {
+      errorUpdateEmail.value = t(`Error.GENERAL_ERROR`);
+    }
+  } finally {
+    loading.email = false;
+  }
 }
 
 //TODO: put error handling - will do it after devide component
@@ -225,7 +247,9 @@ function onClickAvatar() {
                         : `${$t('_Global.update')} ${t('Profile.Profile.title')}`
                     "
                     class="w-full min-w-32 sm:w-fit"
-                    @click="isButtonDisabled ? null : onUpdateProfile"
+                    @click="
+                      isProfileUpdateButtonDisabled ? null : onUpdateProfile
+                    "
                   />
                 </div>
               </aside>
@@ -239,22 +263,42 @@ function onClickAvatar() {
           {{ $t("Profile.Account.title") }}
         </h2>
         <div class="mx-auto flex flex-col gap-4 rounded-lg bg-surface-900 p-4">
-          <div class="flex flex-col items-start gap-3 sm:flex-row">
+          <form class="pb-2" @submit.prevent="onUpdateEmail">
+            <!-- First Row -->
             <BaseInput
               v-model="email"
               :error-message="errorEmail"
               :label="$t('_Global.email')"
               autocomplete="none"
               type="email"
-              class="w-full"
+              class="w-full p-2"
             />
-            <Button
-              class="w-full min-w-32 whitespace-nowrap sm:mt-7 sm:w-fit"
-              :loading="loading.email"
-              :label="loading.email ? null : $t('_Global.update')"
-              @click="onUpdateEmail"
-            />
-          </div>
+
+            <!-- Second Row -->
+            <div class="mt-2 flex items-center justify-between p-2">
+              <div class="text-left">
+                <small
+                  v-if="dirtyEmail && errorUpdateEmail"
+                  class="mt-2 text-lg text-red-500"
+                >
+                  {{ errorUpdateEmail }}
+                </small>
+                <small
+                  v-if="userEmailUpdateSuccessful"
+                  class="mt-2 text-lg text-blue-500"
+                >
+                  {{ userEmailUpdateSuccessful }}
+                </small>
+              </div>
+              <Button
+                type="submit"
+                class="min-w-32 whitespace-nowrap"
+                :loading="loading.email"
+                :label="loading.email ? null : $t('_Global.update')"
+                @click="isEmailUpdateButtonDisabled ? null : onUpdateProfile"
+              />
+            </div>
+          </form>
 
           <div class="flex flex-col items-start gap-3 sm:flex-row">
             <BaseInput
