@@ -25,15 +25,7 @@ export const useProfile = () => {
     }
   }
 
-  async function updateProfile(userId: string, userInfo: UserData) {
-    try {
-      await axios.patch("/users/" + userId, userInfo);
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
-  const updateProfileTwo = async (
+  const updateProfile = async (
     api: AxiosInstance,
     userId: string,
     userInfo: UserData,
@@ -42,7 +34,6 @@ export const useProfile = () => {
   };
 
   return {
-    updateProfileTwo,
     updateAvatar,
     updateProfile,
   };

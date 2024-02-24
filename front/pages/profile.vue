@@ -22,13 +22,15 @@ const {
   passwordValidator,
 } = useValidator();
 const { t } = useI18n();
-const { updateAvatar, updateProfile, updateProfileTwo } = useProfile();
+const { updateAvatar, updateProfile } = useProfile();
 
 const axios = useAxios();
 const email = ref(userData.value?.email);
 const username = ref(userData.value?.username);
 const firstName = ref(userData.value?.firstName);
 const lastName = ref(userData.value?.lastName);
+const password = ref("");
+const confirmPassword = ref("");
 const avatar = computed({
   get() {
     return userData.value?.image;
@@ -37,7 +39,6 @@ const avatar = computed({
     userData.value.image = image;
   },
 });
-const password = ref("");
 const fileInput = ref(null);
 
 const isProfileUpdateButtonDisabled = () => {
@@ -76,12 +77,19 @@ const { error: errorLastName } = lastNameValidator(dirtyProfile, lastName, t);
 const { error: errorEmail } = emailValidator(dirtyEmail, email, t);
 
 const { error: errorPassword } = passwordValidator(dirtyPassword, password, t);
+const { error: errorConfirmPassword } = passwordValidator(
+  dirtyPassword,
+  confirmPassword,
+  t,
+);
 
 const userProfileUpdateSuccessful = ref("");
 const userEmailUpdateSuccessful = ref("");
+const userPasswordUpdateSuccessful = ref("");
 
 const errorUpdateProfile = ref("");
 const errorUpdateEmail = ref("");
+const errorUpdatePassword = ref("");
 
 //TODO: put error handling - will do it after devide component
 const onUpdateProfile = async () => {
@@ -97,7 +105,7 @@ const onUpdateProfile = async () => {
     return;
   try {
     loading.profile = true;
-    await updateProfileTwo(axios, userData.value.id, {
+    await updateProfile(axios, userData.value.id, {
       username: username.value,
       firstName: firstName.value,
       lastName: lastName.value,
@@ -129,7 +137,7 @@ async function onUpdateEmail() {
 
   try {
     loading.email = true;
-    await updateProfileTwo(axios, userData.value.id, {
+    await updateProfile(axios, userData.value.id, {
       email: email.value,
     });
     errorUpdateEmail.value = "";
@@ -149,15 +157,33 @@ async function onUpdateEmail() {
 //TODO: put error handling - will do it after devide component
 async function onUpdatePassword() {
   dirtyPassword.value = true;
-  loading.password = true;
-  if (errorPassword.value) {
+
+  if (!password.value || !confirmPassword.value) return;
+
+  if (password.value != confirmPassword.value) {
+    errorUpdatePassword.value = "Password does not match";
     return;
   }
-  await updateProfile(userData.value.id, {
-    password: password.value,
-  });
-  dirtyPassword.value = false;
-  loading.password = false;
+
+  if (errorPassword.value || errorConfirmPassword.value) return;
+
+  try {
+    loading.password = true;
+    await updateProfile(axios, userData.value.id, {
+      password: password.value,
+    });
+    errorUpdatePassword.value = "";
+    userPasswordUpdateSuccessful.value = "User Password update successful";
+  } catch (e) {
+    userPasswordUpdateSuccessful.value = "";
+    if (e.response && e.response.data.code) {
+      errorUpdatePassword.value = t(`Error.${e.response.data.code}`);
+    } else {
+      errorUpdatePassword.value = t(`Error.GENERAL_ERROR`);
+    }
+  } finally {
+    loading.password = false;
+  }
 }
 
 function onClickAvatar() {
@@ -262,7 +288,7 @@ function onClickAvatar() {
         <h2 class="mb-4 text-3xl font-bold text-primary-400">
           {{ $t("Profile.Account.title") }}
         </h2>
-        <div class="mx-auto flex flex-col gap-4 rounded-lg bg-surface-900 p-4">
+        <div class="mx-auto flex flex-col gap-3 rounded-lg bg-surface-900 p-4">
           <form class="pb-2" @submit.prevent="onUpdateEmail">
             <!-- First Row -->
             <BaseInput
@@ -300,23 +326,50 @@ function onClickAvatar() {
             </div>
           </form>
 
-          <div class="flex flex-col items-start gap-3 sm:flex-row">
+          <form class="pb-2" @submit.prevent="onUpdatePassword">
+            <!-- First Row -->
             <BaseInput
               v-model="password"
-              :label="$t('_Global.password')"
-              type="password"
-              class="w-full"
-              :placeholder="$t('Profile.Account.enterNewPassword')"
-              autocomplete="none"
               :error-message="errorPassword"
+              :label="$t('_Global.password')"
+              autocomplete="none"
+              type="password"
+              class="w-full p-2"
             />
-            <Button
-              class="w-full min-w-32 whitespace-nowrap sm:mt-7 sm:w-fit"
-              :loading="loading.password"
-              :label="loading.password ? null : $t('_Global.update')"
-              @click="onUpdatePassword"
+
+            <BaseInput
+              v-model="confirmPassword"
+              :error-message="errorConfirmPassword"
+              :label="'Confirm ' + $t('_Global.password')"
+              autocomplete="none"
+              type="password"
+              class="w-full p-2"
             />
-          </div>
+
+            <!-- Second Row -->
+            <div class="mt-2 flex items-center justify-between p-2">
+              <div class="text-left">
+                <small
+                  v-if="dirtyPassword && errorUpdatePassword"
+                  class="mt-2 text-lg text-red-500"
+                >
+                  {{ errorUpdatePassword }}
+                </small>
+                <small
+                  v-if="userPasswordUpdateSuccessful"
+                  class="mt-2 text-lg text-blue-500"
+                >
+                  {{ userPasswordUpdateSuccessful }}
+                </small>
+              </div>
+              <Button
+                type="submit"
+                class="min-w-32 whitespace-nowrap"
+                :loading="loading.password"
+                :label="loading.passoword ? null : $t('_Global.update')"
+              />
+            </div>
+          </form>
         </div>
       </section>
 
