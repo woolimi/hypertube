@@ -197,7 +197,7 @@ function onClickAvatar() {
         <h2 class="mb-4 text-3xl font-bold text-primary-400">
           {{ $t("Profile.Profile.title") }}
         </h2>
-        <div class="bg-surface-900">
+        <div class="bg-slate-800">
           <div class="relative flex items-center justify-center">
             <Avatar
               :image="avatar.length > 0 ? avatar : defaultUser"
@@ -221,7 +221,7 @@ function onClickAvatar() {
           </div>
           <br />
           <div
-            class="mx-auto flex flex-col items-center justify-center gap-5 rounded-lg p-4 sm:flex-row"
+            class="mx-auto flex flex-col items-center justify-center gap-5 rounded-lg p-5 sm:flex-row"
           >
             <form @submit.prevent="onUpdateProfile">
               <aside class="grid flex-1 grid-cols-1 gap-6 md:grid-cols-2">
@@ -288,7 +288,7 @@ function onClickAvatar() {
         <h2 class="mb-4 text-3xl font-bold text-primary-400">
           {{ $t("Profile.Account.title") }}
         </h2>
-        <div class="mx-auto flex flex-col gap-3 rounded-lg bg-surface-900 p-4">
+        <div class="mx-auto flex flex-col gap-3 rounded-lg bg-slate-800 p-4">
           <form class="pb-2" @submit.prevent="onUpdateEmail">
             <!-- First Row -->
             <BaseInput
@@ -347,7 +347,9 @@ function onClickAvatar() {
             />
 
             <!-- Second Row -->
-            <div class="mt-2 flex items-center justify-between p-2">
+            <div
+              class="mt-2 flex items-center justify-between bg-slate-800 p-2"
+            >
               <div class="text-left">
                 <small
                   v-if="dirtyPassword && errorUpdatePassword"
