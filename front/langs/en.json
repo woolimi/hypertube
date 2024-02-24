@@ -37,7 +37,12 @@
   "AuthForgotPassword": {
     "title": "Forgot Password?",
     "description": "Retrieve your account password using your registered email.",
-    "submit": "Submit"
+    "submit": "Submit",
+    "emailSent": {
+      "title": "Password Change Email Sent",
+      "description": "We've sent you an email with instructions to reset your password. Please check your inbox.",
+      "button": "Back to Home"
+    }
   },
   "Error": {
     "EMAIL_ALREADY_EXISTS": "Email already exists.",

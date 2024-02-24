@@ -70,6 +70,17 @@ export const useAuth = () => {
     stopRefreshAuth();
   };
 
+  const doCheckUserCredentials = async (
+    api: AxiosInstance,
+    info: { email: string },
+  ) => {
+    const { data } = await api.get("/users/check-user", {
+      email: info.email,
+    });
+    userData.value = data;
+    startRefreshAuth();
+  };
+
   const doRegister = async (
     api: AxiosInstance,
     info: UserData,
@@ -95,6 +106,7 @@ export const useAuth = () => {
     doLogin,
     doLogout,
     doRegister,
+    doCheckUserCredentials,
     onGoogleLogin,
     onFtLogin,
     onGithubLogin,

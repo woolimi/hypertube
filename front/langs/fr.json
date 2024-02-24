@@ -88,6 +88,11 @@
   },
   "AuthForgotPassword": {
     "title": "Mot de passe oublié?",
-    "submit": "Soumettre"
+    "submit": "Soumettre",
+    "emailSent": {
+      "title": "E-mail de changement de mot de passe envoyé",
+      "description": "Nous vous avons envoyé un e-mail contenant des instructions pour réinitialiser votre mot de passe. \nVeuillez vérifier votre boîte de réception.",
+      "button": "De retour à la maison"
+    }
   }
 }

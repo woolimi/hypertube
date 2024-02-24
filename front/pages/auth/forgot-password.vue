@@ -8,8 +8,10 @@ definePageMeta({
 
 const username = ref("");
 const email = ref("");
-const localePath = useLocalePath();
+const axios = useAxios();
+// const localePath = useLocalePath();
 const { emailValidator, usernameValidator } = useValidator();
+const { doCheckUserCredentials } = useAuth();
 const { t } = useI18n();
 const loading = ref(false);
 const dirty = ref(false);
@@ -24,7 +26,11 @@ const handleOnSubmit = async () => {
 
   try {
     loading.value = true;
-    await navigateTo({ path: localePath("auth-verify-email") });
+    await doCheckUserCredentials(axios, {
+      username: username.value,
+      email: email.value,
+    });
+    // await navigateTo({ path: localePath("auth-verify-email") });
     errorGlobal.value = "";
   } catch (e) {
     if (e.response && e.response.data.code) {
