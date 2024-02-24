@@ -12,10 +12,30 @@
     "title": "Email confirmed!",
     "watch": "Watch movie"
   },
+  "AuthForgotPassword": {
+    "changePassword": {
+      "button": "Submit",
+      "description": "Enter your new password below to complete the password change process.",
+      "title": "Change Password"
+    },
+    "complete": {
+      "button": "Click here to log in",
+      "description": "Your password has been successfully changed.",
+      "title": "Password Changed"
+    },
+    "description": "Retrieve your account password using your registered email.",
+    "emailSent": {
+      "button": "Back to Home",
+      "description": "We've sent you an email with instructions to reset your password. Please check your inbox.",
+      "title": "Password Change Email Sent"
+    },
+    "submit": "Submit",
+    "title": "Forgot Password?"
+  },
   "AuthLogin": {
+    "forgotPassword": "<p><a class=\"text-primary-500 hover:text-primary-400 underline\" href=\"/en/auth/forgot-password\"> Forgot password? </a></p>",
     "login": "Login",
     "noAccount": "<p>You don't have an account yet?</p><p>Click <a class=\"text-primary-500 hover:text-primary-400 underline\" href=\"/en/auth/register\"> here </a> to register</p>",
-    "forgotPassword": "<p><a class=\"text-primary-500 hover:text-primary-400 underline\" href=\"/en/auth/forgot-password\"> Forgot password? </a></p>",
     "or": "OR",
     "title": "Login to get access"
   },
@@ -33,26 +53,6 @@
   "AuthVerifyEmail": {
     "description": "Please check your mail box",
     "title": "Waiting for your email confirmation"
-  },
-  "AuthForgotPassword": {
-    "title": "Forgot Password?",
-    "description": "Retrieve your account password using your registered email.",
-    "submit": "Submit",
-    "emailSent": {
-      "title": "Password Change Email Sent",
-      "description": "We've sent you an email with instructions to reset your password. Please check your inbox.",
-      "button": "Back to Home"
-    },
-    "changePassword": {
-      "title": "Change Password",
-      "description": "Enter your new password below to complete the password change process.",
-      "button": "Submit"
-    },
-    "complete": {
-      "title": "Password Changed",
-      "description": "Your password has been successfully changed.",
-      "button": "Click here to log in"
-    }
   },
   "Error": {
     "EMAIL_ALREADY_EXISTS": "Email already exists.",

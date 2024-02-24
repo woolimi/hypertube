@@ -12,12 +12,31 @@
     "title": "E-mail confirmé !",
     "watch": "Regarder un film"
   },
+  "AuthForgotPassword": {
+    "changePassword": {
+      "button": "Soumettre",
+      "description": "Entrez votre nouveau mot de passe ci-dessous pour terminer le processus de changement de mot de passe.",
+      "title": "Changer le mot de passe"
+    },
+    "complete": {
+      "button": "Cliquez ici pour vous identifier",
+      "description": "Votre mot de passe a été changé avec succès.",
+      "title": "Mot de passe changé"
+    },
+    "emailSent": {
+      "button": "De retour à la maison",
+      "description": "Nous vous avons envoyé un e-mail contenant des instructions pour réinitialiser votre mot de passe. \nVeuillez vérifier votre boîte de réception.",
+      "title": "E-mail de changement de mot de passe envoyé"
+    },
+    "submit": "Soumettre",
+    "title": "Mot de passe oublié?"
+  },
   "AuthLogin": {
+    "forgotPassword": "<p><a class=\"text-primary-500 hover:text-primary-400 underline\" href=\"/fr/auth/forgot-password\"> Mot de passe oublié ? \n</a></p>",
     "login": "Se connecter",
     "noAccount": "<p>Vous n'avez pas de compte ?</p><p>Cliquez <a class=\"text-primary-500 hover:text-primary-400 underline\" href=\"/fr/auth/register\"> ici </a> pour vous inscrire</p>",
     "or": "OU",
-    "title": "Connectez-vous pour accéder",
-    "forgotPassword": "<p><a class=\"text-primary-500 hover:text-primary-400 underline\" href=\"/fr/auth/forgot-password\"> Mot de passe oublié ? \n</a></p>"
+    "title": "Connectez-vous pour accéder"
   },
   "AuthRegister": {
     "description": "Créez un compte pour profiter de films en illimité",
@@ -84,15 +103,6 @@
     "WatchedList": {
       "title": "Liste déjà vu",
       "noList": "Vous n'avez jamais vu aucun film."
-    }
-  },
-  "AuthForgotPassword": {
-    "title": "Mot de passe oublié?",
-    "submit": "Soumettre",
-    "emailSent": {
-      "title": "E-mail de changement de mot de passe envoyé",
-      "description": "Nous vous avons envoyé un e-mail contenant des instructions pour réinitialiser votre mot de passe. \nVeuillez vérifier votre boîte de réception.",
-      "button": "De retour à la maison"
     }
   }
 }
