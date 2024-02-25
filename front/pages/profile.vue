@@ -3,8 +3,6 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
 
-import defaultUser from "assets/images/default_user.webp";
-
 import { useProfile } from "../composables/useProfile";
 
 definePageMeta({
@@ -13,7 +11,7 @@ definePageMeta({
 });
 
 //TODO: divide files for each block(Profile, Account, WatchedList)
-const { userData } = storeToRefs(useUserStore());
+const { userData, userImage } = storeToRefs(useUserStore());
 const {
   usernameValidator,
   emailValidator,
@@ -31,14 +29,6 @@ const firstName = ref(userData.value?.firstName);
 const lastName = ref(userData.value?.lastName);
 const password = ref("");
 const confirmPassword = ref("");
-const avatar = computed({
-  get() {
-    return userData.value?.image;
-  },
-  set(image) {
-    userData.value.image = image;
-  },
-});
 const fileInput = ref(null);
 
 const isProfileUpdateButtonDisabled = () => {
@@ -49,9 +39,9 @@ const isProfileUpdateButtonDisabled = () => {
   );
 };
 
-const isEmailUpdateButtonDisabled = () => {
-  return userData.value?.email === email.value;
-};
+const isEmailUpdateButtonDisabled = computed(
+  () => userData.value?.email === email.value,
+);
 
 /* dirtys */
 const dirtyProfile = ref(false);
@@ -191,20 +181,16 @@ function onClickAvatar() {
 }
 </script>
 <template>
-  <main class="flex min-h-[calc(100vh-64px)] px-4 pb-20 pt-10 md:px-8">
-    <div class="mx-auto flex max-w-[540px] flex-col flex-wrap gap-10">
-      <section>
+  <main class="min-h-[calc(100vh-64px)] pb-20 pt-10">
+    <div class="mx-auto grid grid-cols-1 gap-10 md:grid-cols-2">
+      <section class="w-[90vw] sm:w-auto">
         <h2 class="mb-4 text-3xl font-bold text-primary-400">
           {{ $t("Profile.Profile.title") }}
         </h2>
-        <div class="bg-slate-800">
-          <div class="relative flex items-center justify-center">
-            <Avatar
-              :image="avatar.length > 0 ? avatar : defaultUser"
-              size="xlarge"
-              shape="circle"
-              class="m-auto overflow-hidden"
-            />
+
+        <div class="rounded-lg bg-slate-800 p-4 md:p-8">
+          <div class="relative mb-5 flex items-center justify-center">
+            <img :src="userImage" class="h-[150px] w-[150px] rounded-[50%]" />
             <i
               class="pi pi-images absolute m-auto cursor-pointer p-20 opacity-0 transition-opacity duration-300 hover:opacity-100"
               style="font-size: 2rem"
@@ -219,12 +205,14 @@ function onClickAvatar() {
               @change="updateAvatar"
             />
           </div>
-          <br />
+
           <div
-            class="mx-auto flex flex-col items-center justify-center gap-5 rounded-lg p-5 sm:flex-row"
+            class="mx-auto flex flex-col items-center justify-center gap-5 rounded-lg sm:flex-row"
           >
-            <form @submit.prevent="onUpdateProfile">
-              <aside class="grid flex-1 grid-cols-1 gap-6 md:grid-cols-2">
+            <form class="w-full" @submit.prevent="onUpdateProfile">
+              <aside
+                class="grid w-full grid-cols-1 gap-6 sm:w-auto sm:grid-cols-2"
+              >
                 <BaseInput
                   v-model="username"
                   type="text"
@@ -232,7 +220,7 @@ function onClickAvatar() {
                   autocomplete="username"
                   :error-message="errorUsername"
                   :error="!!errorUpdateProfile"
-                  class="md:col-span-2"
+                  class="col-span-1 sm:col-span-2"
                 />
                 <BaseInput
                   v-model="firstName"
@@ -250,18 +238,22 @@ function onClickAvatar() {
                   :error-message="errorLastName"
                   :error="!!errorUpdateProfile"
                 />
-                <small
-                  v-if="dirtyProfile && errorUpdateProfile"
-                  class="mt-2 text-lg text-red-500"
-                >
-                  {{ errorUpdateProfile }}
-                </small>
-                <small
-                  v-if="userProfileUpdateSuccessful"
-                  class="mt-2 text-lg text-blue-500"
-                >
-                  {{ userProfileUpdateSuccessful }}
-                </small>
+
+                <div class="col-span-1 sm:col-span-2">
+                  <small
+                    v-if="dirtyProfile && errorUpdateProfile"
+                    class="mt-2 text-lg text-red-500"
+                  >
+                    {{ errorUpdateProfile }}
+                  </small>
+                  <small
+                    v-if="userProfileUpdateSuccessful"
+                    class="mt-2 text-lg text-blue-500"
+                  >
+                    {{ userProfileUpdateSuccessful }}
+                  </small>
+                </div>
+
                 <div class="col-span-1 text-right sm:col-span-2">
                   <Button
                     v-once
@@ -272,7 +264,7 @@ function onClickAvatar() {
                         ? null
                         : `${$t('_Global.update')} ${t('Profile.Profile.title')}`
                     "
-                    class="w-full min-w-32 sm:w-fit"
+                    class="w-full sm:w-fit"
                     @click="
                       isProfileUpdateButtonDisabled ? null : onUpdateProfile
                     "
@@ -284,12 +276,14 @@ function onClickAvatar() {
         </div>
       </section>
 
-      <section>
-        <h2 class="mb-4 text-3xl font-bold text-primary-400">
+      <section class="flex w-full flex-col">
+        <h2 class="mb-4 w-full text-3xl font-bold text-primary-400">
           {{ $t("Profile.Account.title") }}
         </h2>
-        <div class="mx-auto flex flex-col gap-3 rounded-lg bg-slate-800 p-4">
-          <form class="pb-2" @submit.prevent="onUpdateEmail">
+        <div
+          class="flex flex-1 flex-col justify-between gap-8 rounded-lg bg-slate-800 p-4 md:p-8"
+        >
+          <form class="flex flex-col gap-4" @submit.prevent="onUpdateEmail">
             <!-- First Row -->
             <BaseInput
               v-model="email"
@@ -297,11 +291,11 @@ function onClickAvatar() {
               :label="$t('_Global.email')"
               autocomplete="none"
               type="email"
-              class="w-full p-2"
+              class="w-full"
             />
 
             <!-- Second Row -->
-            <div class="mt-2 flex items-center justify-between p-2">
+            <div>
               <div class="text-left">
                 <small
                   v-if="dirtyEmail && errorUpdateEmail"
@@ -316,17 +310,21 @@ function onClickAvatar() {
                   {{ userEmailUpdateSuccessful }}
                 </small>
               </div>
-              <Button
-                type="submit"
-                class="min-w-32 whitespace-nowrap"
-                :loading="loading.email"
-                :label="loading.email ? null : $t('_Global.update')"
-                @click="isEmailUpdateButtonDisabled ? null : onUpdateProfile"
-              />
+
+              <div class="text-right">
+                <Button
+                  type="submit"
+                  class="w-full sm:w-auto"
+                  :loading="loading.email"
+                  :label="loading.email ? null : $t('_Global.update')"
+                  :disabled="isEmailUpdateButtonDisabled"
+                  @click="onUpdateProfile"
+                />
+              </div>
             </div>
           </form>
 
-          <form class="pb-2" @submit.prevent="onUpdatePassword">
+          <form class="grid gap-2" @submit.prevent="onUpdatePassword">
             <!-- First Row -->
             <BaseInput
               v-model="password"
@@ -334,7 +332,7 @@ function onClickAvatar() {
               :label="$t('_Global.password')"
               autocomplete="none"
               type="password"
-              class="w-full p-2"
+              class="w-full"
             />
 
             <BaseInput
@@ -345,30 +343,29 @@ function onClickAvatar() {
               "
               autocomplete="none"
               type="password"
-              class="w-full p-2"
+              class="w-full"
             />
 
             <!-- Second Row -->
-            <div
-              class="mt-2 flex items-center justify-between bg-slate-800 p-2"
-            >
-              <div class="text-left">
-                <small
-                  v-if="dirtyPassword && errorUpdatePassword"
-                  class="mt-2 text-lg text-red-500"
-                >
-                  {{ errorUpdatePassword }}
-                </small>
-                <small
-                  v-if="userPasswordUpdateSuccessful"
-                  class="mt-2 text-lg text-blue-500"
-                >
-                  {{ userPasswordUpdateSuccessful }}
-                </small>
-              </div>
+            <div>
+              <small
+                v-if="dirtyPassword && errorUpdatePassword"
+                class="mt-2 text-red-500"
+              >
+                {{ errorUpdatePassword }}
+              </small>
+              <small
+                v-if="userPasswordUpdateSuccessful"
+                class="mt-2 text-blue-500"
+              >
+                {{ userPasswordUpdateSuccessful }}
+              </small>
+            </div>
+
+            <div class="text-right">
               <Button
                 type="submit"
-                class="min-w-32 whitespace-nowrap"
+                class="w-full sm:w-auto"
                 :loading="loading.password"
                 :label="loading.passoword ? null : $t('_Global.update')"
               />
@@ -377,10 +374,16 @@ function onClickAvatar() {
         </div>
       </section>
 
-      <section>
+      <section class="col-span-1 md:col-span-2">
         <h2 class="mb-4 text-3xl font-bold text-primary-400">
           {{ $t("Profile.WatchedList.title") }}
         </h2>
+
+        <div class="h-full min-h-[250px] rounded-lg bg-slate-800 p-4 md:p-8">
+          <p class="text-xl text-white">
+            {{ $t("Profile.WatchedList.noList") }}
+          </p>
+        </div>
       </section>
     </div>
   </main>

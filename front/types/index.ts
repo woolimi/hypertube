@@ -6,6 +6,7 @@ export interface UserData {
   email?: string;
   emailVerified?: boolean;
   accessToken?: string;
+  image?: string;
 }
 
 export interface MovieData {

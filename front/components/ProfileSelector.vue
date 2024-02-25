@@ -1,5 +1,4 @@
 <script setup>
-import defaultUser from "assets/images/default_user.webp";
 const axios = useAxios();
 const localePath = useLocalePath();
 const auth = useAuth();
@@ -11,7 +10,7 @@ const onLogout = async () => {
     console.error(error);
   }
 };
-const { userData } = storeToRefs(useUserStore());
+const { userImage } = storeToRefs(useUserStore());
 </script>
 
 <template>
@@ -23,7 +22,7 @@ const { userData } = storeToRefs(useUserStore());
       class="flex items-center justify-center"
     >
       <Avatar
-        :image="userData.image.length > 0 ? userData.image : defaultUser"
+        :image="userImage"
         shape="circle"
         class="overflow-hidden"
         size="large"

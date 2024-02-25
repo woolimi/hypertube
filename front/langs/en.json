@@ -80,7 +80,8 @@
       "title": "Profile"
     },
     "WatchedList": {
-      "title": "Watched list"
+      "title": "Watched list",
+      "noList": "You haven't watched any movie yet."
     }
   }
 }
