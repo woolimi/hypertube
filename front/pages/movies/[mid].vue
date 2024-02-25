@@ -9,8 +9,11 @@ const axios = useAxios();
 const movie = ref<MovieData>({} as MovieData);
 const comments = computed(() => []);
 const route = useRoute();
-const { localeProperties } = useI18n();
+const { localeProperties } = useI18n() as any;
 const fetching = ref(false);
+const openDialog = ref(false);
+const videoSource = ref("");
+const videoEl = ref<HTMLVideoElement>();
 
 onMounted(async () => {
   try {
@@ -21,13 +24,18 @@ onMounted(async () => {
       },
     });
     movie.value = data;
-    console.log(movie.value);
   } catch (error) {
     console.error(error);
   } finally {
     fetching.value = false;
   }
 });
+
+const playVideo = (torrentHash: string) => {
+  videoSource.value = `${useRuntimeConfig().public.BACK_HOST}/movies/${route.params.mid}/stream/${torrentHash}`;
+  videoEl.value?.load();
+  openDialog.value = true;
+};
 </script>
 
 <template>
@@ -37,11 +45,13 @@ onMounted(async () => {
     >
       <div class="mx-auto w-full max-w-[400px] md:w-[45%]">
         <div
+          v-if="movie.poster_path"
           :style="{
             backgroundImage: `url(https://image.tmdb.org/t/p/w500/${movie.poster_path})`,
           }"
           class="h-0 w-full bg-cover bg-no-repeat pb-[150%]"
         ></div>
+        <PosterSkeleton v-else />
       </div>
 
       <section
@@ -89,7 +99,7 @@ onMounted(async () => {
       </section>
     </div>
 
-    <ul :class="$style.gridContainer" class="mx-auto max-w-[960px] px-4">
+    <ul :class="$style.gridContainer" class="mx-auto mt-8 max-w-[960px] px-4">
       <li
         v-for="(torrent, idx) in movie.torrents"
         :key="torrent.url"
@@ -108,10 +118,26 @@ onMounted(async () => {
             <Badge :size="null" severity="info" :value="torrent.type" />
             <Badge :size="null" severity="danger" :value="torrent.quality" />
           </div>
-          <Button label="Watch" icon="pi pi-youtube" />
+          <Button
+            label="Watch"
+            icon="pi pi-youtube"
+            @click="playVideo(torrent.hash)"
+          />
         </div>
       </li>
     </ul>
+
+    <Dialog v-model:visible="openDialog" modal>
+      <video
+        ref="videoEl"
+        controls
+        cross-origin="anonymous"
+        preload="none"
+        :poster="`https://image.tmdb.org/t/p/w500/${movie.backdrop_path}`"
+      >
+        <source :src="videoSource" />
+      </video>
+    </Dialog>
 
     <CommentList :items="comments" />
   </main>

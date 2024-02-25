@@ -18,6 +18,7 @@ export interface MovieData {
   overview: string;
   popularity: number;
   poster_path: string;
+  backdrop_path: string;
   release_date: string; // YYYY-MM-DD
   title: string;
   vote_average: number; // 0.0 - 10.0
