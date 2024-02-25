@@ -1,11 +1,11 @@
 {
   "_Global": {
-    "update": "Update",
-    "username": "Username",
+    "email": "Email",
     "firstName": "First name",
     "lastName": "Last name",
     "password": "Password",
-    "email": "Email"
+    "update": "Update",
+    "username": "Username"
   },
   "AuthEmailConfirmed": {
     "description": "You can now enjoy movie!",
@@ -34,14 +34,15 @@
     "title": "Waiting for your email confirmation"
   },
   "Error": {
+    "EMAIL_ALREADY_EXISTS": "Email already exists.",
     "GENERAL_ERROR": "Unexpected error",
     "INVALID_EMAIL": "Invalid email address",
     "INVALID_LOGIN": "Invalid username or password",
     "INVALID_PASSWORD": "Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a digit, and a special character.",
     "MAX_LENGTH": "{value} must be less than {length}",
     "MIN_LENGTH": "{value} must be at least {length} characters long.",
+    "PASSWORD_DOES_NOT_MATCH": "Password does not match.",
     "REQUIRED": " {value} is required",
-    "EMAIL_ALREADY_EXISTS": "Email already exists.",
     "USERNAME_ALREADY_EXISTS": "Username already exists."
   },
   "Footer": {
@@ -68,14 +69,19 @@
   },
   "Profile": {
     "Account": {
+      "confirm": "Confirm",
       "enterNewPassword": "Enter new password",
+      "successEmail": "Email update successful.",
+      "successPassword": "Password update successful.",
       "title": "Account"
     },
     "Profile": {
+      "success": "User profile update successful.",
       "title": "Profile"
     },
     "WatchedList": {
-      "title": "Watched list"
+      "title": "Watched list",
+      "noList": "You haven't watched any movie yet."
     }
   }
 }
