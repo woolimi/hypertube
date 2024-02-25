@@ -29,7 +29,8 @@
       "title": "E-mail de changement de mot de passe envoyé"
     },
     "submit": "Soumettre",
-    "title": "Mot de passe oublié?"
+    "title": "Mot de passe oublié?",
+    "description": "Récupérez le mot de passe de votre compte en utilisant votre e-mail enregistré."
   },
   "AuthLogin": {
     "forgotPassword": "<p><a class=\"text-primary-500 hover:text-primary-400 underline\" href=\"/fr/auth/forgot-password\"> Mot de passe oublié ? \n</a></p>",
@@ -63,7 +64,8 @@
     "MIN_LENGTH": "{value} doit comporter au moins {length} caractères.",
     "PASSWORD_DOES_NOT_MATCH": "Le mot de passe ne correspond pas.",
     "REQUIRED": "{value} est obligatoire",
-    "USERNAME_ALREADY_EXISTS": "Le nom d'utilisateur existe déjà."
+    "USERNAME_ALREADY_EXISTS": "Le nom d'utilisateur existe déjà.",
+    "INVALID_USER_CREDENTIALS": "Identifiants utilisateur invalides."
   },
   "Footer": {
     "copyright": "Tous droits réservés."

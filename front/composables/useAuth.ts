@@ -72,13 +72,12 @@ export const useAuth = () => {
 
   const doCheckUserCredentials = async (
     api: AxiosInstance,
-    info: { email: string },
+    info: { username: string; email: string },
+    lang: string,
   ) => {
-    const { data } = await api.get("/users/check-user", {
-      email: info.email,
-    });
-    userData.value = data;
-    startRefreshAuth();
+    await api.post(`/auth/forgot-password?lang=${lang}`, info);
+    // userData.value = data;
+    // startRefreshAuth();
   };
 
   const doRegister = async (

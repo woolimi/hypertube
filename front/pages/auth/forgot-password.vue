@@ -9,7 +9,7 @@ definePageMeta({
 const username = ref("");
 const email = ref("");
 const axios = useAxios();
-// const localePath = useLocalePath();
+const localePath = useLocalePath();
 const { emailValidator, usernameValidator } = useValidator();
 const { doCheckUserCredentials } = useAuth();
 const { t } = useI18n();
@@ -18,7 +18,7 @@ const dirty = ref(false);
 const { error: errorEmail } = emailValidator(dirty, email, t);
 const { error: errorUsername } = usernameValidator(dirty, username, t);
 const errorGlobal = ref("");
-// const { locale } = useI18n();
+const { locale } = useI18n();
 
 const handleOnSubmit = async () => {
   dirty.value = true;
@@ -26,11 +26,15 @@ const handleOnSubmit = async () => {
 
   try {
     loading.value = true;
-    await doCheckUserCredentials(axios, {
-      username: username.value,
-      email: email.value,
-    });
-    // await navigateTo({ path: localePath("auth-verify-email") });
+    await doCheckUserCredentials(
+      axios,
+      {
+        username: username.value,
+        email: email.value,
+      },
+      locale.value,
+    );
+    await navigateTo({ path: localePath("auth-password-email-sent") });
     errorGlobal.value = "";
   } catch (e) {
     if (e.response && e.response.data.code) {

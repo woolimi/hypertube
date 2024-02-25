@@ -167,18 +167,28 @@ export class AuthController {
   }
 
   @Post('/forgot-password')
-  async forgotPasswordFindUser(@Body() userInfo: ForgotPasswordDto) {
-    console.log(userInfo);
+  async forgotPasswordFindUser(
+    @Query('lang') lang,
+    @Body() userInfo: ForgotPasswordDto,
+  ) {
+    // console.log(userInfo);
     try {
       const foundEmail = await this.userService.findOneByEmail(userInfo.email);
-      const foundUsername = await this.userService.findOneByEmail(
+      const foundUsername = await this.userService.findOneByUsername(
         userInfo.username,
       );
-
-      if (!foundEmail || !foundUsername || foundEmail !== foundUsername) {
-        throw new BadRequestException({ code: 'INVALID_USER_CREDENTIAL' });
+      if (!foundEmail || !foundUsername) {
+        throw new BadRequestException({ code: 'INVALID_USER_CREDENTIALS' });
+      } else if (!(foundEmail.id === foundUsername.id)) {
+        console.log('hi there');
+        throw new BadRequestException({ code: 'INVALID_USER_CREDENTIALS' });
       }
 
+      // Send email confirmation email
+      await this.emailService.sendPasswordResetEmail(
+        { id: foundEmail.id, email: foundEmail.email },
+        lang || 'en',
+      );
       return foundEmail;
     } catch (error) {
       throw error;

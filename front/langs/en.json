@@ -64,7 +64,8 @@
     "MIN_LENGTH": "{value} must be at least {length} characters long.",
     "PASSWORD_DOES_NOT_MATCH": "Password does not match.",
     "REQUIRED": " {value} is required",
-    "USERNAME_ALREADY_EXISTS": "Username already exists."
+    "USERNAME_ALREADY_EXISTS": "Username already exists.",
+    "INVALID_USER_CREDENTIALS": "Invalid user credentials."
   },
   "Footer": {
     "copyright": "All Rights Reserved."
