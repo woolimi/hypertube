@@ -15,9 +15,9 @@
   "AuthForgotPassword": {
     "changePassword": {
       "button": "Submit",
+      "confirm": "Confirm",
       "description": "Enter your new password below to complete the password change process.",
-      "title": "Change Password",
-      "confirm": "Confirm"
+      "title": "Change Password"
     },
     "complete": {
       "button": "Back to Home",
@@ -61,12 +61,12 @@
     "INVALID_EMAIL": "Invalid email address",
     "INVALID_LOGIN": "Invalid username or password",
     "INVALID_PASSWORD": "Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a digit, and a special character.",
+    "INVALID_USER_CREDENTIALS": "Invalid user credentials.",
     "MAX_LENGTH": "{value} must be less than {length}",
     "MIN_LENGTH": "{value} must be at least {length} characters long.",
     "PASSWORD_DOES_NOT_MATCH": "Password does not match.",
     "REQUIRED": " {value} is required",
-    "USERNAME_ALREADY_EXISTS": "Username already exists.",
-    "INVALID_USER_CREDENTIALS": "Invalid user credentials."
+    "USERNAME_ALREADY_EXISTS": "Username already exists."
   },
   "Footer": {
     "copyright": "All Rights Reserved."
@@ -103,8 +103,8 @@
       "title": "Profile"
     },
     "WatchedList": {
-      "title": "Watched list",
-      "noList": "You haven't watched any movie yet."
+      "noList": "You haven't watched any movie yet.",
+      "title": "Watched list"
     }
   }
 }
