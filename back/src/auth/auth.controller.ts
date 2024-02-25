@@ -205,8 +205,11 @@ export class AuthController {
       secret: process.env.JWT_SECRET,
     });
     const user = await this.userService.findOneById(payload.userId);
-    await this.userService.update(user.id, { ...user, emailVerified: true });
+    console.log(user);
+    //TODO: save tokens into DB
+    // await this.userService.update(user.id, { ...user, emailVerified: true });
 
+    console.log('hi');
     const userId = payload.userId;
     const { accessToken, ...accessOption } =
       this.authService.getCookieWithJwtAccessToken(userId);
