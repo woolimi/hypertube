@@ -1,7 +1,7 @@
 <script setup>
 definePageMeta({
   layout: "password-change",
-  middleware: ["non-auth"],
+  middleware: ["strict-auth"],
 });
 </script>
 
@@ -14,7 +14,7 @@ definePageMeta({
       {{ $t("AuthForgotPassword.complete.description") }}
     </p>
     <div>
-      <NuxtLink :to="localePath('/auth/login')">
+      <NuxtLink :to="localePath('/')">
         <Button :label="$t('AuthForgotPassword.complete.button')" />
       </NuxtLink>
     </div>

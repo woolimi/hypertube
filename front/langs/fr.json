@@ -16,7 +16,8 @@
     "changePassword": {
       "button": "Soumettre",
       "description": "Entrez votre nouveau mot de passe ci-dessous pour terminer le processus de changement de mot de passe.",
-      "title": "Changer le mot de passe"
+      "title": "Changer le mot de passe",
+      "confirm": "Confirmer"
     },
     "complete": {
       "button": "Cliquez ici pour vous identifier",

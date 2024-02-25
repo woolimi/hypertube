@@ -1,30 +1,49 @@
 <script setup>
 definePageMeta({
   layout: "password-change",
-  middleware: ["non-auth"],
+  middleware: ["strict-auth"],
 });
 
+const axios = useAxios();
 const password = ref("");
+const confirmPassword = ref("");
+const { userData } = storeToRefs(useUserStore());
 const { passwordValidator } = useValidator();
+const localePath = useLocalePath();
 const { t } = useI18n();
 const loading = ref(false);
 const dirty = ref(false);
 const { error: errorPassword } = passwordValidator(dirty, password, t);
+const { error: errorConfirmPassword } = passwordValidator(
+  dirty,
+  confirmPassword,
+  t,
+);
 const errorGlobal = ref("");
+
+const { updateProfile } = useProfile();
 
 const handleOnSubmit = async () => {
   dirty.value = true;
-  if (errorPassword.value) return;
+  if (errorPassword.value || errorConfirmPassword.value) return;
+
+  if (!password.value || !confirmPassword.value) return;
+
+  if (password.value != confirmPassword.value) {
+    errorGlobal.value = t("Error.PASSWORD_DOES_NOT_MATCH");
+    return;
+  }
 
   try {
     loading.value = true;
-    await doCheckUserCredentials(axios, {
-      username: username.value,
-      email: email.value,
+    console.log(userData.value.id);
+    await updateProfile(axios, userData.value.id, {
+      password: password.value,
     });
-    // await navigateTo({ path: localePath("auth-verify-email") });
+    await navigateTo({ path: localePath("auth-password-email-complete") });
     errorGlobal.value = "";
   } catch (e) {
+    console.log(e);
     if (e.response && e.response.data.code) {
       errorGlobal.value = t(`Error.${e.response.data.code}`);
     } else {
@@ -53,6 +72,19 @@ const handleOnSubmit = async () => {
           autocomplete="password"
           class="sm:col-span-2"
           :error-message="errorPassword"
+          :error="!!errorGlobal"
+        />
+        <BaseInput
+          v-model="confirmPassword"
+          type="password"
+          :label="
+            t('AuthForgotPassword.changePassword.confirm') +
+            ' ' +
+            $t('_Global.password')
+          "
+          autocomplete="none"
+          class="sm:col-span-2"
+          :error-message="errorConfirmPassword"
           :error="!!errorGlobal"
         />
         <Button

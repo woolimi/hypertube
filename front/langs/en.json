@@ -16,10 +16,11 @@
     "changePassword": {
       "button": "Submit",
       "description": "Enter your new password below to complete the password change process.",
-      "title": "Change Password"
+      "title": "Change Password",
+      "confirm": "Confirm"
     },
     "complete": {
-      "button": "Click here to log in",
+      "button": "Back to Home",
       "description": "Your password has been successfully changed.",
       "title": "Password Changed"
     },

@@ -195,6 +195,34 @@ export class AuthController {
     }
   }
 
+  @Get('/reset-password')
+  async resetPassword(
+    @Query('token') token,
+    @Query('lang') lang,
+    @Response({ passthrough: true }) res,
+  ) {
+    const payload = this.jwtService.verify(token, {
+      secret: process.env.JWT_SECRET,
+    });
+    const user = await this.userService.findOneById(payload.userId);
+    await this.userService.update(user.id, { ...user, emailVerified: true });
+
+    const userId = payload.userId;
+    const { accessToken, ...accessOption } =
+      this.authService.getCookieWithJwtAccessToken(userId);
+    const { refreshToken, ...refreshOption } =
+      this.authService.getCookieWithJwtRefreshToken(userId);
+
+    // Update tokens
+    res.cookie('accessToken', accessToken, accessOption);
+    res.cookie('refreshToken', refreshToken, refreshOption);
+    await this.userService.saveRefreshToken(userId, refreshToken);
+
+    res.redirect(
+      `${process.env.FRONT_HOST}/${lang}/auth/password-email-change`,
+    );
+  }
+
   @Get('google/login')
   @UseGuards(GoogleAuthGuard)
   async googleLogin() { }

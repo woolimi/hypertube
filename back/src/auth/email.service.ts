@@ -73,11 +73,11 @@ export class EmailService {
     const template = {
       en: {
         subject: 'Password reset for Hypertube',
-        html: `<a href="${process.env.BACK_HOST}/auth/verify-email?token=${token}&lang=${lang}">Password reset for Hypertube</a>`,
+        html: `<a href="${process.env.BACK_HOST}/auth/reset-password?token=${token}&lang=${lang}">Password reset for Hypertube</a>`,
       },
       fr: {
         subject: 'Réinitialisation du mot de passe pour Hypertube',
-        html: `<a href="${process.env.BACK_HOST}/auth/verify-email?token=${token}&lang=${lang}"Réinitialisation du mot de passe pour Hypertube</a>`,
+        html: `<a href="${process.env.BACK_HOST}/auth/reset-password?token=${token}&lang=${lang}"Réinitialisation du mot de passe pour Hypertube</a>`,
       },
     };
     const mailOptions = {
