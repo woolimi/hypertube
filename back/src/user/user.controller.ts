@@ -9,6 +9,10 @@ import {
   UseInterceptors,
   UseGuards,
   UploadedFile,
+  Query,
+  ValidationPipe,
+  UsePipes,
+  BadRequestException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';

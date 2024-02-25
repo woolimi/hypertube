@@ -10,6 +10,8 @@ import {
   Query,
   BadRequestException,
   Logger,
+  UsePipes,
+  NotFoundException,
 } from '@nestjs/common';
 import { LocalAuthGuard } from 'src/guards/local-auth.guard';
 import { AuthService } from './auth.service';
@@ -21,6 +23,7 @@ import { FtAuthGuard } from 'src/guards/ft-auth.guard';
 import { GithubAuthGuard } from 'src/guards/github-auth.guard';
 import { EmailService } from './email.service';
 import { JwtService } from '@nestjs/jwt';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -161,6 +164,25 @@ export class AuthController {
     await this.userService.update(user.id, { ...user, emailVerified: true });
 
     res.redirect(`${process.env.FRONT_HOST}/${lang}/auth/email-confirmed`);
+  }
+
+  @Post('/forgot-password')
+  async forgotPasswordFindUser(@Body() userInfo: ForgotPasswordDto) {
+    console.log(userInfo);
+    try {
+      const foundEmail = await this.userService.findOneByEmail(userInfo.email);
+      const foundUsername = await this.userService.findOneByEmail(
+        userInfo.username,
+      );
+
+      if (!foundEmail || !foundUsername || foundEmail !== foundUsername) {
+        throw new BadRequestException({ code: 'INVALID_USER_CREDENTIAL' });
+      }
+
+      return foundEmail;
+    } catch (error) {
+      throw error;
+    }
   }
 
   @Get('google/login')
