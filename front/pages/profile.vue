@@ -112,7 +112,7 @@ const onUpdateProfile = async () => {
     });
     // TODO: instead of printing error
     errorUpdateProfile.value = "";
-    userProfileUpdateSuccessful.value = "User profile update successful";
+    userProfileUpdateSuccessful.value = t("Profile.Profile.success");
   } catch (e) {
     userProfileUpdateSuccessful.value = "";
     if (e.response && e.response.data.code) {
@@ -141,7 +141,7 @@ async function onUpdateEmail() {
       email: email.value,
     });
     errorUpdateEmail.value = "";
-    userEmailUpdateSuccessful.value = "User Email update successful";
+    userEmailUpdateSuccessful.value = t("Profile.Account.successEmail");
   } catch (e) {
     userEmailUpdateSuccessful.value = "";
     if (e.response && e.response.data.code) {
@@ -161,7 +161,7 @@ async function onUpdatePassword() {
   if (!password.value || !confirmPassword.value) return;
 
   if (password.value != confirmPassword.value) {
-    errorUpdatePassword.value = "Password does not match";
+    errorUpdatePassword.value = t("Error.PASSWORD_DOES_NOT_MATCH");
     return;
   }
 
@@ -173,7 +173,7 @@ async function onUpdatePassword() {
       password: password.value,
     });
     errorUpdatePassword.value = "";
-    userPasswordUpdateSuccessful.value = "User Password update successful";
+    userPasswordUpdateSuccessful.value = t("Profile.Account.successPassword");
   } catch (e) {
     userPasswordUpdateSuccessful.value = "";
     if (e.response && e.response.data.code) {
@@ -340,7 +340,9 @@ function onClickAvatar() {
             <BaseInput
               v-model="confirmPassword"
               :error-message="errorConfirmPassword"
-              :label="'Confirm ' + $t('_Global.password')"
+              :label="
+                t('Profile.Account.confirm') + ' ' + $t('_Global.password')
+              "
               autocomplete="none"
               type="password"
               class="w-full p-2"
