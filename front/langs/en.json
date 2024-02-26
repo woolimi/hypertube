@@ -12,7 +12,29 @@
     "title": "Email confirmed!",
     "watch": "Watch movie"
   },
+  "AuthForgotPassword": {
+    "changePassword": {
+      "button": "Submit",
+      "confirm": "Confirm",
+      "description": "Enter your new password below to complete the password change process.",
+      "title": "Change Password"
+    },
+    "complete": {
+      "button": "Back to Home",
+      "description": "Your password has been successfully changed.",
+      "title": "Password Changed"
+    },
+    "description": "Retrieve your account password using your registered email.",
+    "emailSent": {
+      "button": "Back to Home",
+      "description": "We've sent you an email with instructions to reset your password. Please check your inbox.",
+      "title": "Password Change Email Sent"
+    },
+    "submit": "Submit",
+    "title": "Forgot Password?"
+  },
   "AuthLogin": {
+    "forgotPassword": "<p><a class=\"text-primary-500 hover:text-primary-400 underline\" href=\"/en/auth/forgot-password\"> Forgot password? </a></p>",
     "login": "Login",
     "noAccount": "<p>You don't have an account yet?</p><p>Click <a class=\"text-primary-500 hover:text-primary-400 underline\" href=\"/en/auth/register\"> here </a> to register</p>",
     "or": "OR",
@@ -39,6 +61,7 @@
     "INVALID_EMAIL": "Invalid email address",
     "INVALID_LOGIN": "Invalid username or password",
     "INVALID_PASSWORD": "Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a digit, and a special character.",
+    "INVALID_USER_CREDENTIALS": "Invalid user credentials.",
     "MAX_LENGTH": "{value} must be less than {length}",
     "MIN_LENGTH": "{value} must be at least {length} characters long.",
     "PASSWORD_DOES_NOT_MATCH": "Password does not match.",
@@ -80,8 +103,8 @@
       "title": "Profile"
     },
     "WatchedList": {
-      "title": "Watched list",
-      "noList": "You haven't watched any movie yet."
+      "noList": "You haven't watched any movie yet.",
+      "title": "Watched list"
     }
   }
 }

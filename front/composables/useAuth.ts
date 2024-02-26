@@ -70,6 +70,14 @@ export const useAuth = () => {
     stopRefreshAuth();
   };
 
+  const doCheckUserCredentials = async (
+    api: AxiosInstance,
+    info: { username: string; email: string },
+    lang: string,
+  ) => {
+    await api.post(`/auth/forgot-password?lang=${lang}`, info);
+  };
+
   const doRegister = async (
     api: AxiosInstance,
     info: UserData,
@@ -95,6 +103,7 @@ export const useAuth = () => {
     doLogin,
     doLogout,
     doRegister,
+    doCheckUserCredentials,
     onGoogleLogin,
     onFtLogin,
     onGithubLogin,

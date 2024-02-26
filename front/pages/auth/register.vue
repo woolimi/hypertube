@@ -31,11 +31,7 @@ const { error: errorLastName } = lastNameValidator(dirty, lastName, t);
 const { error: errorEmail } = emailValidator(dirty, email, t);
 const { error: errorPassword } = passwordValidator(dirty, password, t);
 const errorGlobal = ref("");
-
-const browserLanguage = process.client
-  ? navigator.language.toLowerCase()
-  : "en";
-const locale = browserLanguage.startsWith("fr") ? "fr" : "en";
+const { locale } = useI18n();
 
 // TODO: Validation and show error message
 const handleOnSubmit = async () => {
@@ -59,9 +55,7 @@ const handleOnSubmit = async () => {
 
   try {
     loading.value = true;
-
     await doRegister(axios, userInfo, locale.value);
-
     await navigateTo({ path: localePath("auth-verify-email") });
     errorGlobal.value = "";
   } catch (e) {
@@ -152,9 +146,12 @@ const handleOnSubmit = async () => {
           :error-message="errorPassword"
           :error="!!errorGlobal"
         />
-        <Button class="mt-4 w-full sm:col-span-2" type="submit">
-          {{ $t("AuthRegister.register") }}
-        </Button>
+        <Button
+          class="mt-4 w-full sm:col-span-2"
+          type="submit"
+          :label="loading ? null : $t('AuthRegister.register')"
+          :loading="loading"
+        />
         <small v-if="dirty && errorGlobal" class="mt-2 text-lg text-red-500">
           {{ errorGlobal }}
         </small>

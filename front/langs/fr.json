@@ -12,7 +12,29 @@
     "title": "E-mail confirmé !",
     "watch": "Regarder un film"
   },
+  "AuthForgotPassword": {
+    "changePassword": {
+      "button": "Soumettre",
+      "confirm": "Confirmer",
+      "description": "Entrez votre nouveau mot de passe ci-dessous pour terminer le processus de changement de mot de passe.",
+      "title": "Changer le mot de passe"
+    },
+    "complete": {
+      "button": "Retour à l'accueil",
+      "description": "Votre mot de passe a été changé avec succès.",
+      "title": "Mot de passe changé"
+    },
+    "description": "Récupérez le mot de passe de votre compte en utilisant votre e-mail enregistré.",
+    "emailSent": {
+      "button": "Retour à l'accueil",
+      "description": "Nous vous avons envoyé un e-mail contenant des instructions pour réinitialiser votre mot de passe. \nVeuillez vérifier votre boîte de réception.",
+      "title": "E-mail de changement de mot de passe envoyé"
+    },
+    "submit": "Soumettre",
+    "title": "Mot de passe oublié?"
+  },
   "AuthLogin": {
+    "forgotPassword": "<p><a class=\"text-primary-500 hover:text-primary-400 underline\" href=\"/fr/auth/forgot-password\"> Mot de passe oublié ? \n</a></p>",
     "login": "Se connecter",
     "noAccount": "<p>Vous n'avez pas de compte ?</p><p>Cliquez <a class=\"text-primary-500 hover:text-primary-400 underline\" href=\"/fr/auth/register\"> ici </a> pour vous inscrire</p>",
     "or": "OU",
@@ -39,6 +61,7 @@
     "INVALID_EMAIL": "Adresse email invalide",
     "INVALID_LOGIN": "Nom d'utilisateur ou mot de passe invalide",
     "INVALID_PASSWORD": "Le mot de passe doit avoir au moins 8 caractères et contenir une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial.",
+    "INVALID_USER_CREDENTIALS": "Identifiants utilisateur invalides.",
     "MAX_LENGTH": "{value} doit comporter mois de {length} caractères",
     "MIN_LENGTH": "{value} doit comporter au moins {length} caractères.",
     "PASSWORD_DOES_NOT_MATCH": "Le mot de passe ne correspond pas.",
@@ -81,8 +104,8 @@
       "title": "Profil"
     },
     "WatchedList": {
-      "title": "Liste déjà vu",
-      "noList": "Vous n'avez jamais vu aucun film."
+      "noList": "Vous n'avez jamais vu aucun film.",
+      "title": "Liste déjà vu"
     }
   }
 }

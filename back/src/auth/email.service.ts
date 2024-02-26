@@ -58,4 +58,43 @@ export class EmailService {
       throw new ServiceUnavailableException("Can't send email");
     }
   }
+
+  async sendPasswordResetEmail(
+    data: { id: string; email: string },
+    lang: 'en' | 'fr',
+  ) {
+    const token = this.jwtService.sign(
+      { userId: data.id },
+      {
+        secret: process.env.JWT_SECRET,
+        expiresIn: `${24 * 60 * 60}s`, // 24 hours
+      },
+    );
+    const template = {
+      en: {
+        subject: 'Password reset for Hypertube',
+        html: `<a href="${process.env.BACK_HOST}/auth/reset-password?token=${token}&lang=${lang}">Password reset for Hypertube</a>`,
+      },
+      fr: {
+        subject: 'Réinitialisation du mot de passe pour Hypertube',
+        html: `<a href="${process.env.BACK_HOST}/auth/reset-password?token=${token}&lang=${lang}">Réinitialisation du mot de passe pour Hypertube</a>`,
+      },
+    };
+    const mailOptions = {
+      from: {
+        name: 'Hypertube',
+        address: process.env.GMAIL_ID,
+      },
+      to: data.email,
+      subject: template[lang].subject,
+      html: template[lang].html,
+    };
+    try {
+      await this.transporter.sendMail(mailOptions);
+      Logger.log('Password reset email sent to ' + data.email);
+      Logger.log(template[lang].html);
+    } catch (error) {
+      throw new ServiceUnavailableException("Can't send password reset email");
+    }
+  }
 }

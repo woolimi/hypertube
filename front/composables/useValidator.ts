@@ -70,6 +70,7 @@ export const useValidator = () => {
     dirty: ComputedRef<boolean>,
     firstName: ComputedRef<string>,
     t: any, //I18n
+
   ) => {
     return validator(dirty, firstName, [
       requiredRule(t("Error.REQUIRED", { value: t("_Global.firstName") })),

@@ -10,6 +10,8 @@ import {
   Query,
   BadRequestException,
   Logger,
+  UsePipes,
+  NotFoundException,
 } from '@nestjs/common';
 import { LocalAuthGuard } from 'src/guards/local-auth.guard';
 import { AuthService } from './auth.service';
@@ -21,6 +23,7 @@ import { FtAuthGuard } from 'src/guards/ft-auth.guard';
 import { GithubAuthGuard } from 'src/guards/github-auth.guard';
 import { EmailService } from './email.service';
 import { JwtService } from '@nestjs/jwt';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -29,7 +32,7 @@ export class AuthController {
     private userService: UserService,
     private emailService: EmailService,
     private jwtService: JwtService,
-  ) { }
+  ) {}
 
   @UseGuards(LocalAuthGuard)
   @Post('/login')
@@ -163,9 +166,65 @@ export class AuthController {
     res.redirect(`${process.env.FRONT_HOST}/${lang}/auth/email-confirmed`);
   }
 
+  @Post('/forgot-password')
+  async forgotPasswordFindUser(
+    @Query('lang') lang,
+    @Body() userInfo: ForgotPasswordDto,
+  ) {
+    try {
+      const foundEmail = await this.userService.findOneByEmail(userInfo.email);
+      const foundUsername = await this.userService.findOneByUsername(
+        userInfo.username,
+      );
+      if (!foundEmail || !foundUsername) {
+        throw new BadRequestException({ code: 'INVALID_USER_CREDENTIALS' });
+      } else if (!(foundEmail.id === foundUsername.id)) {
+        throw new BadRequestException({ code: 'INVALID_USER_CREDENTIALS' });
+      }
+
+      // Send email confirmation email
+      await this.emailService.sendPasswordResetEmail(
+        { id: foundEmail.id, email: foundEmail.email },
+        lang || 'en',
+      );
+      return foundEmail;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @Get('/reset-password')
+  async resetPassword(
+    @Query('token') token,
+    @Query('lang') lang,
+    @Response({ passthrough: true }) res,
+  ) {
+    const payload = this.jwtService.verify(token, {
+      secret: process.env.JWT_SECRET,
+    });
+    const user = await this.userService.findOneById(payload.userId);
+    //TODO: save tokens into DB
+    // await this.userService.update(user.id, { ...user, emailVerified: true });
+
+    const userId = payload.userId;
+    const { accessToken, ...accessOption } =
+      this.authService.getCookieWithJwtAccessToken(userId);
+    const { refreshToken, ...refreshOption } =
+      this.authService.getCookieWithJwtRefreshToken(userId);
+
+    // Update tokens
+    res.cookie('accessToken', accessToken, accessOption);
+    res.cookie('refreshToken', refreshToken, refreshOption);
+    await this.userService.saveRefreshToken(userId, refreshToken);
+
+    res.redirect(
+      `${process.env.FRONT_HOST}/${lang}/auth/password-email-change`,
+    );
+  }
+
   @Get('google/login')
   @UseGuards(GoogleAuthGuard)
-  async googleLogin() { }
+  async googleLogin() {}
 
   @Get('google/redirect')
   @UseGuards(GoogleAuthGuard)
@@ -176,7 +235,7 @@ export class AuthController {
 
   @Get('ft/login')
   @UseGuards(FtAuthGuard)
-  async ftLogin() { }
+  async ftLogin() {}
 
   @Get('ft/redirect')
   @UseGuards(FtAuthGuard)
@@ -187,7 +246,7 @@ export class AuthController {
 
   @Get('github/login')
   @UseGuards(GithubAuthGuard)
-  async githubLogin() { }
+  async githubLogin() {}
 
   @Get('github/redirect')
   @UseGuards(GithubAuthGuard)
