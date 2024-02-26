@@ -13,6 +13,14 @@ const { localeProperties } = useI18n();
 const movies = ref([]);
 const fetching = ref(true);
 
+const state = ref(0); // 0 for NONE, 1 for DESC, 2 for ASC
+// const states = ["NONE", "DESC", "ASC"];
+const sortIcons = ["", "pi-arrow-down", "pi-arrow-up"];
+
+const toggleState = () => {
+  state.value = (state.value + 1) % 3;
+};
+
 const fetchMovies = async (page, language) => {
   return await axios.get("/movies/", {
     params: {
@@ -56,6 +64,14 @@ watch(y, async (scrolledHeight) => {
 <template>
   <main class="min-h-[calc(100vh-64px)]">
     <Jumbotron />
+    <Button
+      class="--tw-text-white h-[30px] bg-gray-300"
+      :label="$t('Sort.title')"
+      :icon="`pi ${sortIcons[state]}`"
+      icon-pos="left"
+      text
+      @click="toggleState"
+    />
     <MovieList
       :items="movies"
       :title="$t('Home.Movies.title')"

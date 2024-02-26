@@ -7,6 +7,11 @@
     "update": "Mettre à jour",
     "username": "Nom d'utilisateur"
   },
+  "Sort": {
+    "title": "Titre",
+    "popularity": "Popularité",
+    "primary_release_date": "Date de sortir"
+  },
   "AuthEmailConfirmed": {
     "description": "Vous pouvez maintenant profiter du film !",
     "title": "E-mail confirmé !",

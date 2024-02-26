@@ -7,6 +7,11 @@
     "update": "Update",
     "username": "Username"
   },
+  "Sort": {
+    "title": "Title",
+    "popularity": "Popularity",
+    "primary_release_date": "Release Date"
+  },
   "AuthEmailConfirmed": {
     "description": "You can now enjoy movie!",
     "title": "Email confirmed!",
