@@ -4,7 +4,6 @@ import type { PropType } from "vue";
 import DarthVader from "~/assets/icons/darth-vader.svg";
 import type { MovieData } from "~/types";
 
-// TODO: Add infinite scroll
 defineProps({
   items: {
     type: Array as PropType<MovieData[]>,
@@ -24,9 +23,9 @@ defineProps({
 <template>
   <section class="mx-auto max-w-[1200px] px-4 py-10">
     <h2 class="mb-3 text-3xl font-bold text-primary-400">{{ title }}</h2>
-
     <div>
       <ul :class="$style.gridContainer">
+        <!-- <li v-for="(item, idx) in movies" :key="idx" class="h-full w-full"> -->
         <li v-for="(item, idx) in items" :key="idx" class="h-full w-full">
           <MovieThumbnail :item="item" />
         </li>

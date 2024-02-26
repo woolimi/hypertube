@@ -105,7 +105,7 @@ export class MovieService {
     });
     const results = data.results;
     results.forEach((movie) => {
-      movie.genres = movie.genre_ids.map((id) => ({
+      movie.genres = movie.genre_ids?.map((id) => ({
         id: id,
         name: this.Genre[id][query.language],
       }));
