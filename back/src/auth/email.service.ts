@@ -77,7 +77,7 @@ export class EmailService {
       },
       fr: {
         subject: 'Réinitialisation du mot de passe pour Hypertube',
-        html: `<a href="${process.env.BACK_HOST}/auth/reset-password?token=${token}&lang=${lang}"Réinitialisation du mot de passe pour Hypertube</a>`,
+        html: `<a href="${process.env.BACK_HOST}/auth/reset-password?token=${token}&lang=${lang}">Réinitialisation du mot de passe pour Hypertube</a>`,
       },
     };
     const mailOptions = {

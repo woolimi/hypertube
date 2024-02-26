@@ -1,12 +1,12 @@
 <script setup>
 const comment = ref();
-const { userData } = storeToRefs(useUserStore());
+const { userImage } = storeToRefs(useUserStore());
 </script>
 
 <template>
   <form class="flex gap-4" @submit.prevent="() => {}">
     <Avatar
-      :image="userData.image"
+      :image="userImage"
       class="shrink-0 overflow-hidden"
       size="large"
       shape="circle"

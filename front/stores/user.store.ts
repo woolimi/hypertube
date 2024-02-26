@@ -8,7 +8,7 @@ export const useUserStore = defineStore("user", () => {
   const isLoggedIn = computed(() => !!userData.value.accessToken);
   const isEmailVerified = computed(() => userData.value.emailVerified);
   const userImage = computed(() => {
-    return userData.value?.image ?? defaultAvatar;
+    return userData.value?.image || defaultAvatar;
   });
 
   return {

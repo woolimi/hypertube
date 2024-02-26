@@ -76,8 +76,6 @@ export const useAuth = () => {
     lang: string,
   ) => {
     await api.post(`/auth/forgot-password?lang=${lang}`, info);
-    // userData.value = data;
-    // startRefreshAuth();
   };
 
   const doRegister = async (

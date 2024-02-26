@@ -32,7 +32,7 @@ export class AuthController {
     private userService: UserService,
     private emailService: EmailService,
     private jwtService: JwtService,
-  ) { }
+  ) {}
 
   @UseGuards(LocalAuthGuard)
   @Post('/login')
@@ -171,7 +171,6 @@ export class AuthController {
     @Query('lang') lang,
     @Body() userInfo: ForgotPasswordDto,
   ) {
-    // console.log(userInfo);
     try {
       const foundEmail = await this.userService.findOneByEmail(userInfo.email);
       const foundUsername = await this.userService.findOneByUsername(
@@ -180,7 +179,6 @@ export class AuthController {
       if (!foundEmail || !foundUsername) {
         throw new BadRequestException({ code: 'INVALID_USER_CREDENTIALS' });
       } else if (!(foundEmail.id === foundUsername.id)) {
-        console.log('hi there');
         throw new BadRequestException({ code: 'INVALID_USER_CREDENTIALS' });
       }
 
@@ -205,11 +203,9 @@ export class AuthController {
       secret: process.env.JWT_SECRET,
     });
     const user = await this.userService.findOneById(payload.userId);
-    console.log(user);
     //TODO: save tokens into DB
     // await this.userService.update(user.id, { ...user, emailVerified: true });
 
-    console.log('hi');
     const userId = payload.userId;
     const { accessToken, ...accessOption } =
       this.authService.getCookieWithJwtAccessToken(userId);
@@ -228,7 +224,7 @@ export class AuthController {
 
   @Get('google/login')
   @UseGuards(GoogleAuthGuard)
-  async googleLogin() { }
+  async googleLogin() {}
 
   @Get('google/redirect')
   @UseGuards(GoogleAuthGuard)
@@ -239,7 +235,7 @@ export class AuthController {
 
   @Get('ft/login')
   @UseGuards(FtAuthGuard)
-  async ftLogin() { }
+  async ftLogin() {}
 
   @Get('ft/redirect')
   @UseGuards(FtAuthGuard)
@@ -250,7 +246,7 @@ export class AuthController {
 
   @Get('github/login')
   @UseGuards(GithubAuthGuard)
-  async githubLogin() { }
+  async githubLogin() {}
 
   @Get('github/redirect')
   @UseGuards(GithubAuthGuard)

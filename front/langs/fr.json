@@ -20,13 +20,13 @@
       "title": "Changer le mot de passe"
     },
     "complete": {
-      "button": "Cliquez ici pour vous identifier",
+      "button": "Retour à l'accueil",
       "description": "Votre mot de passe a été changé avec succès.",
       "title": "Mot de passe changé"
     },
     "description": "Récupérez le mot de passe de votre compte en utilisant votre e-mail enregistré.",
     "emailSent": {
-      "button": "De retour à la maison",
+      "button": "Retour à l'accueil",
       "description": "Nous vous avons envoyé un e-mail contenant des instructions pour réinitialiser votre mot de passe. \nVeuillez vérifier votre boîte de réception.",
       "title": "E-mail de changement de mot de passe envoyé"
     },
