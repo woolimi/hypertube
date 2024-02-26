@@ -19,10 +19,14 @@ import { MovieService } from './movie.service';
 import { CacheInterceptor } from '@nestjs/cache-manager';
 import { MovieQueryDto } from './dto/movie-query.dto';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
-import { createReadStream, statSync } from 'fs';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
+import { promisify } from 'util';
+import torrentStream from 'torrent-stream';
+import path from 'path';
+import ffmpeg from 'fluent-ffmpeg';
+import pump from 'pump';
 
 @Controller('movies')
 // @UseInterceptors(CacheInterceptor)
@@ -95,32 +99,52 @@ export class MovieController {
     }
 
     // Video streaming
-    const videoPath = 'movies/video.mov';
-    const { size } = statSync(videoPath);
-    const videoRange = headers.range;
+    const engine = torrentStream('36DBE5857EC8352361F2E15D889BB78D20E70BEB', {
+      tmp: './movies',
+      verify: true,
+      uploads: 0,
+    });
 
-    if (videoRange) {
-      const parts = videoRange.replace(/bytes=/, '').split('-');
-      const start = parseInt(parts[0]);
-      const end = parts[1] ? parseInt(parts[1]) : size - 1;
-      const chunksize = end - start + 1;
-      const readStreamfile = createReadStream(videoPath, {
-        start,
-        end,
-        highWaterMark: 60,
+    engine.on('ready', async () => {
+      engine.files.forEach(async (file) => {
+        if (this.movieService.isVideoFile(file.name)) {
+          console.log('-----file selected for streaming-----');
+          file.select();
+          const stream = file.createReadStream();
+          const realExtension = path.extname(file.name).slice(1);
+
+          if (realExtension === 'mp4' || realExtension === 'mkv') {
+            pump(stream, res);
+          } else {
+            ffmpeg()
+              .input(stream)
+              .outputOptions('-movflags frag_keyframe+empty_moov')
+              .outputFormat('mp4')
+              .on('start', () => {
+                console.log('start');
+              })
+              .on('progress', (progress) => {
+                console.log(`progress: ${progress.timemark}`);
+              })
+              .on('end', () => {
+                console.log('Finished processing');
+              })
+              .on('error', (err) => {
+                console.log(`ERROR: ${err.message}`);
+              })
+              .inputFormat(realExtension)
+              .audioCodec('aac')
+              .videoCodec('libx264')
+              .pipe(res);
+          }
+          res.on('close', () => {
+            console.log('close');
+            stream.destroy();
+          });
+        } else {
+          console.log('-----file with wrong extension-----');
+        }
       });
-      const head = {
-        'Content-Range': `bytes ${start}-${end}/${size}`,
-        'Content-Length': chunksize,
-      };
-      res.writeHead(HttpStatus.PARTIAL_CONTENT, head); //206
-      readStreamfile.pipe(res);
-    } else {
-      const head = {
-        'Content-Length': size,
-      };
-      res.writeHead(HttpStatus.OK, head); //200
-      createReadStream(videoPath).pipe(res);
-    }
+    });
   }
 }

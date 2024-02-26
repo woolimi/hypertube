@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import axios, { AxiosInstance } from 'axios';
 import { MoviesQueryDto } from './dto/movies-query.dto';
 import { MovieQueryDto } from './dto/movie-query.dto';
+import path from 'path';
 
 @Injectable()
 export class MovieService {
@@ -141,5 +142,19 @@ export class MovieService {
       },
     });
     return response.data.movie?.torrents || [];
+  }
+
+  isVideoFile(filePath: string) {
+    const videoExtensions = [
+      '.mp4',
+      '.mov',
+      '.avi',
+      '.mkv',
+      '.wmv',
+      '.flv',
+      '.webm',
+    ];
+    const ext = path.extname(filePath).toLowerCase();
+    return videoExtensions.includes(ext);
   }
 }
