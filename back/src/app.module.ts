@@ -24,7 +24,6 @@ import { AppController } from './app.controller';
     }),
     UserModule,
     AuthModule,
-    CommentModule,
     MovieModule,
   ],
   controllers: [AppController],

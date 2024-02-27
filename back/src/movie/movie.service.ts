@@ -1,8 +1,11 @@
-import { Injectable, Logger, UseGuards } from '@nestjs/common';
+import { Get, Injectable, Logger, UseGuards } from '@nestjs/common';
 import axios, { AxiosInstance } from 'axios';
 import { MoviesQueryDto } from './dto/movies-query.dto';
 import { MovieQueryDto } from './dto/movie-query.dto';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { Repository } from 'typeorm';
+import { Movie } from './movie.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class MovieService {
@@ -82,7 +85,10 @@ export class MovieService {
       'fr-FR': 'Téléfilm',
     },
   };
-  constructor() {
+  constructor(
+    @InjectRepository(Movie)
+    private readonly movieRepository: Repository<Movie>,
+  ) {
     this.tmdb = axios.create({
       baseURL: 'https://api.themoviedb.org/3',
       headers: {
@@ -129,5 +135,19 @@ export class MovieService {
     });
     data.vote_average = Number(data.vote_average).toFixed(1);
     return data;
+  }
+
+  async getCommentsForMovie(movieId: number) {
+    const movie = await this.movieRepository.find({
+      where: {
+        id: movieId,
+      },
+      relations: ['Comments'],
+    });
+    if (!movie) {
+      return null;
+    }
+    console.log('movie data:', movie);
+    // return movie.Comments;
   }
 }

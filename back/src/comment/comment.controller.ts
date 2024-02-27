@@ -1,4 +1,8 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
+import { CommentService } from './comment.service';
+import { Comment } from './comment.entity';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
-@Controller('comment')
+@ApiTags('Comments')
+@Controller('comments')
 export class CommentController {}
