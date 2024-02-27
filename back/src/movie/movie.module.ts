@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { MovieController } from './movie.controller';
 import { MovieService } from './movie.service';
 import { CacheModule } from '@nestjs/cache-manager';
-import { CommentRepository } from '../comment/comment.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommentService } from '../comment/comment.service';
 import { Comment } from '../comment/comment.entity';

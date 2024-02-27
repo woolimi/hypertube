@@ -136,18 +136,4 @@ export class MovieService {
     data.vote_average = Number(data.vote_average).toFixed(1);
     return data;
   }
-
-  async getCommentsForMovie(movieId: number) {
-    const movie = await this.movieRepository.find({
-      where: {
-        id: movieId,
-      },
-      relations: ['Comments'],
-    });
-    if (!movie) {
-      return null;
-    }
-    console.log('movie data:', movie);
-    // return movie.Comments;
-  }
 }

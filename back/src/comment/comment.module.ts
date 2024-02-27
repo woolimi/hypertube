@@ -5,11 +5,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from 'src/user/user.module';
 import { User } from 'src/user/user.entity';
 import { Comment } from 'src/comment/comment.entity';
-import { CommentRepository } from './comment.repository';
+import { Movie } from 'src/movie/movie.entity';
+import { MovieService } from 'src/movie/movie.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([CommentRepository]), UserModule],
-  providers: [CommentService],
+  imports: [TypeOrmModule.forFeature([Comment, Movie]), UserModule],
+  providers: [CommentService, MovieService],
   controllers: [CommentController],
   exports: [CommentModule],
 })

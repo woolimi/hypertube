@@ -20,6 +20,12 @@ onMounted(async () => {
         language: localeProperties.value.iso,
       },
     });
+    const { data: commentData } = await axios.get("/comments/", {
+      params: {
+		movieId:route.params.mid
+      },
+    });
+	console.log('comment data:', commentData)
     movie.value = data;
   } catch (error) {
     console.error(error);
