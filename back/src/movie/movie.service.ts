@@ -6,6 +6,8 @@ import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { Repository } from 'typeorm';
 import { Movie } from './movie.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { IComment } from 'src/comment/IComment';
+import { Comment } from 'src/comment/comment.entity';
 
 @Injectable()
 export class MovieService {
@@ -135,5 +137,74 @@ export class MovieService {
     });
     data.vote_average = Number(data.vote_average).toFixed(1);
     return data;
+  }
+
+  ///////////////////////
+  async getMovieData(movieId: number) {
+    const movie = await this.movieRepository.findOne({
+      where: {
+        id: movieId,
+      },
+    });
+    return movie;
+  }
+
+  async getMovieDataWithComments(movieId: number): Promise<Movie> {
+    const movie = await this.movieRepository.findOne({
+      where: {
+        id: movieId,
+      },
+      relations: ['Comments'],
+    });
+    if (!movie) {
+      return null;
+    }
+    console.log('movie data:', movie);
+    return movie;
+  }
+
+  async cresteMovieData(movieId: number) {
+    const createMovieDto = { id: movieId };
+    const movie = this.movieRepository.create(createMovieDto);
+    await this.movieRepository.save(movie);
+  }
+
+  async addCommentToMovieData(movieId: number, comment: IComment) {
+    const movie = await this.getMovieData(movieId);
+    if (!movie) {
+      throw new Error('Movie not found');
+    }
+    movie.Comments.push(comment);
+    return await this.movieRepository.save(movie);
+  }
+
+  async updateCommentFromMovieData(movieId: number, updatedComment: IComment) {
+    const movie = await this.getMovieDataWithComments(movieId);
+    if (!movie) {
+      throw new Error('Movie not found');
+    }
+    const updatedMovie = {
+      ...movie,
+      comments: movie.Comments.map((movieComment) =>
+        movieComment.id === updatedComment.id ? updatedComment : movieComment,
+      ),
+    };
+
+    return await this.movieRepository.save(updatedMovie);
+  }
+
+  async removeCommentFromMovieData(movieId: number, commentId: number) {
+    const movie = await this.getMovieData(movieId);
+    if (!movie) {
+      throw new Error('Movie not found');
+    }
+    const commentIndex = movie.Comments.findIndex(
+      (comment) => comment.id === commentId,
+    );
+    if (commentIndex === -1) {
+      throw new Error('Comment not found in movie');
+    }
+    movie.Comments.splice(commentIndex, 1);
+    return await this.movieRepository.save(movie);
   }
 }

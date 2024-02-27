@@ -1,10 +1,12 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
   Post,
+  Put,
   Query,
   Req,
   UseGuards,
@@ -12,25 +14,20 @@ import {
 import { CommentService } from './comment.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
-import { MovieService } from 'src/movie/movie.service';
-import { isNumberObject } from 'util/types';
-import { isNumber } from 'util';
 
 @ApiTags('Comments')
 @Controller('comments')
 export class CommentController {
-  constructor(
-    private readonly commentService: CommentService,
-    private readonly movieService: MovieService,
-  ) {}
+  constructor(private readonly commentService: CommentService) {}
 
+  @ApiOperation({ summary: 'get all comments for a movie' })
   @Get()
   getAllComments(@Query('movieId', ParseIntPipe) movieId: number) {
     // console.log(movieId, isNumber(movieId));
     return this.commentService.getCommentsForMovie(movieId);
   }
 
-  @ApiOperation({ summary: 'create comments' })
+  @ApiOperation({ summary: 'create a comment' })
   @UseGuards(JwtAuthGuard)
   @Post('/create')
   async createComment(
@@ -41,5 +38,20 @@ export class CommentController {
     const userId = req.user.id;
     const createCommentDto = { userId, movieId, content };
     this.commentService.createComment(createCommentDto);
+  }
+
+  @ApiOperation({ summary: 'update a comment' })
+  @Put(':id/update')
+  async updateComment(
+    @Body('content') content: string,
+    @Param('id') commentId: number,
+  ) {
+    this.commentService.updateComment(commentId, content);
+  }
+
+  @ApiOperation({ summary: 'delete a comment' })
+  @Delete(':id/delete')
+  async deleteComment(@Param('id') commentId: number) {
+    this.commentService.deleteComment(commentId);
   }
 }
