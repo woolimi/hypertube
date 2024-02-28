@@ -1,12 +1,17 @@
 <script setup lang="ts">
 import type { MovieData } from "~/types";
-const SORT_BUTTON_LIST = ["popularity", "title", "release_date"];
+const SORT_BUTTON_LIST = [
+  "popularity",
+  "title",
+  "release_date",
+  "vote_average",
+];
 
 const { sortIcon, toggleSort } = useMovies();
 </script>
 
 <template>
-  <div class="mx-auto flex max-w-[1200px] translate-y-16 justify-end gap-2">
+  <div class="flex gap-2">
     <Button
       v-for="(target, idx) in SORT_BUTTON_LIST"
       :key="target + idx"

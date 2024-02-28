@@ -10,7 +10,8 @@
   "Sort": {
     "title": "Title",
     "popularity": "Popularity",
-    "release_date": "Release Date"
+    "release_date": "Release Date",
+    "vote_average": "Vote Average"
   },
   "AuthEmailConfirmed": {
     "description": "You can now enjoy movie!",

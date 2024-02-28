@@ -1,3 +1,7 @@
+<script setup lang="ts">
+const { searchMovies, params } = useMovies();
+</script>
+
 <template>
   <section>
     <div class="mx-auto max-w-[1280px]" :class="$style.heroWrapper">
@@ -13,13 +17,16 @@
         </h1>
 
         <div class="max-w-[600px]">
-          <InputGroup class="flex">
-            <InputText
-              :placeholder="$t('Home.Search.placeholder')"
-              class="w-full"
-            />
-            <Button :label="$t('Home.Search.label')" />
-          </InputGroup>
+          <form @submit.prevent="searchMovies">
+            <InputGroup class="flex">
+              <InputText
+                v-model="params.search"
+                :placeholder="$t('Home.Search.placeholder')"
+                class="w-full"
+              />
+              <Button type="submit" :label="$t('Home.Search.label')" />
+            </InputGroup>
+          </form>
         </div>
       </div>
     </div>

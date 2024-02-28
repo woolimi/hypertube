@@ -3,27 +3,25 @@ import { ref } from "vue";
 
 import type { MovieData } from "~/types";
 
+const fetching = ref(true);
+const movies = ref<MovieData[]>([]);
+const params = reactive({
+  page: 1, // default pagination
+  search: "",
+});
+const info = reactive({
+  page: 1,
+  total_pages: 0,
+  total_results: 0,
+});
+
+const sortBy = ref<string>("popularity");
+const sortDesc = ref(true);
+
 export const useMovies = () => {
-  const { y } = useWindowScroll();
   const axios = useAxios();
+  const { y } = useWindowScroll();
   const { localeProperties } = useI18n();
-
-  const info = reactive({
-    page: 1,
-    total_pages: 0,
-    total_results: 0,
-  });
-
-  const params = reactive({
-    page: 1, // default pagination
-    search: undefined,
-  });
-
-  const movies = ref<MovieData[]>([]);
-  const fetching = ref(true);
-
-  const sortBy = ref<string>("popularity");
-  const sortDesc = ref(true);
 
   const isOtherTarget = (target: string) => {
     return sortBy.value !== target;
@@ -52,7 +50,7 @@ export const useMovies = () => {
   const toggleSort = (target: keyof MovieData) => {
     sortDesc.value = sortBy.value === target ? !sortDesc.value : true;
 
-    movies.value = movies.value.sort((a: MovieData, b: MovieData) => {
+    movies.value.sort((a: MovieData, b: MovieData) => {
       const valueA = a[target];
       const valueB = b[target];
 
@@ -68,8 +66,8 @@ export const useMovies = () => {
     sortBy.value = target;
   };
 
-  const searchMovies = async (search: string, clear: CallableFunction) => {
-    params.search = search;
+  const searchMovies = async () => {
+    fetching.value = true;
 
     const { data } = await fetchMovies();
     const { page, total_pages, total_results, results } = data;
@@ -79,7 +77,7 @@ export const useMovies = () => {
     info.total_results = total_results;
     movies.value = results;
     fetching.value = false;
-    clear();
+    params.search = "";
   };
 
   onMounted(async () => {
