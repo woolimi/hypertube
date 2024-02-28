@@ -22,10 +22,10 @@ onMounted(async () => {
     });
     const { data: commentData } = await axios.get("/comments/", {
       params: {
-		movieId:route.params.mid
+        movieId: route.params.mid,
       },
     });
-	console.log('comment data:', commentData)
+    console.log("comment data:", commentData);
     movie.value = data;
   } catch (error) {
     console.error(error);
@@ -91,6 +91,6 @@ onMounted(async () => {
       </section>
     </div>
 
-    <CommentList :items="comments" />
+    <CommentList :items="comments" :mid="route.params.mid" />
   </main>
 </template>

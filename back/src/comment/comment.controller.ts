@@ -35,6 +35,7 @@ export class CommentController {
     @Body('content') content: string,
     @Query('movieId', ParseIntPipe) movieId: number,
   ) {
+    console.log('req comments/create');
     const userId = req.user.id;
     const createCommentDto = { userId, movieId, content };
     this.commentService.createComment(createCommentDto);

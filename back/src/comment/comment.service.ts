@@ -14,7 +14,11 @@ export class CommentService {
   ) {}
 
   async getCommentsForMovie(movieId: number): Promise<Comment[]> {
-    return (await this.movieService.getMovieDataWithComments(movieId)).Comments;
+    const movie = await this.movieService.getMovieData(movieId);
+    if (!movie) {
+      return null;
+    }
+    return movie.Comments;
   }
 
   async getComment(commentId: number): Promise<Comment> {
@@ -27,9 +31,9 @@ export class CommentService {
 
   async createComment(createCommentDto: CreateCommentDto) {
     const { userId, movieId, content } = createCommentDto;
-    const movie = this.movieService.getMovieData(movieId);
+    const movie = await this.movieService.getMovieData(movieId);
     if (!movie) {
-      this.movieService.cresteMovieData(movieId);
+      await this.movieService.createMovieData(movieId);
     }
     const comment = this.commentRepository.create(createCommentDto);
     this.movieService.addCommentToMovieData(movieId, comment);

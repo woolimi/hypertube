@@ -24,16 +24,16 @@ export class Movie {
     description: 'Movie Title',
     example: 'Men In Black',
   })
-  @Column()
-  title: string;
+  @Column({ default: null })
+  title: string | null;
 
   @ApiProperty({
     description: 'Movie Description',
     example:
       'Men In Black is a movie with one white man and one black man and aliens',
   })
-  @Column()
-  description: string;
+  @Column({ default: null })
+  description: string | null;
 
   @ApiProperty({
     description: 'Created time',

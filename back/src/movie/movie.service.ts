@@ -140,16 +140,7 @@ export class MovieService {
   }
 
   ///////////////////////
-  async getMovieData(movieId: number) {
-    const movie = await this.movieRepository.findOne({
-      where: {
-        id: movieId,
-      },
-    });
-    return movie;
-  }
-
-  async getMovieDataWithComments(movieId: number): Promise<Movie> {
+  async getMovieData(movieId: number): Promise<Movie> {
     const movie = await this.movieRepository.findOne({
       where: {
         id: movieId,
@@ -163,10 +154,12 @@ export class MovieService {
     return movie;
   }
 
-  async cresteMovieData(movieId: number) {
+  async createMovieData(movieId: number) {
+    console.log('start creating move');
     const createMovieDto = { id: movieId };
     const movie = this.movieRepository.create(createMovieDto);
     await this.movieRepository.save(movie);
+    console.log('move has been created');
   }
 
   async addCommentToMovieData(movieId: number, comment: IComment) {
@@ -179,7 +172,7 @@ export class MovieService {
   }
 
   async updateCommentFromMovieData(movieId: number, updatedComment: IComment) {
-    const movie = await this.getMovieDataWithComments(movieId);
+    const movie = await this.getMovieData(movieId);
     if (!movie) {
       throw new Error('Movie not found');
     }

@@ -19,7 +19,7 @@ import { AppController } from './app.controller';
       password: process.env.MYSQL_PASSWORD,
       database: process.env.MYSQL_DATABASE,
       entities: [join(__dirname, '**', '*.entity.{ts,js}')],
-      // synchronize: true,
+      //   synchronize: true,
       // migrationsRun: true,
     }),
     UserModule,
