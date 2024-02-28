@@ -68,6 +68,8 @@ export const useMovies = () => {
 
   const searchMovies = async () => {
     fetching.value = true;
+    sortBy.value = "popularity";
+    sortDesc.value = true;
 
     const { data } = await fetchMovies();
     const { page, total_pages, total_results, results } = data;

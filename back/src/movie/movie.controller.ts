@@ -6,7 +6,6 @@ import {
   Param,
   Query,
   UseInterceptors,
-  ValidationPipe,
 } from '@nestjs/common';
 import { MoviesQueryDto } from './dto/movies-query.dto';
 import { MovieService } from './movie.service';

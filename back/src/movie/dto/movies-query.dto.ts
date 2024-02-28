@@ -12,5 +12,4 @@ export class MoviesQueryDto {
   @IsString()
   @IsOptional()
   search: string;
-
 }

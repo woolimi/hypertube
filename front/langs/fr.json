@@ -7,12 +7,6 @@
     "update": "Mettre à jour",
     "username": "Nom d'utilisateur"
   },
-  "Sort": {
-    "title": "Titre",
-    "popularity": "Popularité",
-    "release_date": "Date de sortir",
-    "vote_average": "Note Moyenne"
-  },
   "AuthEmailConfirmed": {
     "description": "Vous pouvez maintenant profiter du film !",
     "title": "E-mail confirmé !",
@@ -113,5 +107,11 @@
       "noList": "Vous n'avez jamais vu aucun film.",
       "title": "Liste déjà vu"
     }
+  },
+  "Sort": {
+    "popularity": "Popularité",
+    "release_date": "Date de sortir",
+    "title": "Titre",
+    "vote_average": "Note Moyenne"
   }
 }
