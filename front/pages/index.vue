@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import type { MovieData } from "~/types";
+
 const { fetching, movies, sortIcon, toggleSort, searchMovies } = useMovies();
-const SORT_BUTTON_LIST = ["popularity", "title", "primary_release_date"];
+const SORT_BUTTON_LIST = ["popularity", "title", "release_date"];
 
 const search = ref("");
 </script>
@@ -24,7 +26,7 @@ const search = ref("");
         :icon="sortIcon(target)"
         icon-pos="left"
         text
-        @click="toggleSort(target)"
+        @click="toggleSort(target as keyof MovieData)"
       />
     </div>
     <!-- <SortButtonList /> -->

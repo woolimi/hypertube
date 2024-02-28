@@ -16,25 +16,21 @@ export const useMovies = () => {
 
   const params = reactive({
     page: 1, // default pagination
-    // TODO: choice one
-    // sort_by: "popularity.desc", // default sort at backend to tmdb api
-    sort_by: undefined,
-    width_genres: undefined,
-    with_keywords: undefined,
-    with_origin_country: undefined,
+    search: undefined,
   });
 
   const movies = ref<MovieData[]>([]);
   const fetching = ref(true);
 
+  const sortBy = ref<string>("popularity");
+  const sortDesc = ref(true);
+
   const isOtherTarget = (target: string) => {
-    // TODO: choice one
-    return !params.sort_by || !params.sort_by.includes(target);
-    //return !params.sort_by.includes(target);
+    return sortBy.value !== target;
   };
 
   const isSameTargetAndDesc = (target: string) => {
-    return params.sort_by.includes(target) && params.sort_by.includes("desc");
+    return sortBy.value === target && sortDesc.value === true;
   };
 
   const sortIcon = (target: string) => {
@@ -53,38 +49,37 @@ export const useMovies = () => {
     });
   };
 
-  const toggleSort = async (target: string) => {
-    console.log(target, params.sort_by);
-    params.page = 1;
-    if (isOtherTarget(target)) params.sort_by = target + "." + "desc";
-    else if (isSameTargetAndDesc(target))
-      params.sort_by = params.sort_by.replace("desc", "asc");
-    // TODO: choice one
-    // else params.sort_by = "popularity.desc";
-    else params.sort_by = undefined;
+  const toggleSort = (target: keyof MovieData) => {
+    sortDesc.value = sortBy.value === target ? !sortDesc.value : true;
 
-    fetching.value = true;
-    const { data } = await fetchMovies();
-    const { page, total_pages, total_results, results } = data;
-    info.page = page;
-    info.total_pages = total_pages;
-    info.total_results = total_results;
-    movies.value = results;
-    fetching.value = false;
+    movies.value = movies.value.sort((a: MovieData, b: MovieData) => {
+      const valueA = a[target];
+      const valueB = b[target];
+
+      if (typeof valueA === "string" && typeof valueB === "string") {
+        return sortDesc.value
+          ? valueB.localeCompare(valueA)
+          : valueA.localeCompare(valueB);
+      } else if (typeof valueA === "number" && typeof valueB === "number") {
+        return sortDesc.value ? valueB - valueA : valueA - valueB;
+      }
+      return 0;
+    });
+    sortBy.value = target;
   };
 
-  const searchMovies = async (keyword: string, clear: CallableFunction) => {
-    params.with_keywords = keyword;
+  const searchMovies = async (search: string, clear: CallableFunction) => {
+    params.search = search;
 
     const { data } = await fetchMovies();
     const { page, total_pages, total_results, results } = data;
+
     info.page = page;
     info.total_pages = total_pages;
     info.total_results = total_results;
     movies.value = results;
     fetching.value = false;
     clear();
-    params.with_keywords = undefined;
   };
 
   onMounted(async () => {
@@ -95,7 +90,6 @@ export const useMovies = () => {
     info.total_pages = total_pages;
     info.total_results = total_results;
     movies.value = results;
-    // console.log('onMounted', movies.value);
     fetching.value = false;
   });
 

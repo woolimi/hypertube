@@ -10,7 +10,7 @@
   "Sort": {
     "title": "Titre",
     "popularity": "Popularité",
-    "primary_release_date": "Date de sortir"
+    "release_date": "Date de sortir"
   },
   "AuthEmailConfirmed": {
     "description": "Vous pouvez maintenant profiter du film !",

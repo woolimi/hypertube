@@ -23,7 +23,6 @@ export class MovieController {
     @Query()
     query: MoviesQueryDto,
   ) {
-    console.log(query);
     try {
       return await this.movieService.getMovies(query);
     } catch (error) {
