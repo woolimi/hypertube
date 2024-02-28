@@ -14,6 +14,7 @@ defineProps({
     </h2>
     <LeaveComment />
     <div v-for="(item, idx) in items" :key="idx" :item="item">
+      <!-- {{ item }} -->
       <Comment :item="item" />
       <SubComment
         v-for="(subItem, idx2) in item.comments"

@@ -47,14 +47,14 @@ export class Comment {
   @DeleteDateColumn()
   readonly deletedAt: Date | null;
 
-  @ManyToOne((type) => User, (user) => user.Comments)
+  @ManyToOne((type) => User, (user) => user.Comments, { eager: true })
   @JoinColumn({
     name: 'user_id',
     referencedColumnName: 'id',
   })
   User: Relation<User>;
 
-  @ManyToOne((type) => Movie, (movie) => movie.Comments)
+  @ManyToOne((type) => Movie, (movie) => movie.Comments, { eager: true })
   @JoinColumn({
     name: 'movie_id',
     referencedColumnName: 'id',

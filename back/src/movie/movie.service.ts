@@ -140,7 +140,7 @@ export class MovieService {
   }
 
   ///////////////////////
-  async getMovieData(movieId: number): Promise<Movie> {
+  async getMovieData2(movieId: number): Promise<Movie> {
     const movie = await this.movieRepository.findOne({
       where: {
         id: movieId,
@@ -152,6 +152,17 @@ export class MovieService {
     }
     console.log('movie data:', movie);
     return movie;
+  }
+
+  //   async findMovieWithCommentsAndUserInfo(movieId: number): Promise<Movie> {
+  async getMovieData(movieId: number): Promise<Movie> {
+    return this.movieRepository
+      .createQueryBuilder('movie')
+      .leftJoinAndSelect('movie.Comments', 'comment')
+      .leftJoin('comment.User', 'user')
+      .addSelect(['user.username', 'user.image'])
+      .where('movie.id = :movieId', { movieId })
+      .getOne();
   }
 
   async createMovieData(movieId: number) {

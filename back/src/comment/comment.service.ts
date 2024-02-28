@@ -4,6 +4,7 @@ import { Comment } from './comment.entity';
 import { Repository } from 'typeorm';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { MovieService } from 'src/movie/movie.service';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class CommentService {
@@ -11,6 +12,7 @@ export class CommentService {
     @InjectRepository(Comment)
     private readonly commentRepository: Repository<Comment>,
     private readonly movieService: MovieService,
+    private readonly userService: UserService,
   ) {}
 
   async getCommentsForMovie(movieId: number): Promise<Comment[]> {
@@ -31,11 +33,18 @@ export class CommentService {
 
   async createComment(createCommentDto: CreateCommentDto) {
     const { userId, movieId, content } = createCommentDto;
+    console.log('create comment user id:', userId);
     const movie = await this.movieService.getMovieData(movieId);
     if (!movie) {
       await this.movieService.createMovieData(movieId);
     }
-    const comment = this.commentRepository.create(createCommentDto);
+    const user = await this.userService.findOneById(userId);
+    if (!user) {
+      throw Error('user not found');
+    }
+    console.log('comment user:', user);
+    const createDto = { ...createCommentDto, User: user, Movie: movie };
+    const comment = this.commentRepository.create(createDto);
     this.movieService.addCommentToMovieData(movieId, comment);
     return await this.commentRepository.save(comment);
   }

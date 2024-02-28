@@ -7,7 +7,8 @@ definePageMeta({
 
 const axios = useAxios();
 const movie = ref<MovieData>({} as MovieData);
-const comments = computed(() => []);
+// const comments = computed(() => []);
+const comments = ref([]);
 const route = useRoute();
 const { localeProperties } = useI18n();
 const fetching = ref(false);
@@ -25,6 +26,7 @@ onMounted(async () => {
         movieId: route.params.mid,
       },
     });
+    comments.value = commentData;
     console.log("comment data:", commentData);
     movie.value = data;
   } catch (error) {

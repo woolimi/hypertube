@@ -11,14 +11,14 @@ defineProps({
   <div class="flex gap-3">
     <NuxtLink :to="localePath({ name: 'users-uid', params: { uid: 123 } })">
       <Avatar
-        :image="item.avatar"
+        :image="item.User.image"
         class="shrink-0 overflow-hidden"
         size="large"
         shape="circle"
       />
     </NuxtLink>
     <aside>
-      <p class="text-primary-400">{{ item.username }}</p>
+      <p class="text-primary-400">{{ item.User.username }}</p>
       <p>{{ item.content }}</p>
     </aside>
   </div>
