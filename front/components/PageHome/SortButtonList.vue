@@ -15,6 +15,7 @@ const { sortIcon, toggleSort } = useMovies();
     <Button
       v-for="(target, idx) in SORT_BUTTON_LIST"
       :key="target + idx"
+      severity="warning"
       class="h-[30px]"
       :label="$t('Sort.' + target)"
       :icon="sortIcon(target)"

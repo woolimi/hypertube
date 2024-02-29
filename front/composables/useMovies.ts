@@ -79,7 +79,6 @@ export const useMovies = () => {
     info.total_results = total_results;
     movies.value = results;
     fetching.value = false;
-    params.search = "";
   };
 
   onMounted(async () => {

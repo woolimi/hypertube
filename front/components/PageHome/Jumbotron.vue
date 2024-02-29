@@ -9,14 +9,12 @@ const { searchMovies, params } = useMovies();
         :class="$style.hero"
         class="flex h-[400px] flex-col items-center justify-center"
       >
-        <h1
-          class="mb-10 max-w-[600px] px-2 pt-[100px] text-center text-4xl sm:text-5xl"
-        >
-          <p v-html="$t('Home.Jumbotron.title1')"></p>
-          <p v-html="$t('Home.Jumbotron.title2')"></p>
-        </h1>
-
         <div class="max-w-[600px]">
+          <h1 class="mb-10 px-2 pt-[100px] text-center text-4xl sm:text-5xl">
+            <p v-html="$t('Home.Jumbotron.title1')"></p>
+            <p v-html="$t('Home.Jumbotron.title2')"></p>
+          </h1>
+
           <form @submit.prevent="searchMovies">
             <InputGroup class="flex">
               <InputText
