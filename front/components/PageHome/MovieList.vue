@@ -17,7 +17,7 @@ defineProps({
 
 <template>
   <section class="mx-auto max-w-[1200px] px-4 py-10">
-    <div class="mb-3 flex flex-wrap items-end justify-between">
+    <div class="mb-6 flex flex-wrap items-end justify-between gap-3">
       <h2 class="text-5xl font-bold text-primary-400">{{ title }}</h2>
       <SortButtonList />
     </div>
