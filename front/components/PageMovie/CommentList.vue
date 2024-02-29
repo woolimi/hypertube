@@ -5,6 +5,10 @@ defineProps({
     default: () => [],
   },
 });
+const isEditing = ref(false);
+const setIsEditing = (value) => {
+  isEditing.value = value;
+};
 </script>
 
 <template>
@@ -16,7 +20,12 @@ defineProps({
     <div v-for="(item, idx) in items" :key="idx" :item="item">
       <!-- {{ item }} -->
       <!-- TODO: pagenation -->
-      <Comment :item="item" />
+      <Comment
+        :item="item"
+        :is-editing="isEditing"
+        :set-is-editing="setIsEditing"
+      />
+      <!-- TODO: subcomments? -->
       <SubComment
         v-for="(subItem, idx2) in item.comments"
         :key="idx2"

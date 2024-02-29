@@ -4,22 +4,35 @@ const props = defineProps({
     type: Object,
     default: () => ({}),
   },
+  isEditing: {
+    type: Boolean,
+  },
+  setIsEditing: {
+    type: Function,
+    default: () => {},
+  },
 });
 
 const axios = useAxios();
-const route = useRoute();
-const comment = ref("");
-console.log(route.params, props, props.item.id);
-const updateComment = async () => {
-  try {
-    const response = await axios.put(`comments/${props.item.id}/update`, {
-      content: comment.value,
-    });
-    console.log("comment update request successful", response.data);
-  } catch (error) {
-    console.error(error);
+const editState = ref(false);
+
+const editComment = () => {
+  // console.log('is editing:', props.isEditing, 'edit state:', editState.value)
+  if (props.isEditing) {
+    console.log(props.isEditing, "is editing");
+	// TODO: update alert
+    alert("You will lose any unsaved changes to your message.");
+    return;
   }
+  toggleEdit();
 };
+
+const toggleEdit = () => {
+  editState.value = !editState.value;
+  props.setIsEditing(editState.value);
+  // console.log('is editing:', props.isEditing, 'edit state:', editState.value)
+};
+
 const deleteComment = async () => {
   try {
     const response = await axios.delete(`comments/${props.item.id}/delete`);
@@ -40,19 +53,20 @@ const deleteComment = async () => {
         shape="circle"
       />
     </NuxtLink>
-    <aside>
+    <!-- TODO: long text handling -->
+    <aside class="max-w-[760px]" style="width: 600px; word-wrap: break-word">
       <p class="text-primary-400">{{ item.User.username }}</p>
-      <!-- TODO: long text handling -->
-      <p>{{ item.content }}</p>
+      <EditComment v-if="editState" :item="item" :toggle-edit="toggleEdit" />
+      <p v-else>{{ item.content }}</p>
     </aside>
   </div>
-  <div class="text-right">
-    <!-- TODO: get new contents to update-->
+  <!-- TODO: edit/delete only my comments -->
+  <div v-if="!editState" class="text-right">
     <button
       class="rounded bg-blue-500 px-4 py-2 font-bold hover:bg-blue-700"
-      @click="updateComment"
+      @click="editComment"
     >
-      update
+      edit
     </button>
     <button
       class="rounded bg-red-500 px-4 py-2 font-bold hover:bg-red-700"

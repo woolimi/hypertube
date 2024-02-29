@@ -41,6 +41,7 @@ const submitComment = async () => {
         rows="5"
         cols="300"
       />
+      <!-- TODO: add reactivity to comment list whenever creating a comment -->
       <div class="text-right">
         <Button
           label="Write a comment"

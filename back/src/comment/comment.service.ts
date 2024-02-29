@@ -50,25 +50,23 @@ export class CommentService {
   }
 
   async updateComment(commentId: number, content: string) {
-    const comment = this.getComment(commentId);
+    const comment = await this.getComment(commentId);
     if (!comment) {
       throw Error('Comment not found');
     }
-    const updatedComment = await this.commentRepository.save({
-      ...comment,
-      content,
-    });
-    const movieId = (await comment).Movie.id;
+    comment.content = content;
+    const updatedComment = await this.commentRepository.save(comment);
+    const movieId = comment.Movie.id;
     this.movieService.updateCommentFromMovieData(movieId, updatedComment);
     return updatedComment;
   }
 
   async deleteComment(commentId: number) {
-    const comment = this.getComment(commentId);
+    const comment = await this.getComment(commentId);
     if (!comment) {
       throw Error('Comment not found');
     }
-    const movieId = (await comment).Movie.id;
+    const movieId = comment.Movie.id;
     this.movieService.removeCommentFromMovieData(movieId, commentId);
     return await this.commentRepository.delete(commentId);
   }
