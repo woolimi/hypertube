@@ -8,7 +8,6 @@ definePageMeta({
 const axios = useAxios();
 const movie = ref<MovieData>({} as MovieData);
 // const comments = computed(() => []);
-const comments = ref([]);
 const route = useRoute();
 const { localeProperties } = useI18n();
 const fetching = ref(false);
@@ -21,13 +20,6 @@ onMounted(async () => {
         language: localeProperties.value.iso,
       },
     });
-    const { data: commentData } = await axios.get("/comments/", {
-      params: {
-        movieId: route.params.mid,
-      },
-    });
-    comments.value = commentData;
-    console.log("comment data:", commentData);
     movie.value = data;
   } catch (error) {
     console.error(error);
@@ -93,6 +85,6 @@ onMounted(async () => {
       </section>
     </div>
 
-    <CommentList :items="comments" :mid="route.params.mid" />
+    <CommentList :mid="route.params.mid" />
   </main>
 </template>

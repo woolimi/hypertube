@@ -3,11 +3,11 @@ const comment = ref("");
 const { userImage } = storeToRefs(useUserStore());
 const route = useRoute();
 const axios = useAxios();
+const emit = defineEmits(["create"]);
 
 const submitComment = async () => {
-  // console.log('route params:', route.params)
   try {
-    const response = await axios.post(
+    const { data } = await axios.post(
       "comments/create",
       {
         content: comment.value,
@@ -18,7 +18,7 @@ const submitComment = async () => {
         },
       },
     );
-    console.log("Post request successful", response.data);
+    emit("create", data);
   } catch (error) {
     console.error(error);
   }

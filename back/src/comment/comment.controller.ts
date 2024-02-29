@@ -38,7 +38,7 @@ export class CommentController {
     console.log('req comments/create', req.user);
     const userId = req.user.userId;
     const createCommentDto = { userId, movieId, content };
-    this.commentService.createComment(createCommentDto);
+    return this.commentService.createComment(createCommentDto);
   }
 
   @ApiOperation({ summary: 'update a comment' })

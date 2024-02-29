@@ -23,3 +23,11 @@ export interface MovieData {
   vote_count: number;
   genres: Array<{ id: number; name: string }>;
 }
+
+export interface CommentData {
+  id: number;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+  User: UserData;
+}

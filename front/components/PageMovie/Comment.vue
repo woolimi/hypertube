@@ -1,11 +1,16 @@
-<script setup>
+<script setup lang="ts">
+import type { PropType } from "vue";
+
+import type { CommentData } from "~/types";
+
 const props = defineProps({
   item: {
-    type: Object,
+    type: Object as PropType<CommentData>,
     default: () => ({}),
   },
   isEditing: {
     type: Boolean,
+    default: false,
   },
   setIsEditing: {
     type: Function,
@@ -15,34 +20,36 @@ const props = defineProps({
 
 const { userData } = storeToRefs(useUserStore());
 const axios = useAxios();
-const editState = ref(false);
-
-const editComment = () => {
-  // console.log('is editing:', props.isEditing, 'edit state:', editState.value)
-  if (props.isEditing) {
-    console.log(props.isEditing, "is editing");
-    // TODO: update alert
-    alert("You will lose any unsaved changes to your message.");
-    return;
-  }
-  toggleEdit();
-};
-
-const toggleEdit = () => {
-  editState.value = !editState.value;
-  props.setIsEditing(editState.value);
-  // console.log('is editing:', props.isEditing, 'edit state:', editState.value)
-};
-
+const emit = defineEmits(["delete", "edit", "start-edit"]);
+const localePath = useLocalePath();
 const deleteComment = async () => {
   try {
-    const response = await axios.delete(`comments/${props.item.id}/delete`);
-    console.log("comment delete request successful", response.data);
+    await axios.delete(`comments/${props.item.id}/delete`);
+    emit("delete", props.item);
   } catch (error) {
     console.error(error);
   }
 };
-// console.log('userData:', userData.value?.username == props.item.User.username)
+
+const startEditComment = (c: CommentData) => {
+  emit("start-edit", c);
+};
+const cancelEditComment = () => {
+  emit("start-edit", undefined);
+};
+const updateComment = async (c: CommentData) => {
+  try {
+    // TODO: Validation Logic
+
+    await axios.put(`comments/${c.id}/update`, {
+      content: c.content,
+    });
+    emit("edit", c);
+    emit("start-edit", undefined);
+  } catch (error) {
+    console.error(error);
+  }
+};
 </script>
 
 <template>
@@ -57,22 +64,26 @@ const deleteComment = async () => {
         shape="circle"
       />
     </NuxtLink>
-    <!-- TODO: long text handling -->
-    <aside class="max-w-[760px]" style="width: 600px; word-wrap: break-word">
+    <aside>
       <p class="text-primary-400">{{ item.User.username }}</p>
-      <EditComment v-if="editState" :item="item" :toggle-edit="toggleEdit" />
-      <p v-else>{{ item.content }}</p>
+      <EditComment
+        v-if="isEditing"
+        :item="item"
+        @cancel="cancelEditComment"
+        @update="updateComment"
+      />
+      <p v-else :class="$style.commentBlock">{{ item.content }}</p>
     </aside>
   </div>
   <div
-    v-if="!editState && userData.username == item.User.username"
+    v-if="!isEditing && userData.username == item.User.username"
     class="text-right"
   >
     <button
       class="rounded bg-blue-500 px-4 py-2 font-bold hover:bg-blue-700"
-      @click="editComment"
+      @click="startEditComment(item)"
     >
-      edit
+      {{ $t("Movie.Comment.edit") }}
     </button>
     <button
       class="rounded bg-red-500 px-4 py-2 font-bold hover:bg-red-700"
@@ -82,3 +93,11 @@ const deleteComment = async () => {
     </button>
   </div>
 </template>
+
+<style module>
+.commentBlock {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+}
+</style>

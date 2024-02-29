@@ -112,5 +112,10 @@
     "release_date": "Release Date",
     "title": "Title",
     "vote_average": "Vote Average"
+  },
+  "Movie": {
+    "Comment": {
+      "edit": "Edit"
+    }
   }
 }

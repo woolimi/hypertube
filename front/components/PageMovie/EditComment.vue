@@ -4,25 +4,20 @@ const props = defineProps({
     type: Object,
     default: () => ({}),
   },
-  toggleEdit: {
-    type: Function,
-    default: () => {},
-  },
 });
-console.log(props.item);
-const axios = useAxios();
+const emit = defineEmits(["cancel", "update"]);
 const comment = ref(props.item.content);
 
-const editSave = async () => {
-  try {
-    const response = await axios.put(`comments/${props.item.id}/update`, {
-      content: comment.value,
-    });
-    console.log("comment update request successful", response.data);
-    props.toggleEdit();
-  } catch (error) {
-    console.error(error);
-  }
+const cancelEdit = () => {
+  emit("cancel");
+};
+
+const updateComment = async () => {
+  emit("update", {
+    ...props.item,
+    content: comment.value,
+  });
+  comment.value = "";
 };
 </script>
 
@@ -39,13 +34,13 @@ const editSave = async () => {
       <div class="text-right">
         <button
           class="rounded bg-green-500 px-4 py-2 font-bold hover:bg-green-700"
-          @click="editSave"
+          @click="updateComment"
         >
           save
         </button>
         <button
           class="rounded bg-gray-500 px-4 py-2 font-bold hover:bg-gray-700"
-          @click="toggleEdit"
+          @click="cancelEdit"
         >
           cancel
         </button>
