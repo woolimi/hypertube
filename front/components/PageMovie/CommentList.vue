@@ -15,6 +15,7 @@ defineProps({
     <LeaveComment />
     <div v-for="(item, idx) in items" :key="idx" :item="item">
       <!-- {{ item }} -->
+      <!-- TODO: pagenation -->
       <Comment :item="item" />
       <SubComment
         v-for="(subItem, idx2) in item.comments"
