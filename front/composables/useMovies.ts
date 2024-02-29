@@ -70,6 +70,7 @@ export const useMovies = () => {
     fetching.value = true;
     sortBy.value = "popularity";
     sortDesc.value = true;
+    params.page = 1;
 
     const { data } = await fetchMovies();
     const { page, total_pages, total_results, results } = data;
