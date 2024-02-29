@@ -18,10 +18,33 @@ const info = reactive({
 const sortBy = ref<string>("popularity");
 const sortDesc = ref(true);
 
+const filter = reactive({
+  genre: null,
+  release_date: null,
+  vote_average: null,
+});
+
 export const useMovies = () => {
   const axios = useAxios();
   const { y } = useWindowScroll();
   const { localeProperties } = useI18n();
+
+  /**
+   * verify if each filter is triggered(multiple filtering is possible)
+   */
+  const filteredMovies = computed(() =>
+    movies.value.filter(
+      (movie) =>
+        (filter.genre === null ||
+          Object.values(movie.genres).find(
+            (genre) => genre.id === filter.genre,
+          )) &&
+        (filter.release_date === null ||
+          movie.release_date.includes(filter.release_date)) &&
+        (filter.vote_average === null ||
+          movie.vote_average > filter.vote_average),
+    ),
+  );
 
   const isOtherTarget = (target: string) => {
     return sortBy.value !== target;
@@ -115,10 +138,12 @@ export const useMovies = () => {
   });
 
   return {
+    filteredMovies,
     info,
     fetching,
     movies,
     params,
+    filter,
     searchMovies,
     toggleSort,
     sortIcon,

@@ -2,6 +2,7 @@
   "_Global": {
     "email": "E-mail",
     "firstName": "Prénom",
+    "greaterThan": "Plus de",
     "lastName": "Nom de famille",
     "password": "Mot de passe",
     "update": "Mettre à jour",
