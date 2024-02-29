@@ -107,5 +107,11 @@
       "noList": "Vous n'avez jamais vu aucun film.",
       "title": "Liste déjà vu"
     }
+  },
+  "Sort": {
+    "popularity": "Popularité",
+    "release_date": "Date de sortir",
+    "title": "Titre",
+    "vote_average": "Note Moyenne"
   }
 }

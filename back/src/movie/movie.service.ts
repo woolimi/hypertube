@@ -94,24 +94,28 @@ export class MovieService {
   async getMovies(query: MoviesQueryDto) {
     query.page = query.page || 1;
     query.language = query.language || 'en-US';
-    query.sort_by = query.sort_by || 'popularity.desc';
 
-    const { data } = await this.tmdb.get('/discover/movie', {
+    const mode = query.search?.length > 0 ? 'search' : 'discover';
+
+    const { data } = await this.tmdb.get(`/${mode}/movie`, {
       params: {
         include_adult: false,
-        include_video: false,
+        query: query.search,
         ...query,
       },
     });
-    const results = data.results;
-    results.forEach((movie) => {
-      movie.genres = movie.genre_ids.map((id) => ({
+    const results = data.results.map((movie) => ({
+      ...movie,
+      genres: movie.genre_ids?.map((id) => ({
         id: id,
         name: this.Genre[id][query.language],
-      }));
-      movie.vote_average = Number(movie.vote_average).toFixed(1);
-    });
-    return { ...data, results };
+      })),
+      vote_average: Number(movie.vote_average).toFixed(1),
+    }));
+    return {
+      ...data,
+      results,
+    };
   }
 
   @UseGuards(JwtAuthGuard)

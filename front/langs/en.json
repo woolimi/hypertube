@@ -106,5 +106,11 @@
       "noList": "You haven't watched any movie yet.",
       "title": "Watched list"
     }
+  },
+  "Sort": {
+    "popularity": "Popularity",
+    "release_date": "Release Date",
+    "title": "Title",
+    "vote_average": "Vote Average"
   }
 }

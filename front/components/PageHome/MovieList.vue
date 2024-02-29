@@ -1,15 +1,9 @@
 <script setup lang="ts">
-import type { PropType } from "vue";
-
 import DarthVader from "~/assets/icons/darth-vader.svg";
-import type { MovieData } from "~/types";
 
-// TODO: Add infinite scroll
+const { movies } = useMovies();
+
 defineProps({
-  items: {
-    type: Array as PropType<MovieData[]>,
-    default: () => [],
-  },
   title: {
     type: String,
     default: "",
@@ -23,11 +17,14 @@ defineProps({
 
 <template>
   <section class="mx-auto max-w-[1200px] px-4 py-10">
-    <h2 class="mb-3 text-3xl font-bold text-primary-400">{{ title }}</h2>
-
+    <div class="mb-6 flex flex-wrap items-end justify-between gap-3">
+      <h2 class="text-5xl font-bold text-primary-400">{{ title }}</h2>
+      <SortButtonList />
+    </div>
     <div>
       <ul :class="$style.gridContainer">
-        <li v-for="(item, idx) in items" :key="idx" class="h-full w-full">
+        <!-- <li v-for="(item, idx) in movies" :key="idx" class="h-full w-full"> -->
+        <li v-for="(item, idx) in movies" :key="idx" class="h-full w-full">
           <MovieThumbnail :item="item" />
         </li>
         <template v-if="loading">

@@ -1,3 +1,7 @@
+<script setup lang="ts">
+const { searchMovies, params } = useMovies();
+</script>
+
 <template>
   <section>
     <div class="mx-auto max-w-[1280px]" :class="$style.heroWrapper">
@@ -5,21 +9,22 @@
         :class="$style.hero"
         class="flex h-[400px] flex-col items-center justify-center"
       >
-        <h1
-          class="mb-10 max-w-[600px] px-2 pt-[100px] text-center text-4xl sm:text-5xl"
-        >
-          <p v-html="$t('Home.Jumbotron.title1')"></p>
-          <p v-html="$t('Home.Jumbotron.title2')"></p>
-        </h1>
-
         <div class="max-w-[600px]">
-          <InputGroup class="flex">
-            <InputText
-              :placeholder="$t('Home.Search.placeholder')"
-              class="w-full"
-            />
-            <Button :label="$t('Home.Search.label')" />
-          </InputGroup>
+          <h1 class="mb-10 px-2 pt-[100px] text-center text-4xl sm:text-5xl">
+            <p v-html="$t('Home.Jumbotron.title1')"></p>
+            <p v-html="$t('Home.Jumbotron.title2')"></p>
+          </h1>
+
+          <form @submit.prevent="searchMovies">
+            <InputGroup class="flex">
+              <InputText
+                v-model="params.search"
+                :placeholder="$t('Home.Search.placeholder')"
+                class="w-full"
+              />
+              <Button type="submit" :label="$t('Home.Search.label')" />
+            </InputGroup>
+          </form>
         </div>
       </div>
     </div>

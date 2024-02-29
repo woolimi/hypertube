@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import defaultPhoto from "assets/images/no_image.jpg";
 import type { PropType } from "vue";
 
 import type { MovieData } from "~/types";
@@ -10,6 +11,10 @@ defineProps({
     default: () => ({}),
   },
 });
+const onErrorImageLoad = (event: Event) => {
+  const imgElement = event.target as HTMLImageElement;
+  imgElement.src = defaultPhoto;
+};
 </script>
 
 <template>
@@ -41,7 +46,8 @@ defineProps({
     <figure class="w-full">
       <img
         :src="`https://image.tmdb.org/t/p/w500/${item.poster_path}`"
-        class="w-full object-cover"
+        class="h-[420px] w-full object-cover"
+        @error="onErrorImageLoad"
       />
     </figure>
   </NuxtLink>
