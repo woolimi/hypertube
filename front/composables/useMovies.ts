@@ -105,6 +105,10 @@ export const useMovies = () => {
     fetching.value = false;
   };
 
+  const isNotLoadable = () => {
+    return fetching.value || params.page >= info.total_pages;
+  };
+
   let wheelEventListener: () => void;
   onMounted(async () => {
     fetching.value = true;
@@ -117,8 +121,9 @@ export const useMovies = () => {
     fetching.value = false;
 
     wheelEventListener = async () => {
-      // console.log(info.page, params.page, info.total_pages);
-      if (!isLoadable()) return;
+      // if (fetching.value) return;
+      // if (params.page >= info.total_pages) return;
+      if (isNotLoadable()) return;
       if (document.documentElement.scrollHeight <= window.innerHeight) {
         await loadMoreMovies("wheel event");
       }
@@ -135,7 +140,9 @@ export const useMovies = () => {
   });
 
   watch(y, async (scrolledHeight: number) => {
-    if (!isLoadable()) return;
+    // if (fetching.value) return;
+    // if (params.page >= info.total_pages) return;
+    if (isNotLoadable()) return;
     const totalScrollHeight =
       document.documentElement.scrollHeight - window.innerHeight;
     if (totalScrollHeight - scrolledHeight <= 200) {
@@ -143,13 +150,11 @@ export const useMovies = () => {
     }
   });
 
-  const isLoadable = async () => {
-    return fetching.value === false && params.page + 1 < info.total_pages;
-  };
-
   const loadMoreMovies = async (from: string) => {
-    console.log(">>>>>>>>>>>>from:", from);
     params.page = info.page + 1;
+    console.log(">>>>>>>>>>>>from:", from);
+    console.log("page:", params.page);
+    console.log("total_page:", info.total_pages);
     fetching.value = true;
     const { data } = await fetchMovies();
     const { page, total_pages, total_results, results } = data;
