@@ -114,28 +114,46 @@ export const useMovies = () => {
     info.total_results = total_results;
     movies.value = results;
     fetching.value = false;
+
+    window.addEventListener("wheel", wheelEventListener);
+  });
+
+  onBeforeUnmount(() => {
+    window.removeEventListener("wheel", wheelEventListener);
   });
 
   watch(y, async (scrolledHeight: number) => {
-    if (fetching.value) return;
-    if (info.page >= info.total_pages) return;
-
+    if (!isLoadable()) return;
     const totalScrollHeight =
       document.documentElement.scrollHeight - window.innerHeight;
     if (totalScrollHeight - scrolledHeight <= 200) {
-      info.page += 1;
-      params.page = info.page;
-
-      fetching.value = true;
-      const { data } = await fetchMovies();
-      const { page, total_pages, total_results, results } = data;
-      info.page = page;
-      info.total_pages = total_pages;
-      info.total_results = total_results;
-      movies.value = [...movies.value, ...results];
-      fetching.value = false;
+      await loadMoreMovies();
     }
   });
+
+  const wheelEventListener = async () => {
+    if (!isLoadable()) return;
+    if (document.documentElement.scrollHeight <= window.innerHeight)
+      await loadMoreMovies();
+  };
+
+  const isLoadable = () => {
+    return fetching.value === false && info.page < info.total_pages;
+  };
+
+  const loadMoreMovies = async () => {
+    info.page += 1;
+    params.page = info.page;
+
+    fetching.value = true;
+    const { data } = await fetchMovies();
+    const { page, total_pages, total_results, results } = data;
+    info.page = page;
+    info.total_pages = total_pages;
+    info.total_results = total_results;
+    movies.value = [...movies.value, ...results];
+    fetching.value = false;
+  };
 
   return {
     filteredMovies,

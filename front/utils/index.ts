@@ -76,24 +76,15 @@ export const GENRE: GenreType = {
   },
 };
 
-export const getYears = () => {
-  const startYear = 1950;
-  const years = [];
-  const currentYear = new Date().getUTCFullYear();
-
-  for (let year = currentYear; year >= startYear; --year) {
-    years.push(String(year));
+export const range = (
+  start: number,
+  end: number,
+  isReverse: boolean = false,
+) => {
+  const result = [];
+  for (let current = start; current < end; ++current) {
+    result.push(current);
   }
-
-  return years;
-};
-
-export const getVoteAverages = () => {
-  const maxVoteAverage = 9;
-  const votes = [];
-
-  for (let voteAverage = maxVoteAverage; voteAverage > 0; --voteAverage) {
-    votes.push(voteAverage);
-  }
-  return votes;
+  if (isReverse) result.reverse();
+  return result;
 };

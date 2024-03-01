@@ -2,11 +2,13 @@
   "_Global": {
     "email": "Email",
     "firstName": "First name",
+    "genre": "Genre",
     "greaterThan": "Greater than",
     "lastName": "Last name",
     "password": "Password",
     "update": "Update",
-    "username": "Username"
+    "username": "Username",
+    "year": "Year"
   },
   "AuthEmailConfirmed": {
     "description": "You can now enjoy movie!",
