@@ -93,7 +93,11 @@ export const useMovies = () => {
    * This function will be called when filteredMovies has less than 20 movies info
    */
   const infinitySearch = async () => {
-    while (filteredMovies.value.length < 20 && info.page < info.total_pages) {
+    while (
+      params.search.length &&
+      filteredMovies.value.length < 20 &&
+      params.page < info.total_pages
+    ) {
       await loadMoreMovies();
     }
   };
@@ -117,7 +121,9 @@ export const useMovies = () => {
   };
 
   const isNotLoadable = () => {
-    return fetching.value || params.page >= info.total_pages;
+    return (
+      !params.search.length || fetching.value || params.page >= info.total_pages
+    );
   };
 
   const loadMoreMovies = async () => {
@@ -162,6 +168,7 @@ export const useMovies = () => {
     if (isNotLoadable()) return;
     const totalScrollHeight =
       document.documentElement.scrollHeight - window.innerHeight;
+    console.log("here", params.page);
     if (totalScrollHeight - scrolledHeight <= 200) {
       await loadMoreMovies();
     }
