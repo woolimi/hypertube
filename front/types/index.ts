@@ -23,3 +23,15 @@ export interface MovieData {
   vote_count: number;
   genres: Array<{ id: number; name: string }>;
 }
+
+export interface DropdownOption {
+  label: string;
+  value: string | number;
+}
+
+export interface GenreType {
+  [key: string]: {
+    "en-US": string;
+    "fr-FR": string;
+  };
+}

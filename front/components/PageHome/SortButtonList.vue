@@ -11,7 +11,7 @@ const { sortIcon, toggleSort } = useMovies();
 </script>
 
 <template>
-  <div class="flex gap-2">
+  <div class="flex flex-wrap gap-2 lg:justify-end">
     <Button
       v-for="(target, idx) in SORT_BUTTON_LIST"
       :key="target + idx"
