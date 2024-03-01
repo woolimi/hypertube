@@ -168,7 +168,6 @@ export const useMovies = () => {
     if (isNotLoadable()) return;
     const totalScrollHeight =
       document.documentElement.scrollHeight - window.innerHeight;
-    console.log("here", params.page);
     if (totalScrollHeight - scrolledHeight <= 200) {
       await loadMoreMovies();
     }
