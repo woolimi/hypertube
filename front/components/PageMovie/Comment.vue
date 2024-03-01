@@ -20,7 +20,7 @@ const props = defineProps({
 
 const { userData } = storeToRefs(useUserStore());
 const axios = useAxios();
-const emit = defineEmits(["delete", "edit", "start-edit"]);
+const emit = defineEmits(["delete", "edit", "start-edit", "cancel-edit"]);
 const localePath = useLocalePath();
 const deleteComment = async () => {
   try {
@@ -35,7 +35,7 @@ const startEditComment = (c: CommentData) => {
   emit("start-edit", c);
 };
 const cancelEditComment = () => {
-  emit("start-edit", undefined);
+  emit("cancel-edit");
 };
 const updateComment = async (c: CommentData) => {
   try {
@@ -69,7 +69,7 @@ const updateComment = async (c: CommentData) => {
       <EditComment
         v-if="isEditing"
         :item="item"
-        @cancel="cancelEditComment"
+        @cancel="cancelEditComment(item)"
         @update="updateComment"
       />
       <p v-else :class="$style.commentBlock">{{ item.content }}</p>

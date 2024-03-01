@@ -10,6 +10,8 @@ const props = defineProps({
 const comments = ref<CommentData[]>([]);
 
 const editingComment = ref<CommentData | undefined>();
+const pendingComment = ref<CommentData | undefined>();
+const visible = ref(false);
 const axios = useAxios();
 const isFetching = ref(true);
 
@@ -45,14 +47,26 @@ const onEdit = (comment: CommentData) => {
 };
 
 const onStartEdit = (comment: CommentData | undefined) => {
-  editingComment.value = comment;
+  pendingComment.value = comment;
+  if (editingComment.value) visible.value = true;
+  else {
+    editingComment.value = comment;
+  }
 };
 
-watch(editingComment, (bef, aft) => {
-  if (bef && aft) {
-    // alert("You will lose any unsaved changes to your message.");
-  }
-});
+const onCancelEdit = () => {
+  visible.value = false;
+  editingComment.value = undefined;
+};
+
+const onKeepEditing = () => {
+  visible.value = false;
+};
+
+const onContinue = (comment: CommentData | undefined) => {
+  visible.value = false;
+  editingComment.value = comment;
+};
 </script>
 
 <template>
@@ -70,10 +84,35 @@ watch(editingComment, (bef, aft) => {
         @delete="onDelete"
         @edit="onEdit"
         @start-edit="onStartEdit"
+        @cancel-edit="onCancelEdit"
       />
     </div>
     <!-- <template v-if="!isFetching">
       <div></div>
     </template> -->
+    <Dialog
+      v-model:visible="visible"
+      class="font-bold text-primary-400"
+      modal
+      header="Going somewhere else in Hypertube?"
+      :style="{ width: '25rem' }"
+    >
+      <span class="mb-5 block text-primary-400"
+        >You will lose any unsaved changes to your message.</span
+      >
+      <div class="justify-content-end text-right">
+        <Button
+          type="button"
+          label="Keep Editing"
+          severity="secondary"
+          @click="onKeepEditing"
+        ></Button>
+        <Button
+          type="button"
+          label="Continue"
+          @click="onContinue(pendingComment)"
+        ></Button>
+      </div>
+    </Dialog>
   </section>
 </template>
