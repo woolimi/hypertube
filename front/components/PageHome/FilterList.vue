@@ -1,27 +1,29 @@
 <script setup lang="ts">
 import type { DropdownOption } from "~/types";
-import { Genre, getVoteAverages, getYears } from "~/types";
+import { GENRE, getVoteAverages, getYears } from "~/utils";
 
 const { localeProperties, t } = useI18n();
 const { filter } = useMovies();
 const lang = localeProperties.value.iso;
 
-const genreOptions: DropdownOption[] = Object.entries(Genre).map(
+const genreOptions: DropdownOption[] = Object.entries(GENRE).map(
   ([key, value]) => ({
     label: value[lang as keyof typeof value],
     value: Number(key),
   }),
 );
 
-const releaseDateOption: DropdownOption[] = getYears().map((year) => ({
+const releaseDateOption: DropdownOption[] = getYears().map((year: string) => ({
   label: year,
   value: year,
 }));
 
-const voteAverageOption: DropdownOption[] = getVoteAverages().map((vote) => ({
-  label: `${t("_Global.greaterThan")} ${vote}.0`,
-  value: vote,
-}));
+const voteAverageOption: DropdownOption[] = getVoteAverages().map(
+  (vote: number) => ({
+    label: `${t("_Global.greaterThan")} ${vote}.0`,
+    value: vote,
+  }),
+);
 </script>
 
 <template>
@@ -61,3 +63,4 @@ const voteAverageOption: DropdownOption[] = getVoteAverages().map((vote) => ({
     />
   </div>
 </template>
+~/utils
