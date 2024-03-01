@@ -1,6 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import dotenv from "dotenv";
 import path from "path";
+import { vite as vidstack } from "vidstack/plugins";
 
 dotenv.config({ path: "../.env" });
 
@@ -12,6 +13,17 @@ export default defineNuxtConfig({
       tailwindcss: {},
       autoprefixer: {},
     },
+  },
+  vue: {
+    compilerOptions: {
+      isCustomElement: (tag) => tag.startsWith("media-"),
+    },
+  },
+  vite: {
+    plugins: [
+      // Include filter to only check specific files for components and styles.
+      vidstack({ include: /player\// }),
+    ],
   },
   runtimeConfig: {
     public: {

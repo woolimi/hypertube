@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Controller,
   Get,
   Header,
@@ -22,10 +23,7 @@ import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
-import { promisify } from 'util';
-import torrentStream from 'torrent-stream';
-import path from 'path';
-import ffmpeg from 'fluent-ffmpeg';
+import { TorrentService } from './torrent.service';
 import pump from 'pump';
 
 @Controller('movies')
@@ -36,6 +34,7 @@ export class MovieController {
     private readonly authService: AuthService,
     private readonly jwtService: JwtService,
     private readonly userService: UserService,
+    private readonly torrentService: TorrentService,
   ) {}
 
   @Get('/')
@@ -66,11 +65,10 @@ export class MovieController {
     }
   }
 
-  // @Header('Content-Type', 'video/mp4')
   @Get('/:movie_id/stream/:torrent_hash')
-  @Header('Accept-Ranges', 'bytes')
+  @Header('Range', 'bytes')
   async streamMovie(
-    @Param('movie_id') movie_id: string,
+    @Param('movie_id') movie_id: number,
     @Param('torrent_hash') torrent_hash: string,
     @Headers() headers,
     @Req() req,
@@ -79,6 +77,7 @@ export class MovieController {
     // Check access token
     const curAccessToken = req.cookies['accessToken'];
     const curRefreshToken = req.cookies['refreshToken'];
+
     if (!curAccessToken) {
       if (!curRefreshToken) throw new UnauthorizedException();
       const payload = this.jwtService.verify(curRefreshToken, {
@@ -97,54 +96,43 @@ export class MovieController {
         secret: process.env.JWT_SECRET,
       });
     }
+    if (!headers.range) throw new BadRequestException("Missing 'Range' Header");
 
-    // Video streaming
-    const engine = torrentStream('36DBE5857EC8352361F2E15D889BB78D20E70BEB', {
-      tmp: './movies',
-      verify: true,
-      uploads: 0,
+    const ranges: [string, string] = headers.range
+      .replace(/bytes=/, '')
+      .split('-');
+    Logger.log(`Range: [${ranges[0]}, ${ranges[1]}]`);
+
+    const { engine, movieFile } = await this.torrentService.init(
+      torrent_hash,
+      movie_id,
+    );
+    const chunkSize = Math.max(
+      Math.floor(Number(movieFile.length) / 15),
+      10 ** 6,
+    );
+    const start = Number(ranges[0]);
+    const end = Math.min(start + chunkSize, movieFile.length - 1);
+    const { stream, mpeg } = this.torrentService.createStream(start, end);
+
+    req.on('close', () => {
+      stream.destroy();
+      engine.destroy();
+      Logger.log(`${movieFile.name} connection is destroyed`);
     });
 
-    engine.on('ready', async () => {
-      engine.files.forEach(async (file) => {
-        if (this.movieService.isVideoFile(file.name)) {
-          console.log('-----file selected for streaming-----');
-          file.select();
-          const stream = file.createReadStream();
-          const realExtension = path.extname(file.name).slice(1);
-
-          if (realExtension === 'mp4' || realExtension === 'mkv') {
-            pump(stream, res);
-          } else {
-            ffmpeg()
-              .input(stream)
-              .outputOptions('-movflags frag_keyframe+empty_moov')
-              .outputFormat('mp4')
-              .on('start', () => {
-                console.log('start');
-              })
-              .on('progress', (progress) => {
-                console.log(`progress: ${progress.timemark}`);
-              })
-              .on('end', () => {
-                console.log('Finished processing');
-              })
-              .on('error', (err) => {
-                console.log(`ERROR: ${err.message}`);
-              })
-              .inputFormat(realExtension)
-              .audioCodec('aac')
-              .videoCodec('libx264')
-              .pipe(res);
-          }
-          res.on('close', () => {
-            console.log('close');
-            stream.destroy();
-          });
-        } else {
-          console.log('-----file with wrong extension-----');
-        }
-      });
+    res.set({
+      'Content-Type': 'video/mp4',
+      'Accept-Ranges': 'bytes',
+      'Content-Range': `bytes ${start}-${end}/${movieFile.length}`,
+      'Content-Length': end - start + 1,
     });
+    res.status(HttpStatus.PARTIAL_CONTENT);
+
+    if (mpeg) {
+      mpeg.pipe(res);
+    } else {
+      pump(stream, res);
+    }
   }
 }

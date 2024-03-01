@@ -4,10 +4,11 @@ import { MovieService } from './movie.service';
 import { CacheModule } from '@nestjs/cache-manager';
 import { UserService } from 'src/user/user.service';
 import { AuthService } from 'src/auth/auth.service';
+import { JwtService } from '@nestjs/jwt';
+import { TorrentService } from './torrent.service';
 import { UserRepository } from 'src/user/user.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/user/user.entity';
-import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { JwtService } from '@nestjs/jwt';
     UserRepository,
     AuthService,
     JwtService,
+    TorrentService,
   ],
 })
 export class MovieModule {}

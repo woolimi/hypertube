@@ -36,6 +36,12 @@ const playVideo = (torrentHash: string) => {
   videoEl.value?.load();
   openDialog.value = true;
 };
+watch(openDialog, (isOpenDialog: boolean) => {
+  if (!isOpenDialog) {
+    videoEl.value?.removeAttribute("src");
+    videoEl.value?.load();
+  }
+});
 </script>
 
 <template>
@@ -127,15 +133,19 @@ const playVideo = (torrentHash: string) => {
       </li>
     </ul>
 
-    <Dialog v-model:visible="openDialog" modal>
+    <Dialog
+      v-model:visible="openDialog"
+      :style="{ width: '95vw', maxWidth: '1024px' }"
+      modal
+    >
       <video
         ref="videoEl"
         controls
-        cross-origin="anonymous"
-        preload="none"
+        preload="auto"
+        class="w-full"
         :poster="`https://image.tmdb.org/t/p/w500/${movie.backdrop_path}`"
       >
-        <source :src="videoSource" />
+        <source :src="videoSource" type="video/mp4" />
       </video>
     </Dialog>
 

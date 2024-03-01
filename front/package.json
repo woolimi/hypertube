@@ -41,6 +41,7 @@
     "primevue": "^3.48.1",
     "sass": "^1.70.0",
     "stylelint": "^16.2.1",
+    "vidstack": "^1.10.9",
     "vue": "^3.4.15",
     "vue-router": "^4.2.5"
   },
