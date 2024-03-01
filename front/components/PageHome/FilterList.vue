@@ -3,7 +3,7 @@ import type { DropdownOption } from "~/types";
 import { GENRE, range } from "~/utils";
 
 const { localeProperties, t } = useI18n();
-const { filter } = useMovies();
+const { filter, infinitySearch } = useMovies();
 const lang = localeProperties.value.iso;
 
 const genreOptions: DropdownOption[] = Object.entries(GENRE).map(
@@ -42,6 +42,7 @@ const voteAverageOption: DropdownOption[] = range(1, 10, true).map(
       reset-filter-on-clear
       show-clear
       clear-icon="pi pi-times"
+      @change="infinitySearch"
     />
     <Dropdown
       v-model="filter.release_date"
@@ -53,6 +54,7 @@ const voteAverageOption: DropdownOption[] = range(1, 10, true).map(
       reset-filter-on-clear
       show-clear
       clear-icon="pi pi-times"
+      @change="infinitySearch"
     />
     <Dropdown
       v-model="filter.vote_average"
@@ -64,6 +66,7 @@ const voteAverageOption: DropdownOption[] = range(1, 10, true).map(
       reset-filter-on-clear
       show-clear
       clear-icon="pi pi-times"
+      @change="infinitySearch"
     />
   </div>
 </template>
