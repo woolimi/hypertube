@@ -27,7 +27,6 @@ import { TorrentService } from './torrent.service';
 import pump from 'pump';
 
 @Controller('movies')
-@UseInterceptors(CacheInterceptor)
 export class MovieController {
   constructor(
     private readonly movieService: MovieService,
@@ -50,6 +49,7 @@ export class MovieController {
     }
   }
 
+  @UseInterceptors(CacheInterceptor)
   @Get('/:movie_id')
   @UseGuards(JwtAuthGuard)
   async getMovie(@Param('movie_id') movie_id, @Query() query: MovieQueryDto) {
