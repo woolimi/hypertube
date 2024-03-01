@@ -27,7 +27,7 @@ import { TorrentService } from './torrent.service';
 import pump from 'pump';
 
 @Controller('movies')
-// @UseInterceptors(CacheInterceptor)
+@UseInterceptors(CacheInterceptor)
 export class MovieController {
   constructor(
     private readonly movieService: MovieService,
