@@ -33,18 +33,38 @@ const updateComment = async () => {
       />
       <div class="text-right">
         <button
-          class="rounded bg-green-500 px-4 py-2 font-bold hover:bg-green-700"
+          class="bg-green-500 hover:bg-green-700"
+          :class="$style.buttonCircle"
           @click="updateComment"
         >
-          save
+          <i class="pi pi-check" :class="$style.iconCenter"></i>
+          <!-- save -->
         </button>
         <button
-          class="rounded bg-gray-500 px-4 py-2 font-bold hover:bg-gray-700"
+          class="bg-gray-500 hover:bg-gray-700"
+          :class="$style.buttonCircle"
           @click="cancelEdit"
         >
-          cancel
+          <i class="pi pi-times" :class="$style.iconCenter"></i>
+          <!-- cancel -->
         </button>
       </div>
     </div>
   </form>
 </template>
+
+<style module>
+.iconCenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.buttonCircle {
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+}
+</style>

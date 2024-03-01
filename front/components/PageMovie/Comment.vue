@@ -12,10 +12,6 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  setIsEditing: {
-    type: Function,
-    default: () => {},
-  },
 });
 
 const { userData } = storeToRefs(useUserStore());
@@ -80,16 +76,21 @@ const updateComment = async (c: CommentData) => {
     class="text-right"
   >
     <button
-      class="rounded bg-blue-500 px-4 py-2 font-bold hover:bg-blue-700"
+      class="bg-blue-500 hover:bg-blue-700"
+      :class="$style.buttonCircle"
       @click="startEditComment(item)"
     >
-      {{ $t("Movie.Comment.edit") }}
+      <!-- {{ $t("Movie.Comment.edit") }} -->
+      <i class="pi pi-pencil" :class="$style.iconCenter"></i>
     </button>
+
     <button
-      class="rounded bg-red-500 px-4 py-2 font-bold hover:bg-red-700"
+      class="bg-red-500 hover:bg-red-700"
+      :class="$style.buttonCircle"
       @click="deleteComment"
     >
-      delete
+      <i class="pi pi-trash" :class="$style.iconCenter"></i>
+      <!-- delete -->
     </button>
   </div>
 </template>
@@ -99,5 +100,19 @@ const updateComment = async (c: CommentData) => {
   white-space: pre-wrap;
   word-wrap: break-word;
   overflow-wrap: anywhere;
+}
+
+.iconCenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.buttonCircle {
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
 }
 </style>
