@@ -13,10 +13,11 @@ const editingComment = ref<CommentData | undefined>();
 const pendingComment = ref<CommentData | undefined>();
 const visible = ref(false);
 const axios = useAxios();
-const isFetching = ref(true);
+const isFetching = ref(false);
 
 onMounted(async () => {
   try {
+    isFetching.value = false;
     const { data: commentData } = await axios.get("/comments/", {
       params: {
         movieId: props.mid,
@@ -26,7 +27,7 @@ onMounted(async () => {
   } catch (e) {
     console.error(e);
   } finally {
-    isFetching.value = false;
+    isFetching.value = true;
   }
 });
 
@@ -77,8 +78,13 @@ const onContinue = (comment: CommentData | undefined) => {
     </h2>
     <LeaveComment @create="onCreate" />
 
+    <!-- TODO: pagenation -->
+    <template v-if="!isFetching">
+      <div v-for="(item, idx) in 5" :key="idx">
+        <CommentSkeleton />
+      </div>
+    </template>
     <div v-for="(item, idx) in comments" :key="idx" :item="item">
-      <!-- TODO: pagenation -->
       <Comment
         :item="item"
         :is-editing="editingComment?.id === item.id"
@@ -88,9 +94,6 @@ const onContinue = (comment: CommentData | undefined) => {
         @cancel-edit="onCancelEdit"
       />
     </div>
-    <!-- <template v-if="!isFetching">
-      <div></div>
-    </template> -->
     <Dialog
       v-model:visible="visible"
       class="font-bold text-primary-400"
