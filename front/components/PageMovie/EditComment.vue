@@ -1,70 +1,69 @@
 <script setup lang="ts">
-import { useCommentStore } from "~/stores/comment.store";
-
 const props = defineProps({
   item: {
     type: Object,
     default: () => ({}),
   },
 });
+const axios = useAxios();
 const emit = defineEmits(["cancel", "update"]);
 const content = ref(props.item.content);
-const { maxCommentLength } = useCommentStore();
-const visible = ref(false);
+const { MAX_COMMENT_LENGTH } = useConstant();
 
 const cancelEdit = () => {
   emit("cancel");
 };
+const errorMessage = ref("");
+const { t } = useI18n();
 
 const updateComment = async () => {
-  // console.log("editComment", content.value, maxCommentLength);
-  if (0 < content.value.length && content.value.length <= maxCommentLength) {
-    emit("update", {
-      ...props.item,
+  if (!content.value.length || content.value.length > MAX_COMMENT_LENGTH)
+    return;
+
+  try {
+    await axios.patch(`comments/${props.item.id}`, {
       content: content.value,
     });
-  } else {
-    // console.log("max length error", content.value.length);
-    visible.value = true;
-    // console.log("visible:", visible.value);
+  } catch (error) {
+    errorMessage.value = t("Error.GENERAL_ERROR");
   }
-  //   comment.value = "";
-};
-const getComment = (c: string) => {
-  content.value = c;
-};
-const onShowDialog = (value) => {
-  visible.value = value;
+
+  emit("update", {
+    ...props.item,
+    content: content.value,
+  });
 };
 </script>
 
 <template>
-  <form class="flex gap-4" @submit.prevent="editComment">
-    <div>
-      <CommentTextarea
-        :content="content"
-        :visible-value="visible"
-        @input="getComment"
-        @show-dialog="onShowDialog"
-      />
-      <div class="submit-button text-right">
-        <button
-          class="bg-green-500 hover:bg-green-700"
-          :class="$style.buttonCircle"
-          @click="updateComment"
-        >
-          <i class="pi pi-check" :class="$style.iconCenter"></i>
-          <!-- save -->
-        </button>
-        <button
-          class="bg-gray-500 hover:bg-gray-700"
-          :class="$style.buttonCircle"
-          @click="cancelEdit"
-        >
-          <i class="pi pi-times" :class="$style.iconCenter"></i>
-          <!-- cancel -->
-        </button>
-      </div>
+  <form @submit.prevent="updateComment">
+    <div class="mt-2">
+      <CommentTextarea v-model="content" :error="!!errorMessage" />
+      <p v-if="errorMessage" class="mb-2 text-center text-red-500">
+        {{ errorMessage }}
+      </p>
+    </div>
+
+    <div class="flex justify-end gap-1">
+      <button
+        class="bg-green-500 hover:bg-green-700"
+        :class="$style.buttonCircle"
+        type="submit"
+        @click="updateComment"
+      >
+        <!-- save -->
+        <i class="pi pi-check" :class="$style.iconCenter"></i>
+      </button>
+
+      <button
+        class="bg-gray-500 hover:bg-gray-700"
+        :class="$style.buttonCircle"
+        type="button"
+        @click="cancelEdit"
+      >
+        <!-- cancel -->
+        <i class="pi pi-times" :class="$style.iconCenter"></i>
+      </button>
     </div>
   </form>
 </template>
@@ -72,29 +71,15 @@ const onShowDialog = (value) => {
 <style module>
 .iconCenter {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   width: 100%;
   height: 100%;
 }
 
 .buttonCircle {
-  border-radius: 50%;
   width: 2rem;
   height: 2rem;
-}
-</style>
-<style scoped>
-.textarea-container {
-  position: relative;
-  display: inline-block;
-}
-.message-length {
-  position: absolute;
-  bottom: 5px;
-  right: 5px;
-  padding: 5px;
-  color: gray;
-  font-size: 12px;
+  border-radius: 50%;
 }
 </style>

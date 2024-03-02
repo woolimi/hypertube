@@ -2,10 +2,13 @@
   "_Global": {
     "email": "Email",
     "firstName": "First name",
+    "genre": "Genre",
+    "greaterThan": "Greater than",
     "lastName": "Last name",
     "password": "Password",
     "update": "Update",
-    "username": "Username"
+    "username": "Username",
+    "year": "Year"
   },
   "AuthEmailConfirmed": {
     "description": "You can now enjoy movie!",
@@ -84,6 +87,26 @@
       "placeholder": "Type here..."
     }
   },
+  "Movie": {
+    "Comment": {
+      "commentLengthAlert": "Content must be longer than or equal to 1 characters and at most 150       characters.",
+      "commentLoseAlert": "You will lose any unsaved changes to your message.",
+      "commentLoseAlertTitle": "Are you sure?",
+      "Comments": "Comments",
+      "Continue": "Continue",
+      "KeepEditing": "Stay",
+      "writeButton": "Write a comment"
+    },
+    "Description": {
+      "Genres": "Genres",
+      "Language": "Original language",
+      "Overview": "Overview",
+      "ReleaseDate": "Release date",
+      "Score": "Score",
+      "Title": "Title",
+      "Watch": "Watch"
+    }
+  },
   "Navbar": {
     "LoginSelector": {
       "login": "Login",
@@ -112,16 +135,5 @@
     "release_date": "Release Date",
     "title": "Title",
     "vote_average": "Vote Average"
-  },
-  "Movie": {
-    "Comment": {
-      "writeButton": "Write a comment",
-      "Comments": "Comments",
-      "commentLengthAlert": "Content must be longer than or equal to 1 characters and at most 150       characters.",
-      "commentLoseAlert": "You will lose any unsaved changes to your message.",
-      "commentLoseAlertTitle": "Going somewhere else in Hypertube?",
-      "KeepEditing": "Keep Editing",
-      "Continue": "Continue"
-    }
   }
 }

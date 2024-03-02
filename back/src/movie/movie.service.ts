@@ -1,17 +1,16 @@
-import { Get, Injectable, Logger, UseGuards } from '@nestjs/common';
-import axios, { AxiosInstance } from 'axios';
-import { MoviesQueryDto } from './dto/movies-query.dto';
-import { MovieQueryDto } from './dto/movie-query.dto';
-import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { Repository } from 'typeorm';
 import { Movie } from './movie.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IComment } from 'src/comment/IComment';
-import { Comment } from 'src/comment/comment.entity';
+import { Injectable, Logger } from '@nestjs/common';
+import axios, { AxiosInstance } from 'axios';
+import { MoviesQueryDto } from './dto/movies-query.dto';
+import { MovieQueryDto } from './dto/movie-query.dto';
 
 @Injectable()
 export class MovieService {
   private tmdb: AxiosInstance;
+  private yts: AxiosInstance;
   private readonly Genre = {
     '12': {
       'en-US': 'Adventure',
@@ -97,6 +96,10 @@ export class MovieService {
         Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
       },
     });
+
+    this.yts = axios.create({
+      baseURL: 'https://yts.mx/api/v2/',
+    });
   }
 
   async getMovies(query: MoviesQueryDto) {
@@ -126,7 +129,6 @@ export class MovieService {
     };
   }
 
-  @UseGuards(JwtAuthGuard)
   async getMovie(movie_id, query: MovieQueryDto) {
     query.language = query.language || 'en-US';
 
@@ -139,22 +141,6 @@ export class MovieService {
     return data;
   }
 
-  ///////////////////////
-  async getMovieData2(movieId: number): Promise<Movie> {
-    const movie = await this.movieRepository.findOne({
-      where: {
-        id: movieId,
-      },
-      relations: ['Comments'],
-    });
-    if (!movie) {
-      return null;
-    }
-    console.log('movie data:', movie);
-    return movie;
-  }
-
-  //   async findMovieWithCommentsAndUserInfo(movieId: number): Promise<Movie> {
   async getMovieData(movieId: number): Promise<Movie> {
     return this.movieRepository
       .createQueryBuilder('movie')
@@ -166,11 +152,11 @@ export class MovieService {
   }
 
   async createMovieData(movieId: number) {
-    console.log('start creating move');
+    Logger.log('start creating move');
     const createMovieDto = { id: movieId };
     const movie = this.movieRepository.create(createMovieDto);
     await this.movieRepository.save(movie);
-    console.log('move has been created');
+    Logger.log('move has been created');
   }
 
   async addCommentToMovieData(movieId: number, comment: IComment) {
@@ -210,5 +196,14 @@ export class MovieService {
     }
     movie.Comments.splice(commentIndex, 1);
     return await this.movieRepository.save(movie);
+  }
+
+  async getMovieTorrent(imdb_id: string) {
+    const { data: response } = await this.yts.get(`movie_details.json`, {
+      params: {
+        imdb_id,
+      },
+    });
+    return response.data.movie?.torrents || [];
   }
 }

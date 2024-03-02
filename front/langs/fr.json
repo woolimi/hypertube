@@ -2,10 +2,13 @@
   "_Global": {
     "email": "E-mail",
     "firstName": "Prénom",
+    "genre": "Genre",
+    "greaterThan": "Plus de",
     "lastName": "Nom de famille",
     "password": "Mot de passe",
     "update": "Mettre à jour",
-    "username": "Nom d'utilisateur"
+    "username": "Nom d'utilisateur",
+    "year": "Année"
   },
   "AuthEmailConfirmed": {
     "description": "Vous pouvez maintenant profiter du film !",
@@ -84,6 +87,26 @@
       "placeholder": "Écrivez ici..."
     }
   },
+  "Movie": {
+    "Comment": {
+      "commentLengthAlert": " Le contenu doit être supérieur ou égal à 1 caractère et au maximum 150 caractères.",
+      "commentLoseAlert": "Vous perdrez toutes les modifications non enregistrées de votre message.",
+      "commentLoseAlertTitle": "Vous êtes sûr ?",
+      "Comments": "Commentaires",
+      "Continue": "Continuer",
+      "KeepEditing": "Rester",
+      "writeButton": "Écrire un commentaire"
+    },
+    "Description": {
+      "Genres": "Genres",
+      "Language": "Langue originale",
+      "Overview": "Description",
+      "ReleaseDate": "Date de sortie",
+      "Score": "Note",
+      "Title": "Titre",
+      "Watch": "Regarder"
+    }
+  },
   "Navbar": {
     "LoginSelector": {
       "login": "Se connecter",
@@ -113,16 +136,5 @@
     "release_date": "Date de sortir",
     "title": "Titre",
     "vote_average": "Note Moyenne"
-  },
-  "Movie": {
-    "Comment": {
-      "writeButton": "Écrire un commentaire",
-      "Comments": "Commentaires",
-      "commentLengthAlert": " Le contenu doit être supérieur ou égal à 1 caractère et au maximum 150 caractères.",
-      "commentLoseAlert": "Vous perdrez toutes les modifications non enregistrées de votre message.",
-      "commentLoseAlertTitle": "Vous allez ailleurs à Hypertube ?",
-      "KeepEditing": "Continuer à modifier",
-      "Continue": "Continuer"
-    }
   }
 }

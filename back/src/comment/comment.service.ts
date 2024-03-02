@@ -1,4 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  Logger,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Comment } from './comment.entity';
 import { Repository } from 'typeorm';
@@ -32,17 +37,17 @@ export class CommentService {
   }
 
   async createComment(createCommentDto: CreateCommentDto) {
-    const { userId, movieId, content } = createCommentDto;
-    console.log('create comment user id:', userId);
+    const { userId, movieId } = createCommentDto;
+    Logger.log('create comment user id:', userId);
     const movie = await this.movieService.getMovieData(movieId);
     if (!movie) {
       await this.movieService.createMovieData(movieId);
     }
     const user = await this.userService.findOneById(userId);
     if (!user) {
-      throw Error('user not found');
+      throw new UnauthorizedException('User not found');
     }
-    console.log('comment user:', user);
+    Logger.log('comment user:', user);
     const createDto = { ...createCommentDto, User: user, Movie: movie };
     const comment = this.commentRepository.create(createDto);
     this.movieService.addCommentToMovieData(movieId, comment);
@@ -52,7 +57,7 @@ export class CommentService {
   async updateComment(commentId: number, content: string) {
     const comment = await this.getComment(commentId);
     if (!comment) {
-      throw Error('Comment not found');
+      throw new BadRequestException('Comment not found');
     }
     comment.content = content;
     const updatedComment = await this.commentRepository.save(comment);

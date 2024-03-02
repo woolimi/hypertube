@@ -1,47 +1,35 @@
 <script setup>
-import { useCommentStore } from "~/stores/comment.store";
-
-const comment = ref("");
-const visible = ref(false);
-const { userImage } = storeToRefs(useUserStore());
-const { maxCommentLength } = useCommentStore();
+const emit = defineEmits(["create"]);
+const { t } = useI18n();
 const route = useRoute();
 const axios = useAxios();
-const emit = defineEmits(["create"]);
+const { userImage } = storeToRefs(useUserStore());
+const comment = ref("");
+const { MAX_COMMENT_LENGTH } = useConstant();
+const errorMessage = ref("");
 
 const submitComment = async () => {
+  if (!comment.value.length || comment.value.length > MAX_COMMENT_LENGTH)
+    return;
+
   try {
-    // console.log("submitComment", comment.value.length, maxCommentLength);
-    if (0 < comment.value.length && comment.value.length <= maxCommentLength) {
-      const { data } = await axios.post(
-        "comments/create",
-        {
-          content: comment.value,
+    const { data } = await axios.post(
+      "comments",
+      {
+        content: comment.value,
+      },
+      {
+        params: {
+          movieId: route.params.mid,
         },
-        {
-          params: {
-            movieId: route.params.mid,
-          },
-        },
-      );
-      emit("create", data);
-      comment.value = "";
-    } else {
-      // console.log("max error", comment.value.length);
-      visible.value = true;
-      //   console.log("visible:", visible.value);
-    }
-  } catch (error) {
-    console.error(error);
+      },
+    );
+    emit("create", data);
+    errorMessage.value = "";
     comment.value = "";
+  } catch (error) {
+    errorMessage.value = t("Error.GENERAL_ERROR");
   }
-};
-const getComment = (c) => {
-  console.log("getcomment", c);
-  comment.value = c;
-};
-const onShowDialog = (value) => {
-  visible.value = value;
 };
 </script>
 
@@ -55,13 +43,19 @@ const onShowDialog = (value) => {
     />
     <div>
       <CommentTextarea
-        :content="comment"
-        :visible-value="visible"
-        @input="getComment"
-        @show-dialog="onShowDialog"
+        v-model="comment"
+        :maxlength="MAX_COMMENT_LENGTH"
+        :error="!!errorMessage"
       />
       <div class="text-right">
-        <Button class="w-full !px-3 !py-2 sm:w-fit" type="submit">
+        <p v-if="errorMessage" class="mb-2 text-center text-red-500">
+          {{ errorMessage }}
+        </p>
+        <Button
+          class="w-full !px-3 !py-2 sm:w-fit"
+          type="submit"
+          :disabled="!comment.length"
+        >
           {{ $t("Movie.Comment.writeButton") }}
         </Button>
       </div>

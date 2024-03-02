@@ -20,7 +20,7 @@ const emit = defineEmits(["delete", "edit", "start-edit", "cancel-edit"]);
 const localePath = useLocalePath();
 const deleteComment = async () => {
   try {
-    await axios.delete(`comments/${props.item.id}/delete`);
+    await axios.delete(`comments/${props.item.id}`);
     emit("delete", props.item);
   } catch (error) {
     console.error(error);
@@ -34,17 +34,8 @@ const cancelEditComment = () => {
   emit("cancel-edit");
 };
 const updateComment = async (c: CommentData) => {
-  console.log("updateComment", c);
-  try {
-    // TODO: Validation Logic
-    await axios.put(`comments/${c.id}/update`, {
-      content: c.content,
-    });
-    emit("edit", c);
-    emit("start-edit", undefined);
-  } catch (error) {
-    console.error(error);
-  }
+  emit("edit", c);
+  emit("start-edit", undefined);
 };
 </script>
 
@@ -65,7 +56,7 @@ const updateComment = async (c: CommentData) => {
       <EditComment
         v-if="isEditing"
         :item="item"
-        @cancel="cancelEditComment(item)"
+        @cancel="cancelEditComment"
         @update="updateComment"
       />
       <p v-else :class="$style.commentBlock">{{ item.content }}</p>
@@ -73,14 +64,13 @@ const updateComment = async (c: CommentData) => {
   </div>
   <div
     v-if="!isEditing && userData.username == item.User.username"
-    class="text-right"
+    class="flex justify-end gap-1"
   >
     <button
       class="bg-blue-500 hover:bg-blue-700"
       :class="$style.buttonCircle"
       @click="startEditComment(item)"
     >
-      <!-- {{ $t("Movie.Comment.edit") }} -->
       <i class="pi pi-pencil" :class="$style.iconCenter"></i>
     </button>
 
@@ -90,7 +80,6 @@ const updateComment = async (c: CommentData) => {
       @click="deleteComment"
     >
       <i class="pi pi-trash" :class="$style.iconCenter"></i>
-      <!-- delete -->
     </button>
   </div>
 </template>
@@ -104,15 +93,15 @@ const updateComment = async (c: CommentData) => {
 
 .iconCenter {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   width: 100%;
   height: 100%;
 }
 
 .buttonCircle {
-  border-radius: 50%;
   width: 2rem;
   height: 2rem;
+  border-radius: 50%;
 }
 </style>

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useConfirm } from "primevue/useconfirm";
+
 import type { CommentData } from "~/types";
 
 const props = defineProps({
@@ -11,9 +13,10 @@ const comments = ref<CommentData[]>([]);
 
 const editingComment = ref<CommentData | undefined>();
 const pendingComment = ref<CommentData | undefined>();
-const visible = ref(false);
 const axios = useAxios();
 const isFetching = ref(false);
+const confirm = useConfirm();
+const { t } = useI18n();
 
 onMounted(async () => {
   try {
@@ -35,7 +38,9 @@ const onCreate = (comment: CommentData) => {
   comments.value.push(comment);
 };
 const onDelete = (comment: CommentData) => {
-  const idx = comments.value.findIndex((item) => item.id === comment.id);
+  const idx = comments.value.findIndex(
+    (item: CommentData) => item.id === comment.id,
+  );
   comments.value.splice(idx, 1);
 };
 
@@ -47,26 +52,26 @@ const onEdit = (comment: CommentData) => {
   editingComment.value = undefined;
 };
 
+const openEditConfirm = () => {
+  confirm.require({
+    message: t("Movie.Comment.commentLoseAlert"),
+    header: t("Movie.Comment.commentLoseAlertTitle"),
+    accept: () => {
+      editingComment.value = pendingComment.value;
+    },
+  });
+};
 const onStartEdit = (comment: CommentData | undefined) => {
   pendingComment.value = comment;
-  if (editingComment.value) visible.value = true;
-  else {
+  if (editingComment.value) {
+    openEditConfirm();
+  } else {
     editingComment.value = comment;
   }
 };
 
 const onCancelEdit = () => {
-  visible.value = false;
   editingComment.value = undefined;
-};
-
-const onKeepEditing = () => {
-  visible.value = false;
-};
-
-const onContinue = (comment: CommentData | undefined) => {
-  visible.value = false;
-  editingComment.value = comment;
 };
 </script>
 
@@ -80,45 +85,45 @@ const onContinue = (comment: CommentData | undefined) => {
 
     <!-- TODO: pagenation -->
     <template v-if="!isFetching">
-      <div v-for="(item, idx) in 5" :key="idx">
-        <CommentSkeleton />
+      <CommentSkeleton v-for="(item, idx) in 3" :key="idx" />
+    </template>
+    <template v-else>
+      <div v-for="(item, idx) in comments" :key="idx" :item="item">
+        <Comment
+          :item="item"
+          :is-editing="editingComment?.id === item.id"
+          @delete="onDelete"
+          @edit="onEdit"
+          @start-edit="onStartEdit"
+          @cancel-edit="onCancelEdit"
+        />
       </div>
     </template>
-    <div v-for="(item, idx) in comments" :key="idx" :item="item">
-      <Comment
-        :item="item"
-        :is-editing="editingComment?.id === item.id"
-        @delete="onDelete"
-        @edit="onEdit"
-        @start-edit="onStartEdit"
-        @cancel-edit="onCancelEdit"
-      />
-    </div>
-    <Dialog
-      v-model:visible="visible"
-      class="font-bold text-primary-400"
-      modal
-      :header="$t('Movie.Comment.commentLoseAlertTitle')"
-      :style="{ width: '25rem' }"
-    >
-      <span class="mb-5 block text-primary-400">
-        {{ $t("Movie.Comment.commentLoseAlert") }}
-      </span>
-      <div class="justify-content-end text-right">
-        <Button
-          type="button"
-          :label="$t('Movie.Comment.KeepEditing')"
-          severity="secondary"
-          @click="onKeepEditing"
-        >
-        </Button>
-        <Button
-          type="button"
-          :label="$t('Movie.Comment.Continue')"
-          @click="onContinue(pendingComment)"
-        >
-        </Button>
-      </div>
-    </Dialog>
+
+    <ConfirmDialog :style="{ width: '95vw', maxWidth: '400px' }">
+      <template #container="{ message, acceptCallback, rejectCallback }">
+        <div class="rounded-lg bg-gray-200 p-6 text-black">
+          <p class="mb-3 text-center text-3xl font-extrabold">
+            {{ message.header }}
+          </p>
+
+          <p class="text-center text-lg">{{ message.message }}</p>
+
+          <div class="mt-4 flex gap-2">
+            <Button
+              :label="$t('Movie.Comment.Continue')"
+              class="flex-1"
+              @click="acceptCallback"
+            />
+            <Button
+              :label="$t('Movie.Comment.KeepEditing')"
+              severity="secondary"
+              class="flex-1"
+              @click="rejectCallback"
+            />
+          </div>
+        </div>
+      </template>
+    </ConfirmDialog>
   </section>
 </template>

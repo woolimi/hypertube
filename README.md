@@ -18,3 +18,7 @@ dev-up
 front-dev pnpm i some-package
 back-dev pnpm i some-package
 ```
+
+## Resources
+
+- [Video buffering and streaming in NodeJS](https://www.youtube.com/watch?v=cuLawu_m0_Y)

@@ -3,19 +3,18 @@ import {
   Controller,
   Delete,
   Get,
+  Logger,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
-  Put,
   Query,
   Req,
   UseGuards,
-  ValidationPipe,
 } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
-import { CreateCommentDto } from './dto/create-comment.dto';
 import { CommentLengthDto } from './dto/comment.length.dto';
 
 @ApiTags('Comments')
@@ -26,28 +25,27 @@ export class CommentController {
   @ApiOperation({ summary: 'get all comments for a movie' })
   @Get()
   getAllComments(@Query('movieId', ParseIntPipe) movieId: number) {
-    // console.log(movieId, isNumber(movieId));
     return this.commentService.getCommentsForMovie(movieId);
   }
 
   @ApiOperation({ summary: 'create a comment' })
   @UseGuards(JwtAuthGuard)
-  @Post('/create')
+  @Post('/')
   async createComment(
     @Req() req,
-    @Body('content', new ValidationPipe()) content: CommentLengthDto,
+    @Body() data: CommentLengthDto,
     @Query('movieId', ParseIntPipe) movieId: number,
   ) {
-    console.log('req comments/create', req.user);
+    Logger.log('Create Comment', req.user);
     const userId = req.user.userId;
-    const c = String(content);
-    const createCommentDto = { userId, movieId, content: c };
+    const content = data.content;
+    const createCommentDto = { userId, movieId, content };
     return this.commentService.createComment(createCommentDto);
   }
 
   @ApiOperation({ summary: 'update a comment' })
   @UseGuards(JwtAuthGuard)
-  @Put(':id/update')
+  @Patch(':id')
   async updateComment(
     @Body('content') content: string,
     @Param('id') commentId: number,
@@ -57,7 +55,7 @@ export class CommentController {
 
   @ApiOperation({ summary: 'delete a comment' })
   @UseGuards(JwtAuthGuard)
-  @Delete(':id/delete')
+  @Delete(':id')
   async deleteComment(@Param('id') commentId: number) {
     this.commentService.deleteComment(commentId);
   }
