@@ -26,7 +26,7 @@ export class Comment {
     description: 'Comment',
     example: 'This is comment',
   })
-  @Column()
+  @Column({ length: 300, nullable: false })
   content: string;
 
   @ApiProperty({
