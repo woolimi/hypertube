@@ -7,7 +7,7 @@ definePageMeta({
 
 const axios = useAxios();
 const movie = ref<MovieData>({} as MovieData);
-const comments = computed(() => []);
+// const comments = computed(() => []);
 const route = useRoute();
 const { localeProperties } = useI18n() as any;
 const fetching = ref(false);
@@ -58,6 +58,6 @@ onMounted(async () => {
       <TorrentListSkeleton v-else />
     </section>
 
-    <CommentList :items="comments" />
+    <CommentList :mid="route.params.mid" />
   </main>
 </template>

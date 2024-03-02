@@ -87,6 +87,26 @@
       "placeholder": "Écrivez ici..."
     }
   },
+  "Movie": {
+    "Comment": {
+      "commentLengthAlert": " Le contenu doit être supérieur ou égal à 1 caractère et au maximum 150 caractères.",
+      "commentLoseAlert": "Vous perdrez toutes les modifications non enregistrées de votre message.",
+      "commentLoseAlertTitle": "Vous êtes sûr ?",
+      "Comments": "Commentaires",
+      "Continue": "Continuer",
+      "KeepEditing": "Rester",
+      "writeButton": "Écrire un commentaire"
+    },
+    "Description": {
+      "Genres": "Genres",
+      "Language": "Langue originale",
+      "Overview": "Description",
+      "ReleaseDate": "Date de sortie",
+      "Score": "Note",
+      "Title": "Titre",
+      "Watch": "Regarder"
+    }
+  },
   "Navbar": {
     "LoginSelector": {
       "login": "Se connecter",
@@ -116,14 +136,5 @@
     "release_date": "Date de sortir",
     "title": "Titre",
     "vote_average": "Note Moyenne"
-  },
-  "Movie": {
-    "Title": "Titre",
-    "Score": "Note",
-    "ReleaseDate": "Date de sortie",
-    "Language": "Langue originale",
-    "Genres": "Genres",
-    "Overview": "Description",
-    "Watch": "Regarder"
   }
 }

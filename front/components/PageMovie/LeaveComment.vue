@@ -1,10 +1,40 @@
 <script setup>
-const comment = ref();
+const emit = defineEmits(["create"]);
+const { t } = useI18n();
+const route = useRoute();
+const axios = useAxios();
 const { userImage } = storeToRefs(useUserStore());
+const comment = ref("");
+const { MAX_COMMENT_LENGTH } = useConstant();
+const errorMessage = ref("");
+
+const submitComment = async () => {
+  if (!comment.value.length || comment.value.length > MAX_COMMENT_LENGTH)
+    return;
+
+  try {
+    const { data } = await axios.post(
+      "comments",
+      {
+        content: comment.value,
+      },
+      {
+        params: {
+          movieId: route.params.mid,
+        },
+      },
+    );
+    emit("create", data);
+    errorMessage.value = "";
+    comment.value = "";
+  } catch (error) {
+    errorMessage.value = t("Error.GENERAL_ERROR");
+  }
+};
 </script>
 
 <template>
-  <form class="flex gap-4" @submit.prevent="() => {}">
+  <form class="flex gap-4" @submit.prevent="submitComment">
     <Avatar
       :image="userImage"
       class="shrink-0 overflow-hidden"
@@ -12,15 +42,22 @@ const { userImage } = storeToRefs(useUserStore());
       shape="circle"
     />
     <div>
-      <Textarea
+      <CommentTextarea
         v-model="comment"
-        class="w-full"
-        auto-resize
-        rows="5"
-        cols="300"
+        :maxlength="MAX_COMMENT_LENGTH"
+        :error="!!errorMessage"
       />
       <div class="text-right">
-        <Button label="Write a comment" class="w-full !px-3 !py-2 sm:w-fit" />
+        <p v-if="errorMessage" class="mb-2 text-center text-red-500">
+          {{ errorMessage }}
+        </p>
+        <Button
+          class="w-full !px-3 !py-2 sm:w-fit"
+          type="submit"
+          :disabled="!comment.length"
+        >
+          {{ $t("Movie.Comment.writeButton") }}
+        </Button>
       </div>
     </div>
   </form>

@@ -88,13 +88,24 @@
     }
   },
   "Movie": {
-    "Genres": "Genres",
-    "Language": "Original language",
-    "Overview": "Overview",
-    "ReleaseDate": "Release date",
-    "Score": "Score",
-    "Title": "Title",
-    "Watch": "Watch"
+    "Comment": {
+      "commentLengthAlert": "Content must be longer than or equal to 1 characters and at most 150       characters.",
+      "commentLoseAlert": "You will lose any unsaved changes to your message.",
+      "commentLoseAlertTitle": "Are you sure?",
+      "Comments": "Comments",
+      "Continue": "Continue",
+      "KeepEditing": "Stay",
+      "writeButton": "Write a comment"
+    },
+    "Description": {
+      "Genres": "Genres",
+      "Language": "Original language",
+      "Overview": "Overview",
+      "ReleaseDate": "Release date",
+      "Score": "Score",
+      "Title": "Title",
+      "Watch": "Watch"
+    }
   },
   "Navbar": {
     "LoginSelector": {

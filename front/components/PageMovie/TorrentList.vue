@@ -57,7 +57,7 @@ watch(openDialog, (isOpenDialog: boolean) => {
           </div>
 
           <Button
-            :label="$t('Movie.Watch')"
+            :label="$t('Movie.Description.Watch')"
             icon="pi pi-youtube"
             @click="playVideo(torrent.hash)"
           />

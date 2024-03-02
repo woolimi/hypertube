@@ -1,4 +1,4 @@
-import typeorm, {
+import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
@@ -7,6 +7,7 @@ import typeorm, {
   DeleteDateColumn,
   ManyToOne,
   JoinColumn,
+  Relation,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from '../user/user.entity';
@@ -46,17 +47,17 @@ export class Comment {
   @DeleteDateColumn()
   readonly deletedAt: Date | null;
 
-  @ManyToOne((type) => User, (user) => user.Comments)
+  @ManyToOne((type) => User, (user) => user.Comments, { eager: true })
   @JoinColumn({
     name: 'user_id',
     referencedColumnName: 'id',
   })
-  User: typeorm.Relation<User>;
+  User: Relation<User>;
 
-  @ManyToOne((type) => Movie, (movie) => movie.Comments)
+  @ManyToOne((type) => Movie, (movie) => movie.Comments, { eager: true })
   @JoinColumn({
     name: 'movie_id',
     referencedColumnName: 'id',
   })
-  Movie: typeorm.Relation<Movie>;
+  Movie: Relation<Movie>;
 }

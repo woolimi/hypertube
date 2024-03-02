@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { Movie } from './movie.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { IComment } from 'src/comment/IComment';
+import { Injectable, Logger } from '@nestjs/common';
 import axios, { AxiosInstance } from 'axios';
 import { MoviesQueryDto } from './dto/movies-query.dto';
 import { MovieQueryDto } from './dto/movie-query.dto';
@@ -82,7 +86,10 @@ export class MovieService {
       'fr-FR': 'Téléfilm',
     },
   };
-  constructor() {
+  constructor(
+    @InjectRepository(Movie)
+    private readonly movieRepository: Repository<Movie>,
+  ) {
     this.tmdb = axios.create({
       baseURL: 'https://api.themoviedb.org/3',
       headers: {
@@ -132,6 +139,63 @@ export class MovieService {
     });
     data.vote_average = Number(data.vote_average).toFixed(1);
     return data;
+  }
+
+  async getMovieData(movieId: number): Promise<Movie> {
+    return this.movieRepository
+      .createQueryBuilder('movie')
+      .leftJoinAndSelect('movie.Comments', 'comment')
+      .leftJoin('comment.User', 'user')
+      .addSelect(['user.username', 'user.image'])
+      .where('movie.id = :movieId', { movieId })
+      .getOne();
+  }
+
+  async createMovieData(movieId: number) {
+    Logger.log('start creating move');
+    const createMovieDto = { id: movieId };
+    const movie = this.movieRepository.create(createMovieDto);
+    await this.movieRepository.save(movie);
+    Logger.log('move has been created');
+  }
+
+  async addCommentToMovieData(movieId: number, comment: IComment) {
+    const movie = await this.getMovieData(movieId);
+    if (!movie) {
+      throw new Error('Movie not found');
+    }
+    movie.Comments.push(comment);
+    return await this.movieRepository.save(movie);
+  }
+
+  async updateCommentFromMovieData(movieId: number, updatedComment: IComment) {
+    const movie = await this.getMovieData(movieId);
+    if (!movie) {
+      throw new Error('Movie not found');
+    }
+    const updatedMovie = {
+      ...movie,
+      comments: movie.Comments.map((movieComment) =>
+        movieComment.id === updatedComment.id ? updatedComment : movieComment,
+      ),
+    };
+
+    return await this.movieRepository.save(updatedMovie);
+  }
+
+  async removeCommentFromMovieData(movieId: number, commentId: number) {
+    const movie = await this.getMovieData(movieId);
+    if (!movie) {
+      throw new Error('Movie not found');
+    }
+    const commentIndex = movie.Comments.findIndex(
+      (comment) => comment.id === commentId,
+    );
+    if (commentIndex === -1) {
+      throw new Error('Comment not found in movie');
+    }
+    movie.Comments.splice(commentIndex, 1);
+    return await this.movieRepository.save(movie);
   }
 
   async getMovieTorrent(imdb_id: string) {

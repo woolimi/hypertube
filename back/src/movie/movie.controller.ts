@@ -8,6 +8,7 @@ import {
   InternalServerErrorException,
   Logger,
   Param,
+  Post,
   Query,
   Req,
   Res,
@@ -19,6 +20,7 @@ import { MoviesQueryDto } from './dto/movies-query.dto';
 import { MovieService } from './movie.service';
 import { CacheInterceptor } from '@nestjs/cache-manager';
 import { MovieQueryDto } from './dto/movie-query.dto';
+import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtService } from '@nestjs/jwt';
@@ -26,6 +28,7 @@ import { UserService } from 'src/user/user.service';
 import { TorrentService } from './torrent.service';
 import pump from 'pump';
 
+@ApiTags('Movies')
 @Controller('movies')
 export class MovieController {
   constructor(

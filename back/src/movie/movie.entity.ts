@@ -1,11 +1,11 @@
 import {
   Entity,
-  PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
   OneToMany,
+  PrimaryColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Comment } from 'src/comment/comment.entity';
@@ -18,12 +18,12 @@ export class Movie {
     description: 'Movie ID',
     example: 1,
   })
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   id: number;
 
-  @Column()
+  @Column({ nullable: true })
   @IsOptional()
-  watchedAt: Date | null;
+  watchedAt: Date | null = null;
 
   @ApiProperty({
     description: 'Created time',
