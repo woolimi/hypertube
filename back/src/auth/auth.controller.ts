@@ -193,10 +193,11 @@ export class AuthController {
       }
 
       // Send email confirmation email
-      await this.emailService.sendPasswordResetEmail(
+      const token = await this.emailService.sendPasswordResetEmail(
         { id: foundEmail.id, email: foundEmail.email },
         lang || 'en',
       );
+      await this.userService.savePasswordVerifyToken(foundEmail.id, token);
       return foundEmail;
     } catch (error) {
       throw error;
@@ -213,8 +214,9 @@ export class AuthController {
       secret: process.env.JWT_SECRET,
     });
     const user = await this.userService.findOneById(payload.userId);
-    //TODO: save tokens into DB
-    // await this.userService.update(user.id, { ...user, emailVerified: true });
+    if (!user) throw new UnauthorizedException({ code: 'USER_NOT_EXIST' });
+    if (token !== user.passwordVerifyToken)
+      throw new UnauthorizedException({ code: 'PASSWORD_TOKEN_INVALID' });
 
     const userId = payload.userId;
     const { accessToken, ...accessOption } =

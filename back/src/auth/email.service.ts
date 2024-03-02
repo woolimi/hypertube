@@ -95,6 +95,7 @@ export class EmailService {
       await this.transporter.sendMail(mailOptions);
       Logger.log('Password reset email sent to ' + data.email);
       Logger.log(template[lang].html);
+      return token;
     } catch (error) {
       throw new ServiceUnavailableException("Can't send password reset email");
     }

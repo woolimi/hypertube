@@ -99,6 +99,12 @@ export class UserService {
   async update(id: string, user: UpdateUserDto): Promise<UpdateResult> {
     if (user.password) {
       user.password = await this.cryptPassword(user.password);
+      const passwordTokenCheckUser = await this.userRepository.findOneBy({
+        id,
+      });
+
+      if (passwordTokenCheckUser.passwordVerifyToken)
+        user.passwordVerifyToken = '';
     }
 
     let duplicateUsername;
@@ -130,6 +136,12 @@ export class UserService {
     });
   }
 
+  async updatePasswordVerified(id: string): Promise<UpdateResult> {
+    return this.userRepository.update(id, {
+      passwordVerifyToken: '',
+    });
+  }
+
   async remove(id: string): Promise<void> {
     await this.userRepository.delete(id);
   }
@@ -141,6 +153,11 @@ export class UserService {
   async saveEmailVerifyToken(id: string, emailVerifyToken: string) {
     await this.userRepository.update(id, { emailVerifyToken });
   }
+
+  async savePasswordVerifyToken(id: string, passwordVerifyToken: string) {
+    await this.userRepository.update(id, { passwordVerifyToken });
+  }
+
   async cryptPassword(password: string): Promise<string> {
     const salt = await bcrypt.genSalt();
     return bcrypt.hash(password, salt);
