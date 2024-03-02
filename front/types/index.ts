@@ -8,6 +8,19 @@ export interface UserData {
   accessToken?: string;
   image?: string;
 }
+export interface TorrentData {
+  url: string;
+  hash: string;
+  quality: string;
+  video_codec: string;
+  seeds: number;
+  peers: number;
+  size: string;
+  date_uploaded: string;
+  type: string;
+  audio_channels: string;
+  is_repack: string;
+}
 
 export interface MovieData {
   adult: boolean;
@@ -24,19 +37,7 @@ export interface MovieData {
   vote_average: number; // 0.0 - 10.0
   vote_count: number;
   genres: Array<{ id: number; name: string }>;
-  torrents: Array<{
-    url: string;
-    hash: string;
-    quality: string;
-    video_codec: string;
-    seeds: number;
-    peers: number;
-    size: string;
-    date_uploaded: string;
-    type: string;
-    audio_channels: string;
-    is_repack: string;
-  }>;
+  torrents: Array<TorrentData>;
 }
 
 export interface DropdownOption {
