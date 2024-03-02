@@ -12,8 +12,13 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+<<<<<<< HEAD
     private connection: DataSource,
   ) {}
+=======
+    private connection: Connection,
+  ) { }
+>>>>>>> 28b1c6e (feat: email verify token saved and verify, add validations)
 
   async findAll(): Promise<User[]> {
     return this.userRepository.find();
@@ -118,6 +123,13 @@ export class UserService {
     return this.userRepository.update(id, user);
   }
 
+  async updateEmailVerified(id: string): Promise<UpdateResult> {
+    return this.userRepository.update(id, {
+      emailVerified: true,
+      emailVerifyToken: '',
+    });
+  }
+
   async remove(id: string): Promise<void> {
     await this.userRepository.delete(id);
   }
@@ -126,6 +138,9 @@ export class UserService {
     await this.userRepository.update(id, { refreshToken });
   }
 
+  async saveEmailVerifyToken(id: string, emailVerifyToken: string) {
+    await this.userRepository.update(id, { emailVerifyToken });
+  }
   async cryptPassword(password: string): Promise<string> {
     const salt = await bcrypt.genSalt();
     return bcrypt.hash(password, salt);

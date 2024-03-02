@@ -31,6 +31,7 @@ export class EmailService {
         expiresIn: `${24 * 60 * 60}s`, // 24 hours
       },
     );
+
     const template = {
       en: {
         subject: 'Verify your email',
@@ -54,6 +55,7 @@ export class EmailService {
       await this.transporter.sendMail(mailOptions);
       Logger.log('Email sent to ' + data.email);
       Logger.log(template[lang].html);
+      return token;
     } catch (error) {
       throw new ServiceUnavailableException("Can't send email");
     }
