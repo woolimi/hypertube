@@ -1,4 +1,6 @@
-<script setup>
+<script setup lang="ts">
+import { useCommentStore } from "~/stores/comment.store";
+
 const props = defineProps({
   item: {
     type: Object,
@@ -6,32 +8,46 @@ const props = defineProps({
   },
 });
 const emit = defineEmits(["cancel", "update"]);
-const comment = ref(props.item.content);
+const content = ref(props.item.content);
+const { maxCommentLength } = useCommentStore();
+const visible = ref(false);
 
 const cancelEdit = () => {
   emit("cancel");
 };
 
 const updateComment = async () => {
-  emit("update", {
-    ...props.item,
-    content: comment.value,
-  });
-  comment.value = "";
+//   console.log("editComment", content.value, maxCommentLength);
+  if (content.value.length <= maxCommentLength) {
+    emit("update", {
+      ...props.item,
+      content: content.value,
+    });
+  } else {
+    // console.log("max length error", content.value.length);
+    visible.value = true;
+    // console.log("visible:", visible.value);
+  }
+  //   comment.value = "";
+};
+const getComment = (c: string) => {
+  content.value = c;
+};
+const onShowDialog = (value) => {
+  visible.value = value;
 };
 </script>
 
 <template>
   <form class="flex gap-4" @submit.prevent="editComment">
     <div>
-      <Textarea
-        v-model="comment"
-        class="w-full"
-        auto-resize
-        rows="5"
-        cols="300"
+      <CommentTextarea
+        :content="content"
+        :visible-value="visible"
+        @input="getComment"
+        @show-dialog="onShowDialog"
       />
-      <div class="text-right">
+      <div class="submit-button text-right">
         <button
           class="bg-green-500 hover:bg-green-700"
           :class="$style.buttonCircle"
@@ -66,5 +82,19 @@ const updateComment = async () => {
   border-radius: 50%;
   width: 2rem;
   height: 2rem;
+}
+</style>
+<style scoped>
+.textarea-container {
+  position: relative;
+  display: inline-block;
+}
+.message-length {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  padding: 5px;
+  color: gray;
+  font-size: 12px;
 }
 </style>

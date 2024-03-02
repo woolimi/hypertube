@@ -1,28 +1,47 @@
 <script setup>
+import { useCommentStore } from "~/stores/comment.store";
+
 const comment = ref("");
+const visible = ref(false);
 const { userImage } = storeToRefs(useUserStore());
+const { maxCommentLength } = useCommentStore();
 const route = useRoute();
 const axios = useAxios();
 const emit = defineEmits(["create"]);
 
 const submitComment = async () => {
   try {
-    const { data } = await axios.post(
-      "comments/create",
-      {
-        content: comment.value,
-      },
-      {
-        params: {
-          movieId: route.params.mid,
+    // console.log("submitComment", comment.value.length, maxCommentLength);
+    if (0 < comment.value.length && comment.value.length <= maxCommentLength) {
+      const { data } = await axios.post(
+        "comments/create",
+        {
+          content: comment.value,
         },
-      },
-    );
-    emit("create", data);
+        {
+          params: {
+            movieId: route.params.mid,
+          },
+        },
+      );
+      emit("create", data);
+      comment.value = "";
+    } else {
+    //   console.log("max error", comment.value.length);
+      visible.value = true;
+    //   console.log("visible:", visible.value);
+    }
   } catch (error) {
     console.error(error);
+    comment.value = "";
   }
-  comment.value = "";
+};
+const getComment = (c) => {
+  console.log("getcomment", c);
+  comment.value = c;
+};
+const onShowDialog = (value) => {
+  visible.value = value;
 };
 </script>
 
@@ -35,12 +54,11 @@ const submitComment = async () => {
       shape="circle"
     />
     <div>
-      <Textarea
-        v-model="comment"
-        class="w-full"
-        auto-resize
-        rows="5"
-        cols="300"
+      <CommentTextarea
+        :content="comment"
+        :visible-value="visible"
+        @input="getComment"
+        @show-dialog="onShowDialog"
       />
       <div class="text-right">
         <Button

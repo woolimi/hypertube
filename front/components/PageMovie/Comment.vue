@@ -34,9 +34,9 @@ const cancelEditComment = () => {
   emit("cancel-edit");
 };
 const updateComment = async (c: CommentData) => {
+  console.log("updateComment", c);
   try {
     // TODO: Validation Logic
-
     await axios.put(`comments/${c.id}/update`, {
       content: c.content,
     });
