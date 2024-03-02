@@ -87,6 +87,15 @@
       "placeholder": "Type here..."
     }
   },
+  "Movie": {
+    "Genres": "Genres",
+    "Language": "Original language",
+    "Overview": "Overview",
+    "ReleaseDate": "Release date",
+    "Score": "Score",
+    "Title": "Title",
+    "Watch": "Watch"
+  },
   "Navbar": {
     "LoginSelector": {
       "login": "Login",

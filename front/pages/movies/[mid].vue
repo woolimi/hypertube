@@ -9,7 +9,7 @@ const axios = useAxios();
 const movie = ref<MovieData>({} as MovieData);
 const comments = computed(() => []);
 const route = useRoute();
-const { localeProperties } = useI18n();
+const { localeProperties } = useI18n() as any;
 const fetching = ref(false);
 
 onMounted(async () => {
@@ -31,59 +31,32 @@ onMounted(async () => {
 
 <template>
   <main class="min-h-[calc(100vh-64px)]">
-    <div
-      class="mx-auto flex max-w-[1024px] flex-col justify-center gap-10 px-4 pt-[112px] md:flex-row"
+    <section
+      class="mx-auto flex max-w-[1024px] flex-col items-center justify-around gap-10 px-4 pt-[112px] md:flex-row"
     >
-      <div class="mx-auto w-full max-w-[400px] md:w-[45%]">
+      <div
+        class="mx-auto w-full max-w-[400px] md:mx-[none] md:w-[45%] md:min-w-[320px]"
+      >
         <div
+          v-if="movie.poster_path"
           :style="{
             backgroundImage: `url(https://image.tmdb.org/t/p/w500/${movie.poster_path})`,
           }"
           class="h-0 w-full bg-cover bg-no-repeat pb-[150%]"
         ></div>
+        <PosterSkeleton v-else />
       </div>
 
-      <section class="flex w-full flex-col gap-2 p-4 text-xl md:w-[50%]">
-        <div class="flex flex-wrap gap-2">
-          <p class="font-bold">Title:</p>
-          <p class="text-primary-400">{{ movie.title }}</p>
-        </div>
-        <div class="flex flex-wrap gap-2">
-          <p class="font-bold">Score:</p>
-          <p class="text-primary-400">{{ movie.vote_average }}</p>
-        </div>
-        <div class="flex flex-wrap gap-2">
-          <p>Release Date:</p>
-          <p class="text-primary-400">
-            {{ new Date(movie.release_date).toLocaleDateString() }}
-          </p>
-        </div>
-        <div class="flex flex-wrap gap-2">
-          <p>Original language:</p>
-          <p class="text-primary-400">
-            {{ movie.original_language }}
-          </p>
-        </div>
-        <div class="flex gap-2">
-          <p class="font-bold">Genre:</p>
-          <p class="inline-flex flex-wrap gap-2">
-            <span
-              v-for="g in movie.genres"
-              :key="g.id"
-              class="rounded-[12px] bg-primary-400 px-3 py-1 text-sm font-semibold text-black"
-            >
-              {{ g.name }}
-            </span>
-          </p>
-        </div>
-        <div class="flex flex-col gap-2">
-          <p class="font-bold">Description</p>
-          <p class="text-md text-gray-400">
-            {{ movie.overview }}
-          </p>
-        </div>
-      </section>
-    </div>
+      <div class="w-full md:w-[50%]">
+        <MovieDescription v-if="movie.title" :movie="movie" />
+        <MovieDescSkeleton v-else />
+      </div>
+    </section>
+
+    <section>
+      <TorrentList v-if="movie.torrents" :movie="movie" />
+      <TorrentListSkeleton v-else />
+    </section>
 
     <CommentList :items="comments" />
   </main>

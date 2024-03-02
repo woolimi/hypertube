@@ -1,0 +1,96 @@
+<script setup lang="ts">
+import type { MovieData } from "~/types";
+
+defineProps({
+  movie: {
+    type: Object as PropType<MovieData>,
+    default: () => ({}),
+  },
+});
+const route = useRoute();
+const openDialog = ref(false);
+const videoSource = ref("");
+const videoEl = ref<HTMLVideoElement>();
+
+const playVideo = (torrentHash: string) => {
+  videoSource.value = `${useRuntimeConfig().public.BACK_HOST}/movies/${route.params.mid}/stream/${torrentHash}`;
+  videoEl.value?.load();
+  openDialog.value = true;
+};
+
+watch(openDialog, (isOpenDialog: boolean) => {
+  if (!isOpenDialog) {
+    videoEl.value?.removeAttribute("src");
+    videoEl.value?.load();
+  }
+});
+</script>
+
+<template>
+  <div class="mx-auto mt-8 max-w-[960px] px-4">
+    <ul :class="$style.gridContainer">
+      <li
+        v-for="(torrent, idx) in movie.torrents"
+        :key="torrent.url"
+        :data-torrent="torrent.url"
+        :data-hash="torrent.hash"
+        class="mx-auto w-full rounded-lg bg-slate-800 px-4 py-3"
+      >
+        <div class="mb-1 font-extrabold">
+          <span class="mr-1 text-primary-300">Torrent {{ idx + 1 }}</span>
+          <span class="text-gray-400">
+            ({{ torrent.seeds }} seeds, {{ torrent.peers }} peers)
+          </span>
+        </div>
+        <div class="flex justify-between">
+          <div class="mt-2 flex gap-2">
+            <span
+              class="flex items-center rounded-[18px] bg-blue-800 px-3 py-1 text-sm"
+            >
+              {{ torrent.type }}
+            </span>
+            <span
+              class="flex items-center rounded-[18px] bg-red-800 px-3 py-1 text-sm"
+            >
+              {{ torrent.quality }}
+            </span>
+          </div>
+
+          <Button
+            :label="$t('Movie.Watch')"
+            icon="pi pi-youtube"
+            @click="playVideo(torrent.hash)"
+          />
+        </div>
+      </li>
+    </ul>
+
+    <Dialog
+      v-model:visible="openDialog"
+      :style="{ width: '95vw', maxWidth: '1024px' }"
+      modal
+    >
+      <video
+        ref="videoEl"
+        controls
+        preload="auto"
+        class="w-full"
+        :poster="`https://image.tmdb.org/t/p/w500/${movie.backdrop_path}`"
+      >
+        <source :src="videoSource" type="video/mp4" />
+      </video>
+    </Dialog>
+  </div>
+</template>
+
+<style module lang="scss">
+.gridContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(auto, auto));
+  gap: 1rem;
+
+  @media screen and (width >= 540px) {
+    grid-template-columns: repeat(auto-fill, minmax(400px, auto));
+  }
+}
+</style>

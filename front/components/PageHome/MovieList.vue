@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import DarthVader from "~/assets/icons/darth-vader.svg";
-
 const { filteredMovies } = useMovies();
 
 defineProps({
@@ -38,15 +36,8 @@ defineProps({
           <MovieThumbnail :item="item" />
         </li>
         <template v-if="loading">
-          <li
-            v-for="i in 20"
-            :key="i"
-            class="relative flex h-0 bg-gray-800 pb-[150%]"
-            :class="$style.blink"
-          >
-            <DarthVader
-              class="absolute left-1/2 top-1/2 z-10 h-[80px] w-[80px] -translate-x-1/2 -translate-y-1/2"
-            />
+          <li v-for="i in 20" :key="i">
+            <PosterSkeleton />
           </li>
         </template>
       </ul>
@@ -59,23 +50,5 @@ defineProps({
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, auto));
   gap: 1rem;
-}
-
-@keyframes blink-effect {
-  0% {
-    opacity: 0.6;
-  }
-
-  50% {
-    opacity: 0.9;
-  }
-
-  100% {
-    opacity: 0.6;
-  }
-}
-
-.blink {
-  animation: blink-effect ease-in-out 2s infinite;
 }
 </style>

@@ -116,5 +116,14 @@
     "release_date": "Date de sortir",
     "title": "Titre",
     "vote_average": "Note Moyenne"
+  },
+  "Movie": {
+    "Title": "Titre",
+    "Score": "Note",
+    "ReleaseDate": "Date de sortie",
+    "Language": "Langue originale",
+    "Genres": "Genres",
+    "Overview": "Description",
+    "Watch": "Regarder"
   }
 }
