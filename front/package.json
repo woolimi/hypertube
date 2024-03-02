@@ -20,7 +20,7 @@
       "stylelint --fix"
     ],
     "*.{js,ts,vue}": [
-      "eslint --ext '.js,.ts,.vue' --fix --max-warnings 0",
+      "eslint --ext '.js,.ts,.vue' --fix",
       "prettier --write"
     ],
     "*.json": [

@@ -1,11 +1,16 @@
-import { Repository } from 'typeorm';
-import { Movie } from './movie.entity';
+import { DataSource, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IComment } from 'src/comment/IComment';
-import { Injectable, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import axios, { AxiosInstance } from 'axios';
 import { MoviesQueryDto } from './dto/movies-query.dto';
 import { MovieQueryDto } from './dto/movie-query.dto';
+import { Movie } from './movie.entity';
+import { MoviesWatched } from './movies-watched.entity';
 
 @Injectable()
 export class MovieService {
@@ -89,6 +94,7 @@ export class MovieService {
   constructor(
     @InjectRepository(Movie)
     private readonly movieRepository: Repository<Movie>,
+    private readonly connection: DataSource,
   ) {
     this.tmdb = axios.create({
       baseURL: 'https://api.themoviedb.org/3',
@@ -205,5 +211,39 @@ export class MovieService {
       },
     });
     return response.data.movie?.torrents || [];
+  }
+
+  async updateWatchedAt(movieId: number, userId: string) {
+    Logger.log(`Update watched at: ${movieId} ${userId}`);
+    const queryRunner = this.connection.createQueryRunner();
+    try {
+      await queryRunner.connect();
+      await queryRunner.startTransaction();
+
+      await queryRunner.manager.getRepository(Movie).upsert(
+        { id: movieId, watchedAt: new Date() },
+        {
+          conflictPaths: ['id'],
+          upsertType: 'on-conflict-do-update',
+        },
+      );
+      await queryRunner.manager.getRepository(MoviesWatched).upsert(
+        {
+          movieId,
+          userId,
+          watchedAt: new Date(),
+        },
+        {
+          conflictPaths: ['movieId', 'userId'],
+          upsertType: 'on-conflict-do-update',
+        },
+      );
+    } catch (error) {
+      console.error(error);
+      await queryRunner.rollbackTransaction();
+      throw new InternalServerErrorException();
+    } finally {
+      await queryRunner.release();
+    }
   }
 }

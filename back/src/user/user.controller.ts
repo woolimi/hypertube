@@ -9,6 +9,8 @@ import {
   UseInterceptors,
   UseGuards,
   UploadedFile,
+  Query,
+  ValidationPipe,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
@@ -19,11 +21,16 @@ import { diskStorage } from 'multer';
 import { UpdateResult } from 'typeorm';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { cleanImageFile } from 'src/helper';
+import { MoviesWatchedService } from 'src/movie/movies-watched.service';
+import { UserWatchedMoviesQueryDto } from './dto/user-watched-movies-query.dto';
 
 @ApiTags('Users')
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly moviesWatchedService: MoviesWatchedService,
+  ) {}
 
   @ApiOperation({ summary: 'Get all users' })
   @UseGuards(JwtAuthGuard)
@@ -75,5 +82,24 @@ export class UserController {
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<void> {
     return this.userService.remove(id);
+  }
+
+  @Get('/:id/watched-movies')
+  @UseGuards(JwtAuthGuard)
+  async getUserWatchedMovies(
+    @Param('id') id: string,
+    @Query(
+      new ValidationPipe({
+        transform: true,
+        transformOptions: { enableImplicitConversion: true },
+      }),
+    )
+    query: UserWatchedMoviesQueryDto,
+  ) {
+    return await this.moviesWatchedService.getUserWatchedMovies(
+      id,
+      query.page || 1,
+      query.language || 'en-US',
+    );
   }
 }

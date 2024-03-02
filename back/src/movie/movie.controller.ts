@@ -80,12 +80,15 @@ export class MovieController {
     // Check access token
     const curAccessToken = req.cookies['accessToken'];
     const curRefreshToken = req.cookies['refreshToken'];
+    let user_id = '';
 
     if (!curAccessToken) {
       if (!curRefreshToken) throw new UnauthorizedException();
       const payload = this.jwtService.verify(curRefreshToken, {
         secret: process.env.JWT_SECRET,
       });
+      user_id = payload.userId;
+
       const { accessToken, ...accessOption } =
         this.authService.getCookieWithJwtAccessToken(payload.userId);
       const { refreshToken, ...refreshOption } =
@@ -95,9 +98,10 @@ export class MovieController {
       res.cookie('refreshToken', refreshToken, refreshOption);
       await this.userService.saveRefreshToken(payload.userId, refreshToken);
     } else {
-      this.jwtService.verify(curAccessToken, {
+      const payload = this.jwtService.verify(curAccessToken, {
         secret: process.env.JWT_SECRET,
       });
+      user_id = payload.userId;
     }
     if (!headers.range) throw new BadRequestException("Missing 'Range' Header");
 
@@ -118,10 +122,11 @@ export class MovieController {
     const end = Math.min(start + chunkSize, movieFile.length - 1);
     const { stream, mpeg } = this.torrentService.createStream(start, end);
 
-    req.on('close', () => {
+    req.on('close', async () => {
       stream.destroy();
       engine.destroy();
       Logger.log(`${movieFile.name} connection is destroyed`);
+      await this.movieService.updateWatchedAt(movie_id, user_id);
     });
 
     res.set({

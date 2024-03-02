@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Connection, Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { User } from './user.entity';
 import bcrypt from 'bcrypt';
 import { CreateUserDto } from '../auth/dto/create-user.dto';
@@ -12,7 +12,7 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    private connection: Connection,
+    private connection: DataSource,
   ) {}
 
   async findAll(): Promise<User[]> {

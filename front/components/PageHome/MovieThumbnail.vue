@@ -10,6 +10,14 @@ defineProps({
     type: Object as PropType<MovieData>,
     default: () => ({}),
   },
+  height: {
+    type: String,
+    default: "420px",
+  },
+  width: {
+    type: String,
+    default: "100%",
+  },
 });
 const onErrorImageLoad = (event: Event) => {
   const imgElement = event.target as HTMLImageElement;
@@ -20,12 +28,12 @@ const onErrorImageLoad = (event: Event) => {
 <template>
   <NuxtLink
     :to="localePath({ name: 'movies-mid', params: { mid: item.id } })"
-    class="relative block"
+    class="relative block h-full"
     :class="$style.link"
   >
     <div
       :class="$style.overlay"
-      class="flex flex-col items-center justify-center p-4"
+      class="flex h-full flex-col items-center justify-center p-4"
     >
       <p class="text-center text-2xl font-extrabold">{{ item.title }}</p>
       <p class="flex items-center gap-1">
@@ -43,10 +51,10 @@ const onErrorImageLoad = (event: Event) => {
       </ul>
     </div>
 
-    <figure class="w-full">
+    <figure class="h-full w-full">
       <img
         :src="`https://image.tmdb.org/t/p/w500/${item.poster_path}`"
-        class="h-[420px] w-full object-cover"
+        class="h-full w-full object-cover"
         @error="onErrorImageLoad"
       />
     </figure>

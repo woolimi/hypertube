@@ -1,110 +1,118 @@
 export default {
-    root: ({ props }) => ({
-        class: [
-            'flex',
-            {
-                'opacity-60 select-none pointer-events-none cursor-default': props.disabled
-            }
-        ]
-    }),
-    container: ({ state }) => ({
-        class: [
-            // Font
-            'font-sans text-base leading-none',
+  root: ({ props }) => ({
+    class: [
+      "flex",
+      {
+        "opacity-60 select-none pointer-events-none cursor-default":
+          props.disabled,
+      },
+    ],
+  }),
+  container: ({ state, props }) => ({
+    class: [
+      // Font
+      "font-sans text-base leading-none",
 
-            // Flex
-            'flex items-center flex-wrap gap-2',
+      // Flex
+      "flex items-center flex-wrap gap-2",
 
-            // Spacing
-            'm-0 py-1.5 px-3',
+      // Spacing
+      "m-0 py-1.5 px-3",
 
-            // Size
-            'w-full',
-            'min-h-[2.877rem]',
+      // Size
+      "w-full",
+      "min-h-[2.877rem]",
 
-            // Shape
-            'list-none',
-            'rounded-md',
+      // Shape
+      "list-none",
+      "rounded-md",
 
-            // Color
-            'text-surface-700 dark:text-white/80',
-            'bg-surface-0 dark:bg-surface-900',
-            'border border-surface-300 dark:border-surface-700',
+      // Color
+      "text-surface-700 dark:text-white/80",
+      "bg-surface-0 dark:bg-surface-900",
+      "border",
+      { "border-surface-300 dark:border-surface-600": !props.invalid },
 
-            // States
-            'hover:border-primary-500 dark:hover:border-primary-400',
-            'focus:outline-none focus:outline-offset-0',
-            { 'ring ring-primary-400/50 dark:ring-primary-300/50': state.focused },
-            { 'ring ring-primary-400/50 dark:ring-primary-300/50': state.hovered },
+      // Invalid State
+      { "border-red-500 dark:border-red-400": props.invalid },
 
-            // Transition
-            'transition-colors duration-200',
+      // States
+      {
+        "hover:border-primary-500 dark:hover:border-primary-400":
+          !props.invalid,
+      },
+      "focus:outline-none focus:outline-offset-0",
+      { "ring ring-primary-400/50 dark:ring-primary-300/50": state.focused },
+      { "ring ring-primary-400/50 dark:ring-primary-300/50": state.hovered },
 
-            // Misc
-            'cursor-text overflow-hidden',
-            'appearance-none'
-        ]
-    }),
+      // Transition
+      "transition-colors duration-200",
 
-    inputtoken: {
-        class: ['py-1.5 px-0', 'inline-flex flex-auto']
-    },
-    input: {
-        class: [
-            // Font
-            'font-sans text-base leading-[1.2]',
+      // Misc
+      "cursor-text overflow-hidden",
+      "appearance-none",
+    ],
+  }),
 
-            // Size
-            'w-full',
+  inputtoken: {
+    class: ["py-1.5 px-0", "inline-flex flex-auto"],
+  },
+  input: {
+    class: [
+      // Font
+      "font-sans text-base leading-[1.2]",
 
-            // Spacing
-            'p-0 m-0',
+      // Size
+      "w-full",
 
-            // Shape
-            'appearance-none rounded-none',
-            'border-0 outline-none',
-            'shadow-none',
+      // Spacing
+      "p-0 m-0",
 
-            // Color
-            'text-surface-700 dark:text-white/80',
-            'bg-transparent'
-        ]
-    },
-    token: {
-        class: [
-            // Flexbox
-            'inline-flex items-center',
+      // Shape
+      "appearance-none rounded-none",
+      "border-0 outline-none",
+      "shadow-none",
 
-            // Spacing
-            'py-1.5 px-3',
+      // Color
+      "text-surface-700 dark:text-white/80",
+      "bg-transparent",
+    ],
+  },
+  token: {
+    class: [
+      // Flexbox
+      "inline-flex items-center",
 
-            // Shape
-            'rounded-[1.14rem]',
+      // Spacing
+      "py-1.5 px-3",
 
-            // Colors
-            'text-surface-700 dark:text-white/70',
-            'bg-surface-200 dark:bg-surface-700'
-        ]
-    },
-    label: {
-        class: 'leading-5'
-    },
-    removeTokenIcon: {
-        class: [
-            // Shape
-            'rounded-md leading-6',
+      // Shape
+      "rounded-[1.14rem]",
 
-            // Spacing
-            'ml-2',
+      // Colors
+      "text-surface-700 dark:text-white/70",
+      "bg-surface-200 dark:bg-surface-700",
+    ],
+  },
+  label: {
+    class: "leading-5",
+  },
+  removeTokenIcon: {
+    class: [
+      // Shape
+      "rounded-md leading-6",
 
-            // Size
-            'w-4 h-4',
+      // Spacing
+      "ml-2",
 
-            // Transition
-            'transition duration-200 ease-in-out',
+      // Size
+      "w-4 h-4",
 
-            // Misc
-            'cursor-pointer'
-        ]
-    }
+      // Transition
+      "transition duration-200 ease-in-out",
+
+      // Misc
+      "cursor-pointer",
+    ],
+  },
 };
