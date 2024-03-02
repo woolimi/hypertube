@@ -17,8 +17,8 @@ const cancelEdit = () => {
 };
 
 const updateComment = async () => {
-//   console.log("editComment", content.value, maxCommentLength);
-  if (content.value.length <= maxCommentLength) {
+  // console.log("editComment", content.value, maxCommentLength);
+  if (0 < content.value.length && content.value.length <= maxCommentLength) {
     emit("update", {
       ...props.item,
       content: content.value,

@@ -56,10 +56,9 @@ watch(
     :style="{ width: '25rem' }"
     :onHide="handleDialogHide"
   >
-  <!-- TODO: 린트에 의해서 onHide가 on-hide로 바뀌는면서 동작을 하지않음 -->
-    <span class="mb-5 block text-primary-400"
-      >Content must be longer than or equal to 1 characters and at most 150
-      characters.
+    <!-- TODO: 린트에 의해서 onHide가 on-hide로 바뀌면서 동작을 하지않음 -->
+    <span class="mb-5 block text-primary-400">
+      {{ $t("Movie.Comment.commentLengthAlert") }}
     </span>
   </Dialog>
 </template>

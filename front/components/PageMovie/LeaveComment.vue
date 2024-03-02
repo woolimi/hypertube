@@ -27,9 +27,9 @@ const submitComment = async () => {
       emit("create", data);
       comment.value = "";
     } else {
-    //   console.log("max error", comment.value.length);
+      // console.log("max error", comment.value.length);
       visible.value = true;
-    //   console.log("visible:", visible.value);
+      //   console.log("visible:", visible.value);
     }
   } catch (error) {
     console.error(error);
@@ -61,11 +61,9 @@ const onShowDialog = (value) => {
         @show-dialog="onShowDialog"
       />
       <div class="text-right">
-        <Button
-          label="Write a comment"
-          class="w-full !px-3 !py-2 sm:w-fit"
-          type="submit"
-        />
+        <Button class="w-full !px-3 !py-2 sm:w-fit" type="submit">
+          {{ $t("Movie.Comment.writeButton") }}
+        </Button>
       </div>
     </div>
   </form>

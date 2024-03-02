@@ -115,7 +115,13 @@
   },
   "Movie": {
     "Comment": {
-      "edit": "Edit"
+      "writeButton": "Write a comment",
+      "Comments": "Comments",
+      "commentLengthAlert": "Content must be longer than or equal to 1 characters and at most 150       characters.",
+      "commentLoseAlert": "You will lose any unsaved changes to your message.",
+      "commentLoseAlertTitle": "Going somewhere else in Hypertube?",
+      "KeepEditing": "Keep Editing",
+      "Continue": "Continue"
     }
   }
 }

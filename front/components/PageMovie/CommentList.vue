@@ -72,7 +72,8 @@ const onContinue = (comment: CommentData | undefined) => {
 <template>
   <section class="mx-auto my-20 flex max-w-[760px] flex-col gap-3 px-4">
     <h2 class="mb-3 text-3xl font-bold text-primary-400">
-      Comments <span class="text-xl text-white">({{ comments.length }})</span>
+      {{ $t("Movie.Comment.Comments") }}
+      <span class="text-xl text-white">({{ comments.length }})</span>
     </h2>
     <LeaveComment @create="onCreate" />
 
@@ -94,24 +95,26 @@ const onContinue = (comment: CommentData | undefined) => {
       v-model:visible="visible"
       class="font-bold text-primary-400"
       modal
-      header="Going somewhere else in Hypertube?"
+      :header="$t('Movie.Comment.commentLoseAlertTitle')"
       :style="{ width: '25rem' }"
     >
-      <span class="mb-5 block text-primary-400"
-        >You will lose any unsaved changes to your message.</span
-      >
+      <span class="mb-5 block text-primary-400">
+        {{ $t("Movie.Comment.commentLoseAlert") }}
+      </span>
       <div class="justify-content-end text-right">
         <Button
           type="button"
-          label="Keep Editing"
+          :label="$t('Movie.Comment.KeepEditing')"
           severity="secondary"
           @click="onKeepEditing"
-        ></Button>
+        >
+        </Button>
         <Button
           type="button"
-          label="Continue"
+          :label="$t('Movie.Comment.Continue')"
           @click="onContinue(pendingComment)"
-        ></Button>
+        >
+        </Button>
       </div>
     </Dialog>
   </section>
