@@ -177,7 +177,7 @@ function onClickAvatar() {
 }
 </script>
 <template>
-  <main class="min-h-[calc(100vh-64px)] pb-20 pt-10">
+  <div class="min-h-[calc(100vh-64px)] pt-10">
     <div class="mx-auto grid grid-cols-1 gap-10 md:grid-cols-2">
       <section class="w-[90vw] sm:w-auto">
         <h2 class="mb-4 text-3xl font-bold text-primary-400">
@@ -370,17 +370,7 @@ function onClickAvatar() {
         </div>
       </section>
 
-      <section class="col-span-1 md:col-span-2">
-        <h2 class="mb-4 text-3xl font-bold text-primary-400">
-          {{ $t("Profile.WatchedList.title") }}
-        </h2>
-
-        <div class="h-full min-h-[250px] rounded-lg bg-slate-800 p-4 md:p-8">
-          <p class="text-xl text-white">
-            {{ $t("Profile.WatchedList.noList") }}
-          </p>
-        </div>
-      </section>
+      <WatchedList :uid="userData.id" />
     </div>
-  </main>
+  </div>
 </template>

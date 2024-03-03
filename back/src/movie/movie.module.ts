@@ -10,10 +10,12 @@ import { JwtService } from '@nestjs/jwt';
 import { TorrentService } from './torrent.service';
 import { UserRepository } from 'src/user/user.repository';
 import { User } from 'src/user/user.entity';
+import { MoviesWatchedRepository } from './movies-watched.repository';
+import { MoviesWatched } from './movies-watched.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Movie, User]),
+    TypeOrmModule.forFeature([User, Movie, MoviesWatched]),
     CacheModule.register({
       ttl: 15 * 60 * 1000, // 15min
       max: 100,
@@ -27,7 +29,8 @@ import { User } from 'src/user/user.entity';
     AuthService,
     JwtService,
     TorrentService,
+    MoviesWatchedRepository,
   ],
-  exports: [MovieService],
+  exports: [],
 })
 export class MovieModule {}
