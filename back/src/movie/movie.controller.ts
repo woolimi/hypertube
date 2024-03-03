@@ -43,9 +43,20 @@ export class MovieController {
   async getMovies(
     @Query()
     query: MoviesQueryDto,
+    @Req() req,
   ) {
+    let userId = undefined;
     try {
-      return await this.movieService.getMovies(query);
+      const payload = this.jwtService.verify(req.cookies['accessToken'], {
+        secret: process.env.JWT_SECRET,
+      });
+      userId = payload.userId;
+    } catch (e) {
+      userId = undefined;
+    }
+
+    try {
+      return await this.movieService.getMovies(query, userId);
     } catch (error) {
       Logger.error(error);
       throw new InternalServerErrorException();

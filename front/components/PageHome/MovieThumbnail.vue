@@ -51,6 +51,14 @@ const onErrorImageLoad = (event: Event) => {
       </ul>
     </div>
 
+    <div
+      v-if="item.is_watched"
+      class="absolute left-[10px] top-[10px] flex items-center gap-2 text-gray-300"
+    >
+      <i class="pi pi-check text-xl"></i>
+      {{ $t("Home.Movies.watched") }}
+    </div>
+
     <figure class="h-full w-full">
       <img
         :src="`https://image.tmdb.org/t/p/w500/${item.poster_path}`"

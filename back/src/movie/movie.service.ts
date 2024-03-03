@@ -94,6 +94,8 @@ export class MovieService {
   constructor(
     @InjectRepository(Movie)
     private readonly movieRepository: Repository<Movie>,
+    @InjectRepository(MoviesWatched)
+    private readonly moviesWatchedRepository: Repository<MoviesWatched>,
     private readonly connection: DataSource,
   ) {
     this.tmdb = axios.create({
@@ -108,7 +110,7 @@ export class MovieService {
     });
   }
 
-  async getMovies(query: MoviesQueryDto) {
+  async getMovies(query: MoviesQueryDto, userId?: string) {
     query.page = query.page || 1;
     query.language = query.language || 'en-US';
 
@@ -121,14 +123,19 @@ export class MovieService {
         ...query,
       },
     });
-    const results = data.results.map((movie) => ({
-      ...movie,
-      genres: movie.genre_ids?.map((id) => ({
-        id: id,
-        name: this.Genre[id][query.language],
+    const results = await Promise.all([
+      ...data.results.map(async (movie) => ({
+        ...movie,
+        genres: movie.genre_ids?.map((id) => ({
+          id: id,
+          name: this.Genre[id][query.language],
+        })),
+        vote_average: Number(movie.vote_average).toFixed(1),
+        is_watched: userId
+          ? !!(await this.checkUserWatched(movie.id, userId))
+          : false,
       })),
-      vote_average: Number(movie.vote_average).toFixed(1),
-    }));
+    ]);
     return {
       ...data,
       results,
@@ -211,6 +218,10 @@ export class MovieService {
       },
     });
     return response.data.movie?.torrents || [];
+  }
+
+  async checkUserWatched(movieId: number, userId: string) {
+    return await this.moviesWatchedRepository.findOneBy({ movieId, userId });
   }
 
   async updateWatchedAt(movieId: number, userId: string) {

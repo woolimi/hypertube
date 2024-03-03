@@ -7,10 +7,17 @@ import { MovieService } from 'src/movie/movie.service';
 import { Movie } from 'src/movie/movie.entity';
 import { UserService } from 'src/user/user.service';
 import { User } from 'src/user/user.entity';
+import { MoviesWatchedRepository } from 'src/movie/movies-watched.repository';
+import { MoviesWatched } from 'src/movie/movies-watched.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Comment, Movie, User])],
-  providers: [CommentService, MovieService, UserService],
+  imports: [TypeOrmModule.forFeature([Comment, Movie, User, MoviesWatched])],
+  providers: [
+    CommentService,
+    MovieService,
+    UserService,
+    MoviesWatchedRepository,
+  ],
   controllers: [CommentController],
 })
 export class CommentModule {}

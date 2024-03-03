@@ -80,7 +80,8 @@
       "title2": "Regardez <span class=\"text-primary-400\">partout</span>"
     },
     "Movies": {
-      "title": "Les films"
+      "title": "Les films",
+      "watched": "Déja vu"
     },
     "Search": {
       "label": "Voir",
