@@ -3,11 +3,10 @@ const emit = defineEmits(["create"]);
 const { t } = useI18n();
 const route = useRoute();
 const axios = useAxios();
-const { userImage } = storeToRefs(useUserStore());
+const { userImage, userData } = storeToRefs(useUserStore());
 const comment = ref("");
 const { MAX_COMMENT_LENGTH } = useConstant();
 const errorMessage = ref("");
-
 const submitComment = async () => {
   if (!comment.value.length || comment.value.length > MAX_COMMENT_LENGTH)
     return;
@@ -35,12 +34,16 @@ const submitComment = async () => {
 
 <template>
   <form class="flex gap-4" @submit.prevent="submitComment">
-    <Avatar
-      :image="userImage"
-      class="shrink-0 overflow-hidden"
-      size="large"
-      shape="circle"
-    />
+    <NuxtLink
+      :to="localePath({ name: 'users-uid', params: { uid: userData.id } })"
+    >
+      <Avatar
+        :image="userImage"
+        class="shrink-0 overflow-hidden"
+        size="large"
+        shape="circle"
+      />
+    </NuxtLink>
     <div>
       <CommentTextarea
         v-model="comment"

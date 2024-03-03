@@ -40,47 +40,50 @@ const updateComment = async (c: CommentData) => {
 </script>
 
 <template>
-  <div class="flex gap-3">
-    <NuxtLink
-      :to="localePath({ name: 'users-uid', params: { uid: userData.id } })"
-    >
-      <Avatar
-        :image="item.User.image"
-        class="shrink-0 overflow-hidden"
-        size="large"
-        shape="circle"
-      />
-    </NuxtLink>
-    <aside>
-      <p class="text-primary-400">{{ item.User.username }}</p>
-      <EditComment
-        v-if="isEditing"
-        :item="item"
-        @cancel="cancelEditComment"
-        @update="updateComment"
-      />
-      <p v-else :class="$style.commentBlock">{{ item.content }}</p>
-    </aside>
-  </div>
-  <div
-    v-if="!isEditing && userData.username == item.User.username"
-    class="flex justify-end gap-1"
-  >
-    <button
-      class="bg-blue-500 hover:bg-blue-700"
-      :class="$style.buttonCircle"
-      @click="startEditComment(item)"
-    >
-      <i class="pi pi-pencil" :class="$style.iconCenter"></i>
-    </button>
+  <div class="mb-3">
+    <div class="flex gap-3">
+      <NuxtLink
+        :to="localePath({ name: 'users-uid', params: { uid: item.User.id } })"
+      >
+        <Avatar
+          :image="item.User.image"
+          class="shrink-0 overflow-hidden"
+          size="large"
+          shape="circle"
+        />
+      </NuxtLink>
+      <aside>
+        <p class="text-primary-400">{{ item.User.username }}</p>
+        <EditComment
+          v-if="isEditing"
+          :item="item"
+          @cancel="cancelEditComment"
+          @update="updateComment"
+        />
+        <p v-else :class="$style.commentBlock">{{ item.content }}</p>
+      </aside>
+    </div>
 
-    <button
-      class="bg-red-500 hover:bg-red-700"
-      :class="$style.buttonCircle"
-      @click="deleteComment"
+    <div
+      v-if="!isEditing && userData.username == item.User.username"
+      class="flex justify-end gap-1"
     >
-      <i class="pi pi-trash" :class="$style.iconCenter"></i>
-    </button>
+      <button
+        class="bg-blue-500 hover:bg-blue-700"
+        :class="$style.buttonCircle"
+        @click="startEditComment(item)"
+      >
+        <i class="pi pi-pencil" :class="$style.iconCenter"></i>
+      </button>
+
+      <button
+        class="bg-red-500 hover:bg-red-700"
+        :class="$style.buttonCircle"
+        @click="deleteComment"
+      >
+        <i class="pi pi-trash" :class="$style.iconCenter"></i>
+      </button>
+    </div>
   </div>
 </template>
 

@@ -152,7 +152,7 @@ export class MovieService {
       .createQueryBuilder('movie')
       .leftJoinAndSelect('movie.Comments', 'comment')
       .leftJoin('comment.User', 'user')
-      .addSelect(['user.username', 'user.image'])
+      .addSelect(['user.id', 'user.username', 'user.image'])
       .where('movie.id = :movieId', { movieId })
       .getOne();
   }
