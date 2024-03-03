@@ -15,7 +15,6 @@ export class CronService {
 
   @Cron(CronExpression.EVERY_1ST_DAY_OF_MONTH_AT_MIDNIGHT)
   async getUnwatchedMovieIds() {
-    this.logger.debug('Called every 30 seconds');
     const oneMonthAgo = new Date();
     oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
 
