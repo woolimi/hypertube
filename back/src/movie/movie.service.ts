@@ -238,6 +238,7 @@ export class MovieService {
           upsertType: 'on-conflict-do-update',
         },
       );
+      await queryRunner.commitTransaction();
     } catch (error) {
       console.error(error);
       await queryRunner.rollbackTransaction();

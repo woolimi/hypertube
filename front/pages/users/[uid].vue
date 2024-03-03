@@ -1,28 +1,23 @@
 <script setup>
+import defaultAvatar from "~/assets/images/default_user.webp";
+
 definePageMeta({
   middleware: ["strict-auth"],
 });
-const route = useRoute();
-const { data } = await useAsyncData(`users-${route.params.uid}`, async () => {
-  return {
-    uid: route.params.uid,
-    image: "https://i.pravatar.cc/300?u=wpark",
-    username: "wpark",
-    firstName: "Woolim",
-    lastName: "Park",
-    watchedList: [
-      {
-        image: "/thumbnail.jpeg",
-        title: "Don't look up",
-        description:
-          "Deux astronomes méconnus entreprennent une tournée médiatique pour prévenir l'humanité qu'une comète fonce sur la Terre. Mais cela n'a pas l'air d'inquiéter grand monde.",
-        genre: ["SF", "Comedies", "Drames sociaux"],
-        score: 4.5,
-        mid: 12345,
-        year: 2022,
-      },
-    ],
-  };
+const uid = useRoute().params.uid;
+const userData = ref({});
+const axios = useAxios();
+const fetching = ref(true);
+
+onMounted(async () => {
+  try {
+    const { data } = await axios.get("/users/" + uid);
+    userData.value = data;
+  } catch (e) {
+    console.error(e);
+  } finally {
+    fetching.value = false;
+  }
 });
 </script>
 
@@ -34,12 +29,19 @@ const { data } = await useAsyncData(`users-${route.params.uid}`, async () => {
       class="mx-auto mb-10 flex flex-col items-center justify-center gap-5 sm:flex-row sm:gap-10"
     >
       <div class="shrink-0">
+        <Skeleton
+          v-if="fetching"
+          shape="circle"
+          size="150px"
+          class="border-4 border-primary-400"
+        />
         <img
-          :src="data.image"
+          v-else
+          :src="userData.image || defaultAvatar"
           class="h-[150px] w-[150px] rounded-[50%] border-4 border-primary-400"
         />
         <h1 class="text-center text-2xl font-extrabold text-primary-400">
-          {{ data.username }}
+          {{ userData.username }}
         </h1>
       </div>
 
@@ -48,19 +50,21 @@ const { data } = await useAsyncData(`users-${route.params.uid}`, async () => {
           class="flex items-center gap-2 rounded-t-lg bg-surface-800 px-4 py-2 text-primary-400"
         >
           <i class="pi pi-id-card text-3xl"></i>
-          <h2 class="text-2xl font-extrabold">Profile</h2>
+          <h2 class="text-2xl font-extrabold">
+            {{ $t("Profile.Profile.title") }}
+          </h2>
         </div>
         <ul class="flex flex-col gap-2 p-4 text-xl text-white">
           <li class="flex justify-between">
-            <span class="text-primary-400">First name</span>
+            <span class="text-primary-400">{{ $t("_Global.firstName") }}</span>
             <span>
-              {{ data.firstName }}
+              {{ userData.firstName }}
             </span>
           </li>
           <li class="flex justify-between">
-            <span class="text-primary-400">Last name</span>
+            <span class="text-primary-400">{{ $t("_Global.lastName") }}</span>
             <span>
-              {{ data.lastName }}
+              {{ userData.lastName }}
             </span>
           </li>
         </ul>
@@ -68,7 +72,7 @@ const { data } = await useAsyncData(`users-${route.params.uid}`, async () => {
     </section>
 
     <section>
-      <MovieList :items="data.watchedList" title="Watched List" />
+      <WatchedList :uid="uid" />
     </section>
   </main>
 </template>

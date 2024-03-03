@@ -3,7 +3,12 @@ import { useWindowScroll } from "@vueuse/core";
 
 import type { MovieData } from "~/types";
 
-const { userData } = storeToRefs(useUserStore());
+const props = defineProps({
+  uid: {
+    type: String,
+    required: true,
+  },
+});
 const axios = useAxios();
 const watchedMovies = ref<Array<MovieData>>([]);
 const { localeProperties } = useI18n();
@@ -21,15 +26,12 @@ const fetchList = async () => {
   try {
     fetching.value = true;
     pagination.page = pagination.page + 1;
-    const { data } = await axios.get(
-      `/users/${userData.value.id}/watched-movies`,
-      {
-        params: {
-          page: pagination.page,
-          language: localeProperties.value.iso,
-        },
+    const { data } = await axios.get(`/users/${props.uid}/watched-movies`, {
+      params: {
+        page: pagination.page,
+        language: localeProperties.value.iso,
       },
-    );
+    });
     watchedMovies.value = [...watchedMovies.value, ...data.movies];
   } catch (error) {
     console.error(error);

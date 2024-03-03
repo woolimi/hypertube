@@ -370,7 +370,7 @@ function onClickAvatar() {
         </div>
       </section>
 
-      <WatchedList />
+      <WatchedList :uid="userData.id" />
     </div>
   </div>
 </template>
