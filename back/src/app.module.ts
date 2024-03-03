@@ -7,6 +7,7 @@ import { CommentModule } from './comment/comment.module';
 import { MovieModule } from './movie/movie.module';
 import { join } from 'path';
 import { AppController } from './app.controller';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { AppController } from './app.controller';
       // synchronize: true,
       // migrationsRun: true,
     }),
+    ScheduleModule.forRoot(),
     UserModule,
     AuthModule,
     MovieModule,

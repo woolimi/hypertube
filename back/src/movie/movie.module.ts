@@ -12,6 +12,7 @@ import { UserRepository } from 'src/user/user.repository';
 import { User } from 'src/user/user.entity';
 import { MoviesWatchedRepository } from './movies-watched.repository';
 import { MoviesWatched } from './movies-watched.entity';
+import { CronService } from './cron.service';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { MoviesWatched } from './movies-watched.entity';
     JwtService,
     TorrentService,
     MoviesWatchedRepository,
+    CronService,
   ],
   exports: [],
 })
