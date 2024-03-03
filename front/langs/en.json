@@ -80,7 +80,8 @@
       "title2": "<span class=\"text-primary-400\">Watch</span> everywhere"
     },
     "Movies": {
-      "title": "Movies"
+      "title": "Movies",
+      "watched": "Watched"
     },
     "Search": {
       "label": "Search",

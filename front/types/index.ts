@@ -38,6 +38,7 @@ export interface MovieData {
   vote_count: number;
   genres: Array<{ id: number; name: string }>;
   torrents: Array<TorrentData>;
+  is_watched?: boolean;
 }
 
 export interface DropdownOption {
