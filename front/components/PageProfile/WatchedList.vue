@@ -69,7 +69,7 @@ watch(y, async (scrolledHeight: number) => {
         class="flex flex-wrap justify-center gap-4"
       >
         <li v-for="item in watchedMovies" :key="item.id" class="w-[200px]">
-          <MovieThumbnail :item="item" />
+          <MovieThumbnail :item="item" height="300px" />
         </li>
       </ul>
       <div v-else-if="fetching" class="flex justify-center">

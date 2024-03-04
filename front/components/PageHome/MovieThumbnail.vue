@@ -14,10 +14,6 @@ defineProps({
     type: String,
     default: "420px",
   },
-  width: {
-    type: String,
-    default: "100%",
-  },
 });
 const onErrorImageLoad = (event: Event) => {
   const imgElement = event.target as HTMLImageElement;
@@ -62,7 +58,8 @@ const onErrorImageLoad = (event: Event) => {
     <figure class="h-full w-full">
       <img
         :src="`https://image.tmdb.org/t/p/w500/${item.poster_path}`"
-        class="h-full w-full object-cover"
+        class="w-full max-w-[280px] object-cover"
+        :style="{ height }"
         @error="onErrorImageLoad"
       />
     </figure>
