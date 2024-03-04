@@ -1,5 +1,4 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { promisify } from 'util';
 import torrentStream from 'torrent-stream';
 import path from 'path';
 import ffmpeg from 'fluent-ffmpeg';
@@ -52,13 +51,13 @@ export class TorrentService {
 
     return new Promise((resolve, reject) => {
       this.engine.on('idle', () => {
-        Logger.log(`${this.movieFile.name} is downloaded`);
+        Logger.debug(`${this.movieFile.name} is downloaded`);
       });
       this.engine.on('download', (pieceId) => {
-        Logger.log(`Movie piece ${pieceId} downloaded`);
+        Logger.debug(`Movie piece ${pieceId} downloaded`);
       });
       this.engine.on('destroy', () => {
-        Logger.log(`${this.movieFile.name} connections are destroyed`);
+        Logger.debug(`${this.movieFile.name} connections are destroyed`);
       });
       this.engine.on('ready', () => {
         this.engine.files.forEach((file) => {

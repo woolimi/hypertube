@@ -68,17 +68,14 @@ export class MovieController {
   @UseInterceptors(CacheInterceptor)
   @Get('/:movie_id')
   @UseGuards(JwtAuthGuard)
-  async getMovie(@Param('movie_id') movie_id, @Query() query: MovieQueryDto) {
+  async getMovie(
+    @Param('movie_id') movie_id,
+    @Query() query: MovieQueryDto,
+  ): Promise<any> {
     try {
       const data = await this.movieService.getMovie(movie_id, query);
       const imdb_id = data.imdb_id;
       const torrents = await this.movieService.getMovieTorrent(imdb_id);
-
-      // Download subtitle
-      const subtitles = await this.subtitleService.search(movie_id);
-      for (const subtitle of subtitles) {
-        await this.subtitleService.download(movie_id, subtitle);
-      }
 
       return { ...data, torrents };
     } catch (error) {
@@ -87,17 +84,15 @@ export class MovieController {
     }
   }
 
-  // @Get('/:movie_id/subtitles/:language')
-  // async getSubtitles(
-  //   @Param('movie_id') movie_id: number,
-  //   @Param('language') language: 'en' | 'fr',
-  // ) {
-  // if (!['en', 'fr'].includes(language))
-  //   throw new BadRequestException("Invalid language. Allowed 'en', 'fr'");
-  // for (const subtitle of subtitles) {
-  //   await this.subtitleService.downloadIfNotExists(movie_id, subtitle.id);
-  // }
-  // }
+  @Post('/:movie_id/subtitles')
+  @UseGuards(JwtAuthGuard)
+  async getSubtitles(@Param('movie_id') movie_id: number) {
+    const subtitles = await this.subtitleService.search(movie_id);
+
+    for (const subtitle of subtitles) {
+      await this.subtitleService.download(movie_id, subtitle);
+    }
+  }
 
   @Get('/:movie_id/stream/:torrent_hash')
   @Header('Range', 'bytes')

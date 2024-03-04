@@ -12,8 +12,11 @@ const openDialog = ref(false);
 const videoSource = ref("");
 const videoEl = ref<HTMLVideoElement>();
 const { locale } = useI18n();
+const axios = useAxios();
 
-const playVideo = (torrentHash: string) => {
+const playVideo = async (torrentHash: string) => {
+  await axios.post(`/movies/${route.params.mid}/subtitles`);
+
   videoSource.value = `${useRuntimeConfig().public.BACK_HOST}/movies/${route.params.mid}/stream/${torrentHash}`;
   videoEl.value?.load();
   openDialog.value = true;

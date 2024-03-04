@@ -150,8 +150,7 @@ export class MovieService {
         ...query,
       },
     });
-    data.vote_average = Number(data.vote_average).toFixed(1);
-    return data;
+    return { ...data, vote_average: Number(data.vote_average).toFixed(1) };
   }
 
   async getMovieData(movieId: number): Promise<Movie> {
