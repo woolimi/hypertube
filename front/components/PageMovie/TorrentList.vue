@@ -11,6 +11,7 @@ const route = useRoute();
 const openDialog = ref(false);
 const videoSource = ref("");
 const videoEl = ref<HTMLVideoElement>();
+const { locale } = useI18n();
 
 const playVideo = (torrentHash: string) => {
   videoSource.value = `${useRuntimeConfig().public.BACK_HOST}/movies/${route.params.mid}/stream/${torrentHash}`;
@@ -24,6 +25,8 @@ watch(openDialog, (isOpenDialog: boolean) => {
     videoEl.value?.load();
   }
 });
+
+const backHost = useRuntimeConfig().public.BACK_HOST;
 </script>
 
 <template>
@@ -76,8 +79,23 @@ watch(openDialog, (isOpenDialog: boolean) => {
         preload="auto"
         class="w-full"
         :poster="`https://image.tmdb.org/t/p/w500/${movie.backdrop_path}`"
+        crossorigin="use-credentials"
       >
         <source :src="videoSource" type="video/mp4" />
+        <track
+          :default="locale !== 'en'"
+          label="English"
+          kind="subtitles"
+          srclang="en"
+          :src="`${backHost}/movies/${route.params.mid}/subtitles/en.webvtt`"
+        />
+        <track
+          :default="locale !== 'fr'"
+          label="Français"
+          kind="subtitles"
+          srclang="fr"
+          :src="`${backHost}/movies/${route.params.mid}/subtitles/fr.webvtt`"
+        />
       </video>
     </Dialog>
   </div>
