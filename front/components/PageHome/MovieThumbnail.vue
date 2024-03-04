@@ -24,7 +24,7 @@ const onErrorImageLoad = (event: Event) => {
 <template>
   <NuxtLink
     :to="localePath({ name: 'movies-mid', params: { mid: item.id } })"
-    class="relative block h-full"
+    class="relative flex h-full justify-center"
     :class="$style.link"
   >
     <div
@@ -55,10 +55,10 @@ const onErrorImageLoad = (event: Event) => {
       {{ $t("Home.Movies.watched") }}
     </div>
 
-    <figure class="h-full w-full">
+    <figure class="h-full w-full max-w-[280px]">
       <img
         :src="`https://image.tmdb.org/t/p/w500/${item.poster_path}`"
-        class="w-full max-w-[280px] object-cover"
+        class="h-full w-full object-cover"
         :style="{ height }"
         @error="onErrorImageLoad"
       />
@@ -72,10 +72,12 @@ const onErrorImageLoad = (event: Event) => {
 
   position: absolute;
   top: 0;
-  left: 0;
+  left: 50%;
   z-index: 10;
   width: 100%;
+  max-width: 280px;
   height: 100%;
+  transform: translateX(-50%);
   opacity: 0;
 }
 

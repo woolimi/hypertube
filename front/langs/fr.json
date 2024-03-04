@@ -106,6 +106,9 @@
       "Score": "Note",
       "Title": "Titre",
       "Watch": "Regarder"
+    },
+    "Torrents": {
+      "none": "Aucun torrent trouvé"
     }
   },
   "Navbar": {

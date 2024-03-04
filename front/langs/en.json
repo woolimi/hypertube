@@ -106,6 +106,9 @@
       "Score": "Score",
       "Title": "Title",
       "Watch": "Watch"
+    },
+    "Torrents": {
+      "none": "No torrent found"
     }
   },
   "Navbar": {

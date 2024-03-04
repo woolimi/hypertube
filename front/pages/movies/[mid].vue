@@ -10,7 +10,7 @@ const movie = ref<MovieData>({} as MovieData);
 // const comments = computed(() => []);
 const route = useRoute();
 const { localeProperties } = useI18n() as any;
-const fetching = ref(false);
+const fetching = ref(true);
 
 onMounted(async () => {
   try {
@@ -54,8 +54,14 @@ onMounted(async () => {
     </section>
 
     <section>
-      <TorrentList v-if="movie.torrents" :movie="movie" />
-      <TorrentListSkeleton v-else />
+      <TorrentListSkeleton v-if="fetching" />
+      <div
+        v-else-if="!movie.torrents?.length"
+        class="p-10 text-center text-2xl text-white"
+      >
+        {{ $t("Movie.Torrents.none") }}
+      </div>
+      <TorrentList v-else :movie="movie" />
     </section>
 
     <CommentList :mid="route.params.mid" />
