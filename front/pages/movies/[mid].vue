@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import defaultPhoto from "assets/images/no_image.jpg";
+
 import type { MovieData } from "~/types";
 
 definePageMeta({
@@ -44,7 +46,13 @@ onMounted(async () => {
           }"
           class="h-0 w-full bg-cover bg-no-repeat pb-[150%]"
         ></div>
-        <PosterSkeleton v-else />
+        <PosterSkeleton v-else-if="fetching" />
+        <div
+          class="h-0 w-full bg-cover bg-center bg-no-repeat pb-[150%]"
+          :style="{
+            backgroundImage: `url(${defaultPhoto})`,
+          }"
+        ></div>
       </div>
 
       <div class="w-full md:w-[50%]">
@@ -57,7 +65,7 @@ onMounted(async () => {
       <TorrentListSkeleton v-if="fetching" />
       <div
         v-else-if="!movie.torrents?.length"
-        class="p-10 text-center text-2xl text-white"
+        class="mb-10 pt-20 text-center text-2xl text-white"
       >
         {{ $t("Movie.Torrents.none") }}
       </div>

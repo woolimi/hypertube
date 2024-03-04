@@ -216,7 +216,7 @@ export class MovieService {
         imdb_id,
       },
     });
-    return response.data.movie?.torrents || [];
+    return response.data?.movie?.torrents || [];
   }
 
   async checkUserWatched(movieId: number, userId: string) {
