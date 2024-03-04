@@ -13,6 +13,7 @@ import { User } from 'src/user/user.entity';
 import { MoviesWatchedRepository } from './movies-watched.repository';
 import { MoviesWatched } from './movies-watched.entity';
 import { CronService } from './cron.service';
+import { SubtitleService } from './subtitle.service';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { CronService } from './cron.service';
     TorrentService,
     MoviesWatchedRepository,
     CronService,
+    SubtitleService,
   ],
   exports: [],
 })

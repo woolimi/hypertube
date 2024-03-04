@@ -8,9 +8,14 @@ import { MovieModule } from './movie/movie.module';
 import { join } from 'path';
 import { AppController } from './app.controller';
 import { ScheduleModule } from '@nestjs/schedule';
+import { ServeStaticModule } from '@nestjs/serve-static';
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: './movies',
+      serveRoot: '/movies/',
+    }),
     ConfigModule.forRoot({ envFilePath: '../.env' }),
     TypeOrmModule.forRoot({
       type: 'mysql',

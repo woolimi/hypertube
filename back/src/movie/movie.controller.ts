@@ -27,6 +27,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
 import { TorrentService } from './torrent.service';
 import pump from 'pump';
+import { SubtitleService } from './subtitle.service';
 
 @ApiTags('Movies')
 @Controller('movies')
@@ -37,6 +38,7 @@ export class MovieController {
     private readonly jwtService: JwtService,
     private readonly userService: UserService,
     private readonly torrentService: TorrentService,
+    private readonly subtitleService: SubtitleService,
   ) {}
 
   @Get('/')
@@ -72,12 +74,30 @@ export class MovieController {
       const imdb_id = data.imdb_id;
       const torrents = await this.movieService.getMovieTorrent(imdb_id);
 
+      // Download subtitle
+      const subtitles = await this.subtitleService.search(movie_id);
+      for (const subtitle of subtitles) {
+        await this.subtitleService.download(movie_id, subtitle);
+      }
+
       return { ...data, torrents };
     } catch (error) {
       Logger.error(error);
       throw new InternalServerErrorException();
     }
   }
+
+  // @Get('/:movie_id/subtitles/:language')
+  // async getSubtitles(
+  //   @Param('movie_id') movie_id: number,
+  //   @Param('language') language: 'en' | 'fr',
+  // ) {
+  // if (!['en', 'fr'].includes(language))
+  //   throw new BadRequestException("Invalid language. Allowed 'en', 'fr'");
+  // for (const subtitle of subtitles) {
+  //   await this.subtitleService.downloadIfNotExists(movie_id, subtitle.id);
+  // }
+  // }
 
   @Get('/:movie_id/stream/:torrent_hash')
   @Header('Range', 'bytes')
