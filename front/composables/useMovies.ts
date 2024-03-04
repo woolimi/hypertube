@@ -3,6 +3,8 @@ import { ref } from "vue";
 
 import type { MovieData } from "~/types";
 
+const MAX_PAGINATION = 20;
+
 const fetching = ref(true);
 const movies = ref<MovieData[]>([]);
 const params = reactive({
@@ -89,15 +91,22 @@ export const useMovies = () => {
     sortBy.value = target;
   };
 
+  const isLimitPagenation = () => {
+    return params.page > MAX_PAGINATION && info.total_pages > MAX_PAGINATION;
+  };
+
+  const isNotLoadable = () => {
+    return (
+      fetching.value || params.page >= info.total_pages || isLimitPagenation()
+    );
+  };
+
   /**
    * This function will be called when filteredMovies has less than 20 movies info
    */
   const infinitySearch = async () => {
-    while (
-      params.search.length &&
-      filteredMovies.value.length < 20 &&
-      params.page < info.total_pages
-    ) {
+    while (filteredMovies.value.length < 20 && params.page < info.total_pages) {
+      if (isLimitPagenation()) break;
       await loadMoreMovies();
     }
   };
@@ -118,12 +127,6 @@ export const useMovies = () => {
     fetching.value = false;
 
     infinitySearch();
-  };
-
-  const isNotLoadable = () => {
-    return (
-      !params.search.length || fetching.value || params.page >= info.total_pages
-    );
   };
 
   const loadMoreMovies = async () => {

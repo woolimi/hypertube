@@ -62,7 +62,8 @@ const onErrorImageLoad = (event: Event) => {
     <figure class="h-full w-full">
       <img
         :src="`https://image.tmdb.org/t/p/w500/${item.poster_path}`"
-        class="h-full w-full object-cover"
+        class="w-full object-cover"
+        :class="`h-[${height}]`"
         @error="onErrorImageLoad"
       />
     </figure>
