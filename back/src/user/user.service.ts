@@ -12,13 +12,8 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-<<<<<<< HEAD
     private connection: DataSource,
-  ) {}
-=======
-    private connection: Connection,
   ) { }
->>>>>>> 28b1c6e (feat: email verify token saved and verify, add validations)
 
   async findAll(): Promise<User[]> {
     return this.userRepository.find();
