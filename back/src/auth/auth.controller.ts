@@ -161,7 +161,7 @@ export class AuthController {
       secret: process.env.JWT_SECRET,
     });
     const user = await this.userService.findOneById(payload.userId);
-    await this.userService.update(user.id, { ...user, emailVerified: true });
+    await this.userService.update(user.id, { emailVerified: true });
 
     res.redirect(`${process.env.FRONT_HOST}/${lang}/auth/email-confirmed`);
   }

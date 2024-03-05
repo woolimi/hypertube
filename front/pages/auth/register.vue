@@ -152,7 +152,10 @@ const handleOnSubmit = async () => {
           :label="loading ? null : $t('AuthRegister.register')"
           :loading="loading"
         />
-        <small v-if="dirty && errorGlobal" class="mt-2 text-lg text-red-500">
+        <small
+          v-if="dirty && errorGlobal"
+          class="col-span-2 mt-2 text-lg text-red-500"
+        >
           {{ errorGlobal }}
         </small>
       </form>
