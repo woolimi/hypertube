@@ -48,7 +48,16 @@ export class CommentService {
       throw new UnauthorizedException('User not found');
     }
     Logger.log('comment user:', user);
-    const createDto = { ...createCommentDto, User: user, Movie: movie };
+    Logger.log(
+      'comment content:',
+      createCommentDto.content,
+      createCommentDto.content.length,
+    );
+    const modifiedUser = {
+      username: user.username,
+      image: user.image,
+    };
+    const createDto = { ...createCommentDto, User: modifiedUser, Movie: movie };
     const comment = this.commentRepository.create(createDto);
     this.movieService.addCommentToMovieData(movieId, comment);
     return await this.commentRepository.save(comment);
