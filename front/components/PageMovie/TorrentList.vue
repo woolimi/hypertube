@@ -7,6 +7,8 @@ defineProps({
     default: () => ({}),
   },
 });
+const OFFSET = 0.5;
+const sync = ref(0);
 const route = useRoute();
 const openDialog = ref(false);
 const videoSource = ref("");
@@ -20,6 +22,27 @@ const playVideo = async (torrentHash: string) => {
   videoSource.value = `${useRuntimeConfig().public.BACK_HOST}/movies/${route.params.mid}/stream/${torrentHash}`;
   videoEl.value?.load();
   openDialog.value = true;
+};
+
+const adjustSubtitle = (isAdd: boolean) => {
+  if (videoEl.value) {
+    sync.value += isAdd ? OFFSET : -OFFSET;
+    console.log("sync: ", sync.value);
+    Array.from(videoEl.value.textTracks as TextTrackList).forEach(
+      (track: TextTrack) => {
+        if (track.mode === "showing") {
+          Array.from(track.cues as TextTrackCueList).forEach(
+            (cue: TextTrackCue) => {
+              cue.startTime += isAdd ? OFFSET : -OFFSET;
+              cue.endTime += isAdd ? OFFSET : -OFFSET;
+            },
+          );
+          return true;
+        }
+      },
+    );
+  }
+  return false;
 };
 
 watch(openDialog, (isOpenDialog: boolean) => {
@@ -100,6 +123,22 @@ const backHost = useRuntimeConfig().public.BACK_HOST;
           :src="`${backHost}/movies/${route.params.mid}/subtitles/fr.webvtt`"
         />
       </video>
+      <div class="mt-5 flex items-center justify-end gap-5">
+        <div class="text-2xl text-primary-300">sync: {{ sync }}s</div>
+        <div class="flex gap-2">
+          <Button
+            icon="pi pi-plus"
+            severity="secondary"
+            @click="adjustSubtitle(true)"
+          />
+          <Button
+            size="small"
+            icon="pi pi-minus"
+            severity="secondary"
+            @click="adjustSubtitle(false)"
+          />
+        </div>
+      </div>
     </Dialog>
   </div>
 </template>
