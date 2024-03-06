@@ -59,6 +59,8 @@
     "title": "Waiting for your email confirmation"
   },
   "Error": {
+    "404": "Page not found",
+    "backToHome": "Back to home",
     "EMAIL_ALREADY_EXISTS": "Email already exists.",
     "GENERAL_ERROR": "Unexpected error",
     "INVALID_EMAIL": "Invalid email address",

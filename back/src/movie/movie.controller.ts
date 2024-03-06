@@ -72,16 +72,11 @@ export class MovieController {
     @Param('movie_id') movie_id,
     @Query() query: MovieQueryDto,
   ): Promise<any> {
-    try {
-      const data = await this.movieService.getMovie(movie_id, query);
-      const imdb_id = data.imdb_id;
-      const torrents = await this.movieService.getMovieTorrent(imdb_id);
+    const data = await this.movieService.getMovie(movie_id, query);
+    const imdb_id = data.imdb_id;
+    const torrents = await this.movieService.getMovieTorrent(imdb_id);
 
-      return { ...data, torrents };
-    } catch (error) {
-      Logger.error(error);
-      throw new InternalServerErrorException();
-    }
+    return { ...data, torrents };
   }
 
   @Post('/:movie_id/subtitles')

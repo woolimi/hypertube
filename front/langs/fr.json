@@ -59,6 +59,8 @@
     "title": "En attente de votre email de confirmation"
   },
   "Error": {
+    "404": "Page introuvable",
+    "backToHome": "Retour à l'accueil",
     "EMAIL_ALREADY_EXISTS": "L'adresse e-mail existe déjà.",
     "GENERAL_ERROR": "Erreur inattendue",
     "INVALID_EMAIL": "Adresse email invalide",
