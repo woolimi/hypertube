@@ -54,6 +54,7 @@ export class CommentService {
       createCommentDto.content.length,
     );
     const modifiedUser = {
+      id: user.id,
       username: user.username,
       image: user.image,
     };
