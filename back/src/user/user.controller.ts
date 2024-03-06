@@ -57,6 +57,9 @@ export class UserController {
           return cb(null, userId + '.' + ext);
         },
       }),
+      limits: {
+        fileSize: 5 * 1024 * 1024,
+      },
     }),
   )
   async uploadAvatar(@Req() req, @UploadedFile() image) {
