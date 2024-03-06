@@ -127,6 +127,7 @@
       "title": "Compte"
     },
     "Profile": {
+      "image_size_too_big": "La taille de l'image est trop grande!!",
       "success": "Mise à jour du profil utilisateur réussie.",
       "title": "Profil"
     },

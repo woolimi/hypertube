@@ -197,8 +197,7 @@ function onClickAvatar() {
               type="file"
               class="hidden"
               accept="image/*"
-              maxlength="1000000"
-              @change="updateAvatar"
+              @change="(e) => updateAvatar(e, t)"
             />
           </div>
 

@@ -126,6 +126,7 @@
       "title": "Account"
     },
     "Profile": {
+      "image_size_too_big": "Image size is too big!",
       "success": "User profile update successful.",
       "title": "Profile"
     },
