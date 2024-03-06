@@ -16,7 +16,7 @@ const {
   passwordValidator,
 } = useValidator();
 const { t } = useI18n();
-const { updateAvatar, updateProfile } = useProfile();
+const { updateAvatar, updateProfile, imageAlertActive } = useProfile();
 
 const axios = useAxios();
 const email = ref(userData.value?.email);
@@ -197,9 +197,12 @@ function onClickAvatar() {
               type="file"
               class="hidden"
               accept="image/*"
-              @change="(e) => updateAvatar(e, t)"
+              @change="updateAvatar"
             />
           </div>
+          <Message v-if="imageAlertActive" severity="error">{{
+            t("Profile.Profile.image_size_too_big")
+          }}</Message>
 
           <div
             class="mx-auto flex flex-col items-center justify-center gap-5 rounded-lg sm:flex-row"

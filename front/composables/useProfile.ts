@@ -4,19 +4,22 @@ import type { UserData } from "~/types";
 
 const MAX_IMAGE_SIZE = 5242880; // 5MB
 
+const imageAlertActive = ref(false);
+
 export const useProfile = () => {
   const axios = useAxios();
   const router = useRouter();
 
-  function updateAvatar(event: any, t: any) {
+  function updateAvatar(event: any) {
     const target = event.target;
     const file = target.files[0];
     if (file) {
       if (file.size > MAX_IMAGE_SIZE) {
-        // eslint-disable-next-line no-alert
-        alert(t("Profile.Profile.image_size_too_big"));
+        imageAlertActive.value = true;
         target.value = "";
-        return;
+        return setTimeout(() => {
+          imageAlertActive.value = false;
+        }, 5000);
       }
 
       const reader = new FileReader();
@@ -45,6 +48,7 @@ export const useProfile = () => {
   };
 
   return {
+    imageAlertActive,
     updateAvatar,
     updateProfile,
   };

@@ -126,7 +126,7 @@
       "title": "Account"
     },
     "Profile": {
-      "image_size_too_big": "Image size is too big!",
+      "image_size_too_big": "Image size should be less than 5MB.",
       "success": "User profile update successful.",
       "title": "Profile"
     },
