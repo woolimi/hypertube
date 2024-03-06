@@ -9,22 +9,22 @@ definePageMeta({
 
 const axios = useAxios();
 const movie = ref<MovieData>({} as MovieData);
-// const comments = computed(() => []);
 const route = useRoute();
 const { localeProperties } = useI18n() as any;
 const fetching = ref(true);
+const localePath = useLocalePath();
 
 onMounted(async () => {
   try {
-    fetching.value = false;
+    fetching.value = true;
     const { data } = await axios.get("/movies/" + route.params.mid, {
       params: {
         language: localeProperties.value.iso,
       },
     });
     movie.value = data;
-  } catch (error) {
-    console.error(error);
+  } catch (error: any) {
+    navigateTo({ path: localePath("404") });
   } finally {
     fetching.value = false;
   }
@@ -39,14 +39,14 @@ onMounted(async () => {
       <div
         class="mx-auto w-full max-w-[400px] md:mx-[none] md:w-[45%] md:min-w-[320px]"
       >
+        <PosterSkeleton v-if="fetching" />
         <div
-          v-if="movie.poster_path"
+          v-else-if="movie.poster_path"
           :style="{
             backgroundImage: `url(https://image.tmdb.org/t/p/w500/${movie.poster_path})`,
           }"
           class="h-0 w-full bg-cover bg-no-repeat pb-[150%]"
         ></div>
-        <PosterSkeleton v-else-if="fetching" />
         <div
           v-else
           class="h-0 w-full bg-cover bg-center bg-no-repeat pb-[150%]"

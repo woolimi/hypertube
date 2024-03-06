@@ -5,6 +5,7 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import axios, { AxiosInstance } from 'axios';
 import { MoviesQueryDto } from './dto/movies-query.dto';
@@ -145,12 +146,17 @@ export class MovieService {
   async getMovie(movie_id, query: MovieQueryDto) {
     query.language = query.language || 'en-US';
 
-    const { data } = await this.tmdb.get(`/movie/${movie_id}`, {
-      params: {
-        ...query,
-      },
-    });
-    return { ...data, vote_average: Number(data.vote_average).toFixed(1) };
+    try {
+      const { data } = await this.tmdb.get(`/movie/${movie_id}`, {
+        params: {
+          ...query,
+        },
+      });
+      return { ...data, vote_average: Number(data.vote_average).toFixed(1) };
+    } catch (e) {
+      Logger.error(e);
+      throw new NotFoundException('Movie not found');
+    }
   }
 
   async getMovieData(movieId: number): Promise<Movie> {
