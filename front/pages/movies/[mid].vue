@@ -48,6 +48,7 @@ onMounted(async () => {
         ></div>
         <PosterSkeleton v-else-if="fetching" />
         <div
+          v-else
           class="h-0 w-full bg-cover bg-center bg-no-repeat pb-[150%]"
           :style="{
             backgroundImage: `url(${defaultPhoto})`,
