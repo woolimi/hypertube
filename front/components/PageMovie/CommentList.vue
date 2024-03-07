@@ -26,7 +26,7 @@ onMounted(async () => {
         movieId: props.mid,
       },
     });
-    comments.value = commentData;
+    comments.value = commentData || [];
   } catch (e) {
     console.error(e);
   } finally {

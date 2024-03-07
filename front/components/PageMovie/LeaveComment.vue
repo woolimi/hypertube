@@ -27,6 +27,7 @@ const submitComment = async () => {
     errorMessage.value = "";
     comment.value = "";
   } catch (error) {
+    console.error(error);
     errorMessage.value = t("Error.GENERAL_ERROR");
   }
 };
