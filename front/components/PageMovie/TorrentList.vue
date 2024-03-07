@@ -109,14 +109,14 @@ const backHost = useRuntimeConfig().public.BACK_HOST;
       >
         <source :src="videoSource" type="video/mp4" />
         <track
-          :default="locale !== 'en'"
+          :default="locale === 'en'"
           label="English"
           kind="subtitles"
           srclang="en"
           :src="`${backHost}/movies/${route.params.mid}/subtitles/en.webvtt`"
         />
         <track
-          :default="locale !== 'fr'"
+          :default="locale === 'fr'"
           label="Français"
           kind="subtitles"
           srclang="fr"
