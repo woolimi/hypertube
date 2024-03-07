@@ -1,19 +1,24 @@
-version: "3" # 파일 규격 버전
-services: # 이 항목 밑에 실행하려는 컨테이너 들을 정의
-  back:
-    build:
-      target: development
-    volumes: # 실시간 코드 수정을 위한 volumes 설정
-      - ./back:/usr/src/app
-      - /usr/src/app/node_modules
+version: "3"
+services:
   front:
     build:
       target: development
-    ports:
-      - "24678:24678"
     volumes:
       - ./front:/usr/src/app
-      - /usr/src/app/node_modules
+      - front_node_modules:/usr/src/app/node_modules
+
+  back:
+    build:
+      target: development
+    volumes:
+      - ./back:/usr/src/app
+      - back_node_modules:/usr/src/app/node_modules
+
   db:
     volumes:
-      - ./db:/var/lib/mysql
+      - db:/var/lib/mysql
+
+volumes:
+  db:
+  front_node_modules:
+  back_node_modules:
