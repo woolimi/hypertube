@@ -10,9 +10,6 @@ import {
   Query,
   BadRequestException,
   Logger,
-  UsePipes,
-  NotFoundException,
-  ParseEnumPipe,
 } from '@nestjs/common';
 import { LocalAuthGuard } from 'src/guards/local-auth.guard';
 import { AuthService } from './auth.service';
@@ -174,9 +171,7 @@ export class AuthController {
     res.cookie('accessToken', accessToken, accessOption);
     res.cookie('refreshToken', refreshToken, refreshOption);
     await this.userService.saveRefreshToken(userId, refreshToken);
-    const userData = await this.userService.findOneById(userId);
-    delete userData.refreshToken;
-    delete userData.password;
+    const userData = await this.userService.findOneById(userId, true);
 
     return { ...userData, accessToken };
   }

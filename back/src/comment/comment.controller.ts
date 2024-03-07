@@ -13,7 +13,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { CommentService } from './comment.service';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { CommentLengthDto } from './dto/comment.length.dto';
 
@@ -22,15 +22,23 @@ import { CommentLengthDto } from './dto/comment.length.dto';
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
-  @ApiOperation({ summary: 'get all comments for a movie' })
-  @Get()
+  @Get('/')
+  @ApiOperation({
+    summary: 'Get all comments of a movie',
+    description: 'Get all comments of a movie. MovieId query param is required',
+  })
+  @ApiQuery({ name: 'movieId', required: true, type: Number })
   getAllComments(@Query('movieId', ParseIntPipe) movieId: number) {
     return this.commentService.getCommentsForMovie(movieId);
   }
 
-  @ApiOperation({ summary: 'create a comment' })
-  @UseGuards(JwtAuthGuard)
   @Post('/')
+  @ApiOperation({
+    summary: 'Create a comment',
+    description: 'Create a comment',
+  })
+  @ApiBody({ type: CommentLengthDto })
+  @UseGuards(JwtAuthGuard)
   async createComment(
     @Req() req,
     @Body() data: CommentLengthDto,
@@ -43,9 +51,14 @@ export class CommentController {
     return this.commentService.createComment(createCommentDto);
   }
 
-  @ApiOperation({ summary: 'update a comment' })
-  @UseGuards(JwtAuthGuard)
   @Patch(':id')
+  @ApiOperation({
+    summary: 'Update a comment',
+    description: 'Update a comment',
+  })
+  @ApiBody({ type: String })
+  @ApiQuery({ name: 'id', required: true, type: Number })
+  @UseGuards(JwtAuthGuard)
   async updateComment(
     @Body('content') content: string,
     @Param('id') commentId: number,
@@ -53,9 +66,9 @@ export class CommentController {
     this.commentService.updateComment(commentId, content);
   }
 
+  @Delete(':id')
   @ApiOperation({ summary: 'delete a comment' })
   @UseGuards(JwtAuthGuard)
-  @Delete(':id')
   async deleteComment(@Param('id') commentId: number) {
     this.commentService.deleteComment(commentId);
   }

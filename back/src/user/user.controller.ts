@@ -11,10 +11,23 @@ import {
   UploadedFile,
   Query,
   ValidationPipe,
+  UnauthorizedException,
+  BadRequestException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiProperty,
+  ApiQuery,
+  ApiTags,
+  PickType,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -32,14 +45,37 @@ export class UserController {
     private readonly moviesWatchedService: MoviesWatchedService,
   ) {}
 
-  @ApiOperation({ summary: 'Get all users' })
+  @ApiOperation({ summary: 'Get all users', description: 'Get all users' })
+  @ApiBearerAuth()
+  @ApiQuery({ name: 'page', type: Number, required: false })
+  @ApiQuery({ name: 'perPage', type: Number, required: false })
   @UseGuards(JwtAuthGuard)
   @Get()
-  async findAll(@Req() req): Promise<User[]> {
-    return this.userService.findAll();
+  async findAll(
+    @Query() query: { page?: number; perPage?: number },
+  ): Promise<User[]> {
+    return this.userService.findAll(query.page || 1, query.perPage || 10);
   }
 
   @Patch('avatar')
+  @ApiOperation({
+    summary: 'Upload avatar image for user',
+    description: 'Upload avatar image for user and return the url of the image',
+  })
+  @ApiBearerAuth()
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        image: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @ApiCreatedResponse({ type: String })
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(
     FileInterceptor('image', {
@@ -68,26 +104,52 @@ export class UserController {
     return url;
   }
 
-  @ApiOperation({ summary: 'Get user by id' })
+  @ApiOperation({ summary: 'Get user info by id' })
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse({
+    type: PickType(User, ['username', 'image', 'firstName', 'lastName']),
+  })
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<User> {
-    return this.userService.findOneById(id);
+  async findOne(@Req() req, @Param('id') id: string): Promise<User> {
+    const user = await this.userService.findOneById(id, req.user.userId === id);
+    if (!user) {
+      throw new BadRequestException("User doesn't exist");
+    }
+    return user;
   }
 
   @Patch(':id')
+  @ApiOperation({ summary: 'Update user data endpoint' })
+  @ApiBody({ type: UpdateUserDto })
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   async update(
     @Param('id') id: string,
     @Body() user: UpdateUserDto,
+    @Req() req,
   ): Promise<UpdateResult> {
+    if (req.user.userId !== id) {
+      throw new UnauthorizedException();
+    }
     return this.userService.update(id, user);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string): Promise<void> {
+  @ApiOperation({ summary: 'Delete user' })
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  async remove(@Param('id') id: string, @Req() req): Promise<void> {
+    if (req.user.userId !== id) {
+      throw new UnauthorizedException();
+    }
     return this.userService.remove(id);
   }
 
   @Get('/:id/watched-movies')
+  @ApiOperation({ summary: 'Get watched movie list of a user' })
+  @ApiQuery({ name: 'page', type: Number, required: false })
+  @ApiQuery({ name: 'language', type: String, required: false })
   @UseGuards(JwtAuthGuard)
   async getUserWatchedMovies(
     @Param('id') id: string,
