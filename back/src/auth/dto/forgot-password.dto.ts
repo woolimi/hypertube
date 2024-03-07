@@ -6,18 +6,10 @@ export class ForgotPasswordDto extends PickType(User, [
   'username',
   'email',
 ] as const) {
-  @ApiProperty({
-    description: 'username of user',
-    example: 'marvin',
-  })
   @IsString()
   @IsNotEmpty()
   username: string;
 
-  @ApiProperty({
-    description: 'email of user',
-    example: 'marvin@student.42.fr',
-  })
   @IsEmail()
   @IsNotEmpty()
   email: string;

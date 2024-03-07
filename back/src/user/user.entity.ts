@@ -51,7 +51,7 @@ export class User {
 
   @ApiProperty({
     description: 'Password',
-    example: 'marvin',
+    example: 'marvin1234',
     required: true,
   })
   @Column({ default: '' })
