@@ -1,13 +1,11 @@
 version: "3"
 services:
   front:
-    build:
     volumes:
       - ./front:/usr/src/app
       - front_node_modules:/usr/src/app/node_modules
 
   back:
-    build:
     volumes:
       - ./back:/usr/src/app
       - back_node_modules:/usr/src/app/node_modules
