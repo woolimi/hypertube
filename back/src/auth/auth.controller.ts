@@ -32,7 +32,7 @@ export class AuthController {
     private userService: UserService,
     private emailService: EmailService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   @UseGuards(LocalAuthGuard)
   @Post('/login')
@@ -96,9 +96,13 @@ export class AuthController {
     delete createdUser.password;
 
     // Send email confirmation email
-    await this.emailService.sendVerifyEmail(
+    const emailVerifyToken = await this.emailService.sendVerifyEmail(
       { id: createdUser.id, email: createdUser.email },
       lang || 'en',
+    );
+    await this.userService.saveEmailVerifyToken(
+      createdUser.id,
+      emailVerifyToken,
     );
 
     return { ...createdUser, accessToken };
@@ -161,8 +165,14 @@ export class AuthController {
       secret: process.env.JWT_SECRET,
     });
     const user = await this.userService.findOneById(payload.userId);
-    await this.userService.update(user.id, { emailVerified: true });
+    // new code
+    if (!user) throw new UnauthorizedException({ code: 'USER_NOT_EXIST' });
+    if (token !== user.emailVerifyToken)
+      throw new UnauthorizedException({ code: 'EMAIL_TOKEN_INVALID' });
+    await this.userService.updateEmailVerified(user.id);
 
+    // TODO: check (updated by @woolimi)
+    //await this.userService.update(user.id, { emailVerified: true });
     res.redirect(`${process.env.FRONT_HOST}/${lang}/auth/email-confirmed`);
   }
 
@@ -183,10 +193,11 @@ export class AuthController {
       }
 
       // Send email confirmation email
-      await this.emailService.sendPasswordResetEmail(
+      const token = await this.emailService.sendPasswordResetEmail(
         { id: foundEmail.id, email: foundEmail.email },
         lang || 'en',
       );
+      await this.userService.savePasswordVerifyToken(foundEmail.id, token);
       return foundEmail;
     } catch (error) {
       throw error;
@@ -203,8 +214,9 @@ export class AuthController {
       secret: process.env.JWT_SECRET,
     });
     const user = await this.userService.findOneById(payload.userId);
-    //TODO: save tokens into DB
-    // await this.userService.update(user.id, { ...user, emailVerified: true });
+    if (!user) throw new UnauthorizedException({ code: 'USER_NOT_EXIST' });
+    if (token !== user.passwordVerifyToken)
+      throw new UnauthorizedException({ code: 'PASSWORD_TOKEN_INVALID' });
 
     const userId = payload.userId;
     const { accessToken, ...accessOption } =
@@ -224,7 +236,7 @@ export class AuthController {
 
   @Get('google/login')
   @UseGuards(GoogleAuthGuard)
-  async googleLogin() {}
+  async googleLogin() { }
 
   @Get('google/redirect')
   @UseGuards(GoogleAuthGuard)
@@ -235,7 +247,7 @@ export class AuthController {
 
   @Get('ft/login')
   @UseGuards(FtAuthGuard)
-  async ftLogin() {}
+  async ftLogin() { }
 
   @Get('ft/redirect')
   @UseGuards(FtAuthGuard)
@@ -246,7 +258,7 @@ export class AuthController {
 
   @Get('github/login')
   @UseGuards(GithubAuthGuard)
-  async githubLogin() {}
+  async githubLogin() { }
 
   @Get('github/redirect')
   @UseGuards(GithubAuthGuard)

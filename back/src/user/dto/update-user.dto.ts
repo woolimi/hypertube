@@ -34,14 +34,17 @@ export class UpdateUserDto {
   password?: string;
 
   @IsOptional()
-  @IsOptional()
   image?: string;
 
-  @IsOptional()
   @IsOptional()
   provider?: string;
 
   @IsOptional()
-  @IsOptional()
   emailVerified?: boolean;
+
+  @IsOptional()
+  emailVerifyToken?: string;
+
+  @IsOptional()
+  passwordVerifyToken?: string;
 }

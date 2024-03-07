@@ -13,7 +13,7 @@ export class UserService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private connection: DataSource,
-  ) {}
+  ) { }
 
   async findAll(): Promise<User[]> {
     return this.userRepository.find();
@@ -94,6 +94,12 @@ export class UserService {
   async update(id: string, user: UpdateUserDto): Promise<UpdateResult> {
     if (user.password) {
       user.password = await this.cryptPassword(user.password);
+      const passwordTokenCheckUser = await this.userRepository.findOneBy({
+        id,
+      });
+
+      if (passwordTokenCheckUser.passwordVerifyToken)
+        user.passwordVerifyToken = '';
     }
 
     let duplicateUsername;
@@ -118,12 +124,33 @@ export class UserService {
     return this.userRepository.update(id, user);
   }
 
+  async updateEmailVerified(id: string): Promise<UpdateResult> {
+    return this.userRepository.update(id, {
+      emailVerified: true,
+      emailVerifyToken: '',
+    });
+  }
+
+  async updatePasswordVerified(id: string): Promise<UpdateResult> {
+    return this.userRepository.update(id, {
+      passwordVerifyToken: '',
+    });
+  }
+
   async remove(id: string): Promise<void> {
     await this.userRepository.delete(id);
   }
 
   async saveRefreshToken(id: string, refreshToken: string): Promise<void> {
     await this.userRepository.update(id, { refreshToken });
+  }
+
+  async saveEmailVerifyToken(id: string, emailVerifyToken: string) {
+    await this.userRepository.update(id, { emailVerifyToken });
+  }
+
+  async savePasswordVerifyToken(id: string, passwordVerifyToken: string) {
+    await this.userRepository.update(id, { passwordVerifyToken });
   }
 
   async cryptPassword(password: string): Promise<string> {

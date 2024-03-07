@@ -69,6 +69,12 @@ export class User {
   @Column({ default: 'local' })
   provider: string;
 
+  @Column({ default: '' })
+  emailVerifyToken: string;
+
+  @Column({ default: '' })
+  passwordVerifyToken: string;
+
   @CreateDateColumn()
   createdAt: Date;
 
