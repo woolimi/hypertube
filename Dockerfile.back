@@ -16,11 +16,21 @@ EXPOSE 5000
 FROM dependencies AS build
 COPY ./back .
 RUN pnpm run build
+# COPY ./back/setup-database.sh ./
+# RUN chmod +x ./setup-database.sh
+# CMD ["./setup-database.sh"]
 
 FROM base AS production
+COPY ./back/package.json  ./
 COPY --from=dependencies /usr/src/app/node_modules ./node_modules
 ENV NODE_ENV=production
 COPY --from=build /usr/src/app/dist ./dist
 RUN pnpm prune --prod
-CMD ["node", "dist/src/main.js"]
+CMD [ "node", "dist/src/main.js" ]
 EXPOSE 5000
+
+# FROM build AS production
+# ENV NODE_ENV=production
+# RUN pnpm prune --prod
+# CMD [ "node", "dist/src/main.js" ]
+# EXPOSE 5000

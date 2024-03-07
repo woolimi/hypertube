@@ -18,8 +18,15 @@ COPY ./front .
 RUN pnpm run build
 
 FROM base AS production
+COPY ./front/package.json  ./
 ENV NODE_ENV=production
 COPY --from=build /usr/src/app/ .
 RUN pnpm prune --prod
 CMD [ "node", ".output/server/index.mjs" ]
 EXPOSE 3000
+
+# FROM build AS production
+# ENV NODE_ENV=production
+# RUN pnpm prune --prod
+# CMD [ "node", ".output/server/index.mjs" ]
+# EXPOSE 3000
