@@ -20,7 +20,14 @@ import { MoviesQueryDto } from './dto/movies-query.dto';
 import { MovieService } from './movie.service';
 import { CacheInterceptor } from '@nestjs/cache-manager';
 import { MovieQueryDto } from './dto/movie-query.dto';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtService } from '@nestjs/jwt';
@@ -28,6 +35,8 @@ import { UserService } from 'src/user/user.service';
 import { TorrentService } from './torrent.service';
 import pump from 'pump';
 import { SubtitleService } from './subtitle.service';
+import { MoviesResponseDto } from './dto/movies-response.dto';
+import { MovieTorrentDto } from './dto/movie-torrent.dto';
 
 @ApiTags('Movies')
 @Controller('movies')
@@ -42,12 +51,21 @@ export class MovieController {
   ) {}
 
   @Get('/')
+  @ApiOperation({
+    summary: 'Get movies',
+    description: 'Get list of movies',
+  })
+  @ApiOkResponse({ type: MoviesResponseDto })
+  @ApiQuery({ name: 'page', type: Number, required: false })
+  @ApiQuery({ name: 'language', type: String, required: false })
   async getMovies(
     @Query()
     query: MoviesQueryDto,
     @Req() req,
   ) {
     let userId = undefined;
+    query.page = query.page || 1;
+    query.language = query.language || 'en-US';
     try {
       const payload = this.jwtService.verify(req.cookies['accessToken'], {
         secret: process.env.JWT_SECRET,
@@ -65,8 +83,16 @@ export class MovieController {
     }
   }
 
-  @UseInterceptors(CacheInterceptor)
   @Get('/:movie_id')
+  @ApiOperation({
+    summary: 'Get movie',
+    description: 'Get info of a movie',
+  })
+  @ApiOkResponse({ type: MovieTorrentDto })
+  @ApiQuery({ name: 'language', enum: ['en-US', 'fr-FR'], required: false })
+  @ApiParam({ name: 'movie_id', type: Number, example: 62320 })
+  @UseInterceptors(CacheInterceptor)
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   async getMovie(
     @Param('movie_id') movie_id,
@@ -80,6 +106,11 @@ export class MovieController {
   }
 
   @Post('/:movie_id/subtitles')
+  @ApiOperation({
+    summary: 'Download subtitles for a movie',
+    description: 'Trigger to download subtitles for a movie in server',
+  })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   async getSubtitles(@Param('movie_id') movie_id: number) {
     const subtitles = await this.subtitleService.search(movie_id);
@@ -90,6 +121,11 @@ export class MovieController {
   }
 
   @Get('/:movie_id/stream/:torrent_hash')
+  @ApiOperation({
+    summary: 'Movie streaming endpoint',
+    description: 'Streaming endpoint for a movie',
+  })
+  @ApiBearerAuth()
   @Header('Range', 'bytes')
   async streamMovie(
     @Param('movie_id') movie_id: number,

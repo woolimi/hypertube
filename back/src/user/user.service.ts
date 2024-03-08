@@ -15,12 +15,31 @@ export class UserService {
     private connection: DataSource,
   ) {}
 
-  async findAll(): Promise<User[]> {
-    return this.userRepository.find();
+  async findAll(page: number, perPage: number): Promise<User[]> {
+    return this.userRepository.find({
+      select: {
+        username: true,
+        image: true,
+        firstName: true,
+        lastName: true,
+      },
+      skip: page * perPage - perPage,
+      take: perPage,
+    });
   }
 
-  async findOneById(id: string): Promise<User> {
+  async findOneById(id: string, isSelf?: boolean): Promise<User> {
     return this.userRepository.findOne({
+      select: {
+        id: true,
+        username: true,
+        image: true,
+        firstName: true,
+        lastName: true,
+        email: isSelf ? true : false,
+        emailVerified: isSelf ? true : false,
+        provider: isSelf ? true : false,
+      },
       where: {
         id,
       },

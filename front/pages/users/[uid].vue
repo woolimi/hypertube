@@ -8,13 +8,14 @@ const uid = useRoute().params.uid;
 const userData = ref({});
 const axios = useAxios();
 const fetching = ref(true);
+const localePath = useLocalePath();
 
 onMounted(async () => {
   try {
     const { data } = await axios.get("/users/" + uid);
     userData.value = data;
   } catch (e) {
-    console.error(e);
+    navigateTo({ path: localePath("404") });
   } finally {
     fetching.value = false;
   }

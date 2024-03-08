@@ -10,8 +10,6 @@ import {
   Query,
   BadRequestException,
   Logger,
-  UsePipes,
-  NotFoundException,
 } from '@nestjs/common';
 import { LocalAuthGuard } from 'src/guards/local-auth.guard';
 import { AuthService } from './auth.service';
@@ -24,7 +22,17 @@ import { GithubAuthGuard } from 'src/guards/github-auth.guard';
 import { EmailService } from './email.service';
 import { JwtService } from '@nestjs/jwt';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiProperty,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
+import { LoginUserDto } from './dto/login-user.dto';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -34,27 +42,32 @@ export class AuthController {
     private jwtService: JwtService,
   ) {}
 
+  @ApiOperation({
+    summary: 'Login',
+    description: 'Login user and return user info with access token',
+  })
+  @ApiBody({ type: LoginUserDto })
   @UseGuards(LocalAuthGuard)
   @Post('/login')
   async login(@Request() req, @Response({ passthrough: true }) res) {
-    const {
-      accessToken: oldAccessToken,
-      refreshToken: oldRefreshToken,
-      ...user
-    } = req.user;
+    const userId = req.user.id;
 
     const { accessToken, ...accessOption } =
-      this.authService.getCookieWithJwtAccessToken(user.id);
+      this.authService.getCookieWithJwtAccessToken(userId);
     const { refreshToken, ...refreshOption } =
-      this.authService.getCookieWithJwtRefreshToken(user.id);
+      this.authService.getCookieWithJwtRefreshToken(userId);
 
     res.cookie('accessToken', accessToken, accessOption);
     res.cookie('refreshToken', refreshToken, refreshOption);
     res.status(200);
-    await this.userService.saveRefreshToken(user.id, refreshToken);
-    return { ...user, accessToken };
+    await this.userService.saveRefreshToken(userId, refreshToken);
+    return { ...req.user, accessToken };
   }
 
+  @ApiOperation({
+    summary: 'Logout',
+    description: 'Logout user and delete token from cookie',
+  })
   @Post('/logout')
   async logout(@Request() req, @Response({ passthrough: true }) res) {
     const option = {
@@ -76,6 +89,13 @@ export class AuthController {
     return {};
   }
 
+  @ApiOperation({
+    summary: 'Register endpoint',
+    description:
+      'Register user and return user info with access token and refresh token',
+  })
+  @ApiProperty({ type: CreateUserDto })
+  @ApiQuery({ name: 'lang', enum: ['en', 'fr'], required: false })
   @Post('/register')
   async register(
     @Body() user: CreateUserDto,
@@ -96,14 +116,21 @@ export class AuthController {
     delete createdUser.password;
 
     // Send email confirmation email
+    lang = ['en', 'fr'].includes(lang) ? lang : 'en';
     await this.emailService.sendVerifyEmail(
       { id: createdUser.id, email: createdUser.email },
-      lang || 'en',
+      lang,
     );
 
     return { ...createdUser, accessToken };
   }
 
+  @ApiOperation({
+    summary: 'Refresh token',
+    description:
+      'Refresh access token and return user info with refreshed access token. It will create access token and refresh token in cookie (http only).',
+  })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Post('/refresh')
   async refresh(@Request() req, @Response({ passthrough: true }) res) {
@@ -144,19 +171,32 @@ export class AuthController {
     res.cookie('accessToken', accessToken, accessOption);
     res.cookie('refreshToken', refreshToken, refreshOption);
     await this.userService.saveRefreshToken(userId, refreshToken);
-    const userData = await this.userService.findOneById(userId);
-    delete userData.refreshToken;
-    delete userData.password;
+    const userData = await this.userService.findOneById(userId, true);
 
     return { ...userData, accessToken };
   }
 
+  @ApiOperation({
+    summary: 'Email verification endpoint',
+    description:
+      'Verify email address from the link user clicked in email. Send token in query and redirect to email verification page',
+  })
+  @ApiQuery({
+    name: 'token',
+    type: String,
+  })
+  @ApiQuery({
+    name: 'lang',
+    enum: ['en', 'fr'],
+    required: false,
+  })
   @Get('/verify-email')
   async verifyEmail(
     @Query('token') token,
     @Query('lang') lang,
     @Response({ passthrough: true }) res,
   ) {
+    lang = ['en', 'fr'].includes(lang) ? lang : 'en';
     const payload = this.jwtService.verify(token, {
       secret: process.env.JWT_SECRET,
     });
@@ -166,10 +206,22 @@ export class AuthController {
     res.redirect(`${process.env.FRONT_HOST}/${lang}/auth/email-confirmed`);
   }
 
+  @ApiOperation({
+    summary: 'Forgot password endpoint',
+    description:
+      'Send email to user to reset password. Send username or email in query and redirect to forgot password page',
+  })
+  @ApiQuery({
+    name: 'lang',
+    enum: ['en', 'fr'],
+    required: false,
+  })
+  @ApiProperty({ type: ForgotPasswordDto })
   @Post('/forgot-password')
   async forgotPasswordFindUser(
     @Query('lang') lang,
-    @Body() userInfo: ForgotPasswordDto,
+    @Body()
+    userInfo: ForgotPasswordDto,
   ) {
     try {
       const foundEmail = await this.userService.findOneByEmail(userInfo.email);
@@ -187,18 +239,33 @@ export class AuthController {
         { id: foundEmail.id, email: foundEmail.email },
         lang || 'en',
       );
-      return foundEmail;
+      return;
     } catch (error) {
       throw error;
     }
   }
 
+  @ApiOperation({
+    summary: 'Reset password',
+    description:
+      'Verify reset password from the link user clicked in email. Send token in query and redirect to reset password page. User will be able to change password with new one',
+  })
+  @ApiQuery({
+    name: 'token',
+    type: String,
+  })
+  @ApiQuery({
+    name: 'lang',
+    enum: ['en', 'fr'],
+    required: false,
+  })
   @Get('/reset-password')
   async resetPassword(
     @Query('token') token,
     @Query('lang') lang,
     @Response({ passthrough: true }) res,
   ) {
+    lang = ['en', 'fr'].includes(lang) ? lang : 'en';
     const payload = this.jwtService.verify(token, {
       secret: process.env.JWT_SECRET,
     });
@@ -222,10 +289,16 @@ export class AuthController {
     );
   }
 
+  @ApiOperation({
+    summary: 'Google Oauth login endpoint',
+  })
   @Get('google/login')
   @UseGuards(GoogleAuthGuard)
   async googleLogin() {}
 
+  @ApiOperation({
+    summary: 'Google Oauth login redirect endpoint',
+  })
   @Get('google/redirect')
   @UseGuards(GoogleAuthGuard)
   async googleCallback(@Request() req, @Response({ passthrough: true }) res) {
@@ -233,10 +306,16 @@ export class AuthController {
     res.redirect(process.env.FRONT_HOST);
   }
 
+  @ApiOperation({
+    summary: '42 login endpoint',
+  })
   @Get('ft/login')
   @UseGuards(FtAuthGuard)
   async ftLogin() {}
 
+  @ApiOperation({
+    summary: '42 login redirect endpoint',
+  })
   @Get('ft/redirect')
   @UseGuards(FtAuthGuard)
   async ftCallback(@Request() req, @Response({ passthrough: true }) res) {
@@ -244,10 +323,16 @@ export class AuthController {
     res.redirect(process.env.FRONT_HOST);
   }
 
+  @ApiOperation({
+    summary: 'Github login endpoint',
+  })
   @Get('github/login')
   @UseGuards(GithubAuthGuard)
   async githubLogin() {}
 
+  @ApiOperation({
+    summary: 'Github login redirect endpoint',
+  })
   @Get('github/redirect')
   @UseGuards(GithubAuthGuard)
   async githubCallback(@Request() req, @Response({ passthrough: true }) res) {

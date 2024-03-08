@@ -183,7 +183,6 @@ function onClickAvatar() {
         <h2 class="mb-4 text-3xl font-bold text-primary-400">
           {{ $t("Profile.Profile.title") }}
         </h2>
-
         <div class="rounded-lg bg-slate-800 p-4 md:p-8">
           <div class="relative mb-5 flex items-center justify-center">
             <img :src="userImage" class="h-[150px] w-[150px] rounded-[50%]" />

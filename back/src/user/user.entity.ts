@@ -51,12 +51,18 @@ export class User {
 
   @ApiProperty({
     description: 'Password',
-    example: 'marvin',
+    example: 'marvin1234',
     required: true,
   })
   @Column({ default: '' })
   password: string;
 
+  @ApiProperty({
+    description: 'Image url',
+    example:
+      'http://localhost:3005/images/avatar/386745e2-5333-4c2e-b088-02530f656351.png',
+    required: true,
+  })
   @Column({ default: '' })
   image: string;
 
@@ -66,6 +72,10 @@ export class User {
   @Column({ default: '' })
   refreshToken: string;
 
+  @ApiProperty({
+    description: 'Image url',
+    enum: ['local', 'google', 'github', '42'],
+  })
   @Column({ default: 'local' })
   provider: string;
 

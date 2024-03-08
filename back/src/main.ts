@@ -28,6 +28,7 @@ async function bootstrap() {
     .setTitle('Hypertube API')
     .setDescription('API Documentation for Hypertube.')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

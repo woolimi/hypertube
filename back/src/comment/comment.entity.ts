@@ -47,7 +47,11 @@ export class Comment {
   @DeleteDateColumn()
   readonly deletedAt: Date | null;
 
-  @ManyToOne((type) => User, (user) => user.Comments, { eager: true })
+  @ManyToOne((type) => User, (user) => user.Comments, {
+    eager: true,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({
     name: 'user_id',
     referencedColumnName: 'id',
