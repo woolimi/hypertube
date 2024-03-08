@@ -2,7 +2,7 @@
 import dotenv from "dotenv";
 import path from "path";
 
-dotenv.config({ path: "../.env" });
+dotenv.config({ path: "./.env" });
 
 export default defineNuxtConfig({
   devtools: { enabled: true },
@@ -61,6 +61,7 @@ export default defineNuxtConfig({
   },
   i18n: {
     vueI18n: "./i18n.config.ts",
+    defaultLocale: "en",
     detectBrowserLanguage: {
       useCookie: true,
       fallbackLocale: "en",

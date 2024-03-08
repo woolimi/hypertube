@@ -1,40 +1,45 @@
-version: "3.8" # Updated to the latest version
+version: "3.8"
 services:
-  db:
-    image: mysql:latest
-    container_name:  "db-mysql"
-    environment:
-      - TZ=Asia/Seoul
-    env_file:
-      - ./.env
-    ports:
-      - "${DB_PORT}:3306"
-    networks:
-      - default
-  back:
-    container_name: "back-nestjs"
-    env_file:
-     - ./.env
-    ports:
-      - "${BACK_PORT}:3005"
-    build:
-      context: .
-      dockerfile: Dockerfile.back
-    depends_on:
-      - db
-    networks:
-      - default
-    restart: unless-stopped
   front:
     container_name: "front-nuxt"
     build:
       context: .
       dockerfile: Dockerfile.front
     env_file:
-     - ./.env
+      - ./.env
     ports:
       - "${FRONT_PORT}:3000"
     networks:
-      - default
+      - app_networks
+
+  back:
+    container_name: "back-nestjs"
+    build:
+      context: .
+      dockerfile: Dockerfile.back
+    env_file:
+      - ./.env
+    ports:
+      - "${BACK_PORT}:3005"
+    depends_on:
+      - db
+    networks:
+      - data_networks
+      - app_networks
+    restart: unless-stopped
+
+  db:
+    container_name: "db-mysql"
+    image: mysql:latest
+    environment:
+      - TZ=Europe/Paris
+    env_file:
+      - ./.env
+    # ports:
+    #   - "${DB_PORT}:3306"
+    networks:
+      - data_networks
+
 networks:
-  default:
+  data_networks:
+  app_networks:
