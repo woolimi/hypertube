@@ -49,9 +49,7 @@ const updateComment = async () => {
         class="bg-green-500 hover:bg-green-700"
         :class="$style.buttonCircle"
         type="submit"
-        @click="updateComment"
       >
-        <!-- save -->
         <i class="pi pi-check" :class="$style.iconCenter"></i>
       </button>
 
@@ -61,7 +59,6 @@ const updateComment = async () => {
         type="button"
         @click="cancelEdit"
       >
-        <!-- cancel -->
         <i class="pi pi-times" :class="$style.iconCenter"></i>
       </button>
     </div>

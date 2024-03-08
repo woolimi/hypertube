@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  Logger,
   Param,
   ParseIntPipe,
   Patch,
@@ -13,9 +12,18 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { CommentService } from './comment.service';
-import { ApiBody, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { CommentLengthDto } from './dto/comment.length.dto';
+import { CommentResponseDto } from './dto/comment-response.dto';
 
 @ApiTags('Comments')
 @Controller('comments')
@@ -28,6 +36,9 @@ export class CommentController {
     description: 'Get all comments of a movie. MovieId query param is required',
   })
   @ApiQuery({ name: 'movieId', required: true, type: Number })
+  @ApiOkResponse({ type: CommentResponseDto, isArray: true })
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   getAllComments(@Query('movieId', ParseIntPipe) movieId: number) {
     return this.commentService.getCommentsForMovie(movieId);
   }
@@ -38,17 +49,27 @@ export class CommentController {
     description: 'Create a comment',
   })
   @ApiBody({ type: CommentLengthDto })
+  @ApiCreatedResponse({ type: CommentResponseDto })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   async createComment(
     @Req() req,
     @Body() data: CommentLengthDto,
     @Query('movieId', ParseIntPipe) movieId: number,
   ) {
-    Logger.log('Create Comment', req.user);
     const userId = req.user.userId;
     const content = data.content;
     const createCommentDto = { userId, movieId, content };
-    return this.commentService.createComment(createCommentDto);
+    const newComment =
+      await this.commentService.createComment(createCommentDto);
+    return {
+      ...newComment,
+      User: {
+        id: newComment.User.id,
+        username: newComment.User.username,
+        image: newComment.User.image,
+      },
+    };
   }
 
   @Patch(':id')
@@ -56,20 +77,50 @@ export class CommentController {
     summary: 'Update a comment',
     description: 'Update a comment',
   })
-  @ApiBody({ type: String })
+  @ApiBody({ type: CommentLengthDto })
+  @ApiOkResponse({ type: CommentResponseDto })
   @ApiQuery({ name: 'id', required: true, type: Number })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   async updateComment(
     @Body('content') content: string,
     @Param('id') commentId: number,
+    @Req() req,
   ) {
-    this.commentService.updateComment(commentId, content);
+    const authorId = req.user.userId;
+    const updatedComment = await this.commentService.updateComment(
+      commentId,
+      authorId,
+      content,
+    );
+    return {
+      ...updatedComment,
+      User: {
+        id: updatedComment.User.id,
+        username: updatedComment.User.username,
+        image: updatedComment.User.image,
+      },
+    };
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'delete a comment' })
+  @ApiOkResponse({ type: CommentResponseDto })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
-  async deleteComment(@Param('id') commentId: number) {
-    this.commentService.deleteComment(commentId);
+  async deleteComment(@Param('id') commentId: number, @Req() req) {
+    const authorId = req.user.userId;
+    const deletedComment = await this.commentService.deleteComment(
+      commentId,
+      authorId,
+    );
+    return {
+      ...deletedComment,
+      User: {
+        id: deletedComment.User.id,
+        username: deletedComment.User.username,
+        image: deletedComment.User.image,
+      },
+    };
   }
 }

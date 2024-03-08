@@ -2,6 +2,7 @@ import { DataSource, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IComment } from 'src/comment/IComment';
 import {
+  BadRequestException,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -170,50 +171,8 @@ export class MovieService {
   }
 
   async createMovieData(movieId: number) {
-    Logger.log('start creating move');
     const createMovieDto = { id: movieId };
-    const movie = this.movieRepository.create(createMovieDto);
-    await this.movieRepository.save(movie);
-    Logger.log('move has been created');
-  }
-
-  async addCommentToMovieData(movieId: number, comment: IComment) {
-    const movie = await this.getMovieData(movieId);
-    if (!movie) {
-      throw new Error('Movie not found');
-    }
-    movie.Comments.push(comment);
-    return await this.movieRepository.save(movie);
-  }
-
-  async updateCommentFromMovieData(movieId: number, updatedComment: IComment) {
-    const movie = await this.getMovieData(movieId);
-    if (!movie) {
-      throw new Error('Movie not found');
-    }
-    const updatedMovie = {
-      ...movie,
-      comments: movie.Comments.map((movieComment) =>
-        movieComment.id === updatedComment.id ? updatedComment : movieComment,
-      ),
-    };
-
-    return await this.movieRepository.save(updatedMovie);
-  }
-
-  async removeCommentFromMovieData(movieId: number, commentId: number) {
-    const movie = await this.getMovieData(movieId);
-    if (!movie) {
-      throw new Error('Movie not found');
-    }
-    const commentIndex = movie.Comments.findIndex(
-      (comment) => comment.id === commentId,
-    );
-    if (commentIndex === -1) {
-      throw new Error('Comment not found in movie');
-    }
-    movie.Comments.splice(commentIndex, 1);
-    return await this.movieRepository.save(movie);
+    return this.movieRepository.create(createMovieDto);
   }
 
   async getMovieTorrent(imdb_id: string) {
