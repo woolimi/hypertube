@@ -16,9 +16,8 @@ services:
 
   db:
     volumes:
-      - db:/var/lib/mysql
+      - ./db:/var/lib/mysql
 
 volumes:
-  db:
   front_node_modules:
   back_node_modules:

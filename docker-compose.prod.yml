@@ -2,7 +2,4 @@ version: "3"
 services:
   db:
     volumes:
-      - db:/var/lib/mysql
-
-volumes:
-  db:
+      - ./db:/var/lib/mysql
