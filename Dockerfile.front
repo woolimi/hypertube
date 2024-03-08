@@ -15,6 +15,7 @@ EXPOSE 3000
 
 FROM dependencies AS build
 COPY ./front .
+COPY ./.env .
 RUN pnpm run build
 
 FROM base AS production

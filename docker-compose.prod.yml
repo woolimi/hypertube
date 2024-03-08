@@ -1,20 +1,8 @@
 version: "3"
 services:
-  front:
-    volumes:
-      - ./front:/usr/src/app
-      - front_node_modules:/usr/src/app/node_modules
-
-  back:
-    volumes:
-      - ./back:/usr/src/app
-      - back_node_modules:/usr/src/app/node_modules
-
   db:
     volumes:
       - db:/var/lib/mysql
 
 volumes:
   db:
-  front_node_modules:
-  back_node_modules:

@@ -2,7 +2,7 @@
 import dotenv from "dotenv";
 import path from "path";
 
-dotenv.config({ path: "../.env" });
+dotenv.config({ path: "./.env" });
 
 export default defineNuxtConfig({
   devtools: { enabled: true },
