@@ -21,12 +21,16 @@ RUN pnpm run build
 # CMD ["./setup-database.sh"]
 
 FROM base AS production
-COPY ./back/package.json  ./
-COPY --from=dependencies /usr/src/app/node_modules ./node_modules
+WORKDIR /usr/src/app
+COPY ./back/ ./
+COPY --from=dependencies /usr/src/app/ ./node_modules
+# RUN pnpm run db:migrate
+# RUN pnpm prune --prod
 ENV NODE_ENV=production
 COPY --from=build /usr/src/app/dist ./dist
-RUN pnpm prune --prod
-CMD [ "node", "dist/src/main.js" ]
+# RUN pnpm prune --prod
+RUN pnpm install --prod
+ENTRYPOINT [ "/usr/src/app/startup.sh" ]
 EXPOSE 5000
 
 # FROM build AS production
