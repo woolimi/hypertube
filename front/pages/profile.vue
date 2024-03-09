@@ -92,10 +92,14 @@ const onUpdateProfile = async () => {
   try {
     loading.profile = true;
     await updateProfile(axios, userData.value.id, {
-      username: username.value,
+      username: userData.value.username === username.value ? undefined : username.value,
       firstName: firstName.value,
       lastName: lastName.value,
     });
+
+    userData.value.username = username.value;
+    userData.value.firstName = firstName.value;
+    userData.value.lastName = lastName.value;
     // TODO: instead of printing error
     errorUpdateProfile.value = "";
     userProfileUpdateSuccessful.value = t("Profile.Profile.success");
