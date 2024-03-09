@@ -16,7 +16,7 @@ const dataSource = new DataSource({
   database: process.env.MYSQL_DATABASE,
   entities: [User, Comment, Movie, MoviesWatched],
   migrations: [__dirname + '/src/migrations/*.ts'],
-  synchronize: true,
+  synchronize: false,
   logging: true,
 });
 
