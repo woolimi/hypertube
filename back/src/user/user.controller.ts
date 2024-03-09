@@ -99,6 +99,9 @@ export class UserController {
     }),
   )
   async uploadAvatar(@Req() req, @UploadedFile() image) {
+    if (!image) {
+      throw new BadRequestException('Image is required');
+    }
     const url = process.env.BACK_HOST + '/' + image.path;
     await this.userService.update(req.user.userId, { image: url });
     return url;

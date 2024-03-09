@@ -12,6 +12,8 @@ export class AppController {
 
     if (fs.existsSync(imagePath)) {
       res.sendFile(imagePath, { root: '.' });
+    } else {
+      res.sendStatus(404);
     }
   }
 }
