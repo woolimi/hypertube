@@ -14,7 +14,7 @@ Hypertube is ecole42's web project that uses the torrent protocol to downloads a
 
 |         movie         |         video         |
 | :-------------------: | :-------------------: |
-| ![](./demo/movie.jpg) | ![](./demo/video.png) |
+| ![](./demo/movie.png) | ![](./demo/video.png) |
 
 ## Stack
 
