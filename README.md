@@ -1,7 +1,5 @@
 # Hypertube
 
-<img src="./demo/home.png" width="100%">
-
 Hypertube is ecole42's web project that uses the torrent protocol to downloads and streams videos at the same time.
 
 |         home         |         login         |
